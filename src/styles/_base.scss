@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 2.4rem;
+  color: $text-primary;
+  background-color: $bg-primary;
+}
+
+main {
+  flex-grow: 1;
+}
