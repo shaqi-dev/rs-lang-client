@@ -25,5 +25,14 @@ module.exports = {
     'react/jsx-uses-react': ['off'],
     'react/jsx-props-no-spreading': ['warn'],
     'react/no-unescaped-entities': ['off'],
+    'no-param-reassign': ['off'],
+    '@typescript-eslint/explicit-function-return-type': ['error'],
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
   },
 };
