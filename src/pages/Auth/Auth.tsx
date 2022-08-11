@@ -16,6 +16,7 @@ const Auth: FC = () => {
 
   return (
     <ContentWrapper className={s.wrapper}>
+      <p className={s.title}>Авторизация</p>
       {form === 'signIn' ? <AuthForm /> : <SignUpForm />}
       <Button type="button" buttonStyle="secondary" onClick={toggleForm} className={s.switch}>
         {form === 'signIn' ? 'Зарегистрироваться' : 'Войти'}
