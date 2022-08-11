@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { CounterState } from '../../interfaces/Counter';
-import type { RootState } from '../../store';
+import type { RootState } from '..';
 
 const initialState: CounterState = {
   value: 0,

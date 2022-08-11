@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { selectCount, increment, decrement } from './CounterSlice';
+import { selectCount, increment, decrement } from '../../store/counter/counter.slice';
 import s from './Counter.module.scss';
 
 const Counter: FC = () => {
