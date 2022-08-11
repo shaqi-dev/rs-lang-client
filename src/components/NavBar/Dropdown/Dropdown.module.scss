@@ -1,0 +1,39 @@
+@use '../../../styles/_variables.scss' as *;
+
+.root {
+  .handler {
+    position: relative;
+  }
+  
+  .list {
+    position: absolute;
+    display: none;
+    padding: 15px 20px;
+    flex-direction: column;
+    background-color: #dedede;
+    border-radius: 8px;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .link {
+    text-decoration: none;
+    color: $text-primary;
+  }
+
+  &:hover {
+    .handler {
+      color: $text-primary--hover;
+    }
+
+    .list {
+      display: flex;
+    }
+  }
+
+  .item:hover {
+    .link {
+      color: $text-primary--hover;
+    }
+  }
+}
