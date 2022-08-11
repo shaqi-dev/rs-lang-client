@@ -5,13 +5,18 @@ interface TextFieldProps {
   type: 'text' | 'password' | 'email';
   htmlFor: string;
   label: string;
+  autoComplete?: string;
 }
 
-const FormTextField: FC<TextFieldProps> = ({ type, htmlFor, label }) => {
+const FormTextField: FC<TextFieldProps> = ({ type, htmlFor, label, autoComplete }) => {
   return (
     <label htmlFor={htmlFor} className={s.root}>
-      <p className={s.label}>{label}</p>
-      <input type={type} className={s.input} />
+      <input
+        type={type}
+        className={s.input}
+        placeholder={label}
+        autoComplete={autoComplete || 'off'}
+      />
     </label>
   );
 };

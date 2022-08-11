@@ -1,0 +1,29 @@
+@use '../../styles/_variables.scss' as *;
+
+.root {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  color: $light;
+  background: $primary;
+
+  &:hover {
+    background: $hover;
+  }
+}
+
+.secondary {
+  border: #28335b 1px solid;
+  color: $primary;
+  background: none;
+
+  &:hover {
+    border: $hover 1px solid;
+    color: $hover;
+  }
+}

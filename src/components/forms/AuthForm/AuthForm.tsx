@@ -1,6 +1,6 @@
 import { FC, FormEvent } from 'react';
 import FormTextField from '../FormTextField';
-import FormButton from '../FormButton';
+import Button from '../../Button';
 import s from './AuthForm.module.scss';
 
 const AuthForm: FC = () => {
@@ -12,9 +12,16 @@ const AuthForm: FC = () => {
 
   return (
     <form className={s.root} onSubmit={handleSubmit}>
-      <FormTextField type="email" htmlFor="auth-email" label="Эл. почта" />
-      <FormTextField type="password" htmlFor="auth-password" label="Пароль" />
-      <FormButton type="submit" htmlFor="auth-submit" value="Войти" />
+      <FormTextField type="email" htmlFor="auth-email" label="Эл. почта" autoComplete="email" />
+      <FormTextField
+        type="password"
+        htmlFor="auth-password"
+        label="Пароль"
+        autoComplete="current-password"
+      />
+      <Button type="submit" buttonStyle="primary">
+        Войти
+      </Button>
     </form>
   );
 };

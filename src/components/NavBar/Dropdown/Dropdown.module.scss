@@ -18,12 +18,12 @@
 
   .link {
     text-decoration: none;
-    color: $text-primary;
+    color: $primary;
   }
 
   &:hover {
     .handler {
-      color: $text-primary--hover;
+      color: $hover;
     }
 
     .list {
@@ -33,7 +33,7 @@
 
   .item:hover {
     .link {
-      color: $text-primary--hover;
+      color: $hover;
     }
   }
 }
