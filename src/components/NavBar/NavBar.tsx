@@ -23,11 +23,6 @@ const NavBar: FC = () => {
           <Dropdown options={gamesOptions} />
         </li>
         <li className={s.item}>
-          <Link to="/statistic" className={s.link}>
-            Статистика
-          </Link>
-        </li>
-        <li className={s.item}>
           <Link to="/authorization" className={s.link}>
             Войти
           </Link>
