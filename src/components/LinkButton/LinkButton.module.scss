@@ -1,0 +1,14 @@
+@use '../../styles/variables' as *;
+
+.root {
+  border: none;
+  background: none;
+  text-decoration: underline;
+  font-weight: normal;
+  font-size: 2rem;
+  cursor: pointer;
+
+  &:hover {
+    color: $text-primary--hover;
+  }
+}
