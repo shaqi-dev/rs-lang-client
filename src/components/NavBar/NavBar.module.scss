@@ -1,0 +1,24 @@
+@use '../../styles/_variables.scss' as *;
+
+.root {
+  .main {
+    display: flex;
+    gap: 30px;
+    
+    .item {
+      list-style: none;
+      cursor: pointer;
+
+      .link {
+        color: $text-primary;
+        text-decoration: none;
+      }
+
+      &:hover {
+        .link {
+          color: $text-primary--hover;
+        }
+      }
+    }
+  }
+}
