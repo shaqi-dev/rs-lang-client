@@ -27,6 +27,7 @@ module.exports = {
     'react/no-unescaped-entities': ['off'],
     'no-param-reassign': ['off'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
+    'react/require-default-props': ['off'],
     'react/function-component-definition': [
       2,
       {

@@ -1,20 +1,22 @@
 import { FC } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 
 const App: FC = () => {
   return (
-    <div className="App">
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="login">Login</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </div>
+    <>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </main>
+      <Footer />
+    </>
   );
 };
 

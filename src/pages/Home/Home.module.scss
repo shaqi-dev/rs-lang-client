@@ -1,0 +1,21 @@
+.wrapper {
+  section {
+    min-height: 40vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.hero {
+  background-color: #e9ff9b;
+}
+
+.about {
+  background-color: #a09bff;
+}
+
+.team {
+  background-color: #e19bff;
+}
