@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import ContentWrapper from '../ContentWrapper';
+import ContentWrapper from '../../layouts/ContentWrapper';
 import s from './Footer.module.scss';
 
 const Footer: FC = () => {

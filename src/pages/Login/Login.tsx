@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import ContentWrapper from '../../components/layout/ContentWrapper';
+import ContentWrapper from '../../layouts/ContentWrapper';
 
 const Login: FC = () => {
   return <ContentWrapper>Login page</ContentWrapper>;
