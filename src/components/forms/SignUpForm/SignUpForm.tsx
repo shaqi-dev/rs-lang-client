@@ -1,4 +1,4 @@
-import { FC, useRef, useState, ReactElement } from 'react';
+import { FC, useRef, useState, ReactNode } from 'react';
 import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import ErrorBanner from '../../ErrorBanner';
@@ -54,6 +54,10 @@ const SignUpForm: FC = () => {
     if (serverError) setServerError(null);
   };
 
+  const renderErrorMessage = ({ message }: { message: string }): ReactNode => (
+    <p className={s.validateError}>{message}</p>
+  );
+
   return (
     <form className={s.root} onSubmit={handleSubmit(onSubmit)} onChange={handleChange}>
       {serverError && <ErrorBanner>{serverError.message}</ErrorBanner>}
@@ -71,11 +75,7 @@ const SignUpForm: FC = () => {
           },
         })}
       />
-      <ErrorMessage
-        errors={errors}
-        name="email"
-        render={({ message }): ReactElement => <p className={s.validateError}>{message}</p>}
-      />
+      <ErrorMessage errors={errors} name="email" render={renderErrorMessage} />
       <input
         type="text"
         placeholder="Имя"
@@ -90,11 +90,7 @@ const SignUpForm: FC = () => {
           },
         })}
       />
-      <ErrorMessage
-        errors={errors}
-        name="name"
-        render={({ message }): ReactElement => <p className={s.validateError}>{message}</p>}
-      />
+      <ErrorMessage errors={errors} name="name" render={renderErrorMessage} />
       <input
         type="password"
         placeholder="Пароль"
@@ -109,11 +105,7 @@ const SignUpForm: FC = () => {
           },
         })}
       />
-      <ErrorMessage
-        errors={errors}
-        name="password"
-        render={({ message }): ReactElement => <p className={s.validateError}>{message}</p>}
-      />
+      <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
       <input
         type="password"
         placeholder="Повторите пароль"
@@ -129,11 +121,7 @@ const SignUpForm: FC = () => {
           validate: (value) => value === passwordRef.current || PASSWORDS_NOT_MATCH,
         })}
       />
-      <ErrorMessage
-        errors={errors}
-        name="passwordRepeat"
-        render={({ message }): ReactElement => <p className={s.validateError}>{message}</p>}
-      />
+      <ErrorMessage errors={errors} name="passwordRepeat" render={renderErrorMessage} />
       <Button type="submit" buttonStyle="primary" disabled={isLoading}>
         Зарегистрироваться
       </Button>
