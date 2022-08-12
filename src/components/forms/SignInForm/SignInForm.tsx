@@ -1,7 +1,7 @@
 import { FC, FormEvent } from 'react';
 import FormTextField from '../FormTextField';
 import Button from '../../Button';
-import s from './AuthForm.module.scss';
+import s from './SignInForm.module.scss';
 
 const AuthForm: FC = () => {
   const handleSubmit = (e: FormEvent): void => {

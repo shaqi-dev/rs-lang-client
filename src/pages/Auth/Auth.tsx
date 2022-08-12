@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
-import AuthForm from '../../components/forms/AuthForm';
+import SignInForm from '../../components/forms/SignInForm';
 import SignUpForm from '../../components/forms/SignUpForm';
 import Button from '../../components/Button';
 import s from './Auth.module.scss';
@@ -17,7 +17,7 @@ const Auth: FC = () => {
   return (
     <ContentWrapper className={s.wrapper}>
       <p className={s.title}>Авторизация</p>
-      {form === 'signIn' ? <AuthForm /> : <SignUpForm />}
+      {form === 'signIn' ? <SignInForm /> : <SignUpForm />}
       <Button type="button" buttonStyle="secondary" onClick={toggleForm} className={s.switch}>
         {form === 'signIn' ? 'Зарегистрироваться' : 'Войти'}
       </Button>
