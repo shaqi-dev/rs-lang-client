@@ -1,6 +1,6 @@
 import { API_USERS } from './endpoints';
 import { SignUpUserData, SignUpResponse, CreateUserResponse } from '../interfaces/signUp';
-import { UNEXPECTED_STATUS, INCORRECT_SIGNUP_DATA, USERS_ALREADY_EXISTS } from './errors';
+import { UNEXPECTED_STATUS, INCORRECT_USER_DATA, USER_ALREADY_EXISTS } from '../shared/authErrors';
 
 const createUser = async (userData: SignUpUserData): Promise<CreateUserResponse> => {
   try {
@@ -19,9 +19,9 @@ const createUser = async (userData: SignUpUserData): Promise<CreateUserResponse>
       return { data, error: undefined };
     }
 
-    if (res.status === 417) throw USERS_ALREADY_EXISTS;
+    if (res.status === 417) throw USER_ALREADY_EXISTS;
 
-    if (res.status === 422) throw INCORRECT_SIGNUP_DATA;
+    if (res.status === 422) throw INCORRECT_USER_DATA;
 
     throw UNEXPECTED_STATUS;
   } catch (e: unknown) {
