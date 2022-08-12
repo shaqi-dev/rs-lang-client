@@ -23,7 +23,7 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': ['off'],
     'react/jsx-uses-react': ['off'],
-    'react/jsx-props-no-spreading': ['warn'],
+    'react/jsx-props-no-spreading': ['off'],
     'react/no-unescaped-entities': ['off'],
     'no-param-reassign': ['off'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
