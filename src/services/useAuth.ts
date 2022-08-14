@@ -31,16 +31,13 @@ const baseQueryWithReauth = async (
   extraOptions: {},
 ): Promise<QueryReturnValue<unknown, FetchBaseQueryError, FetchBaseQueryMeta>> => {
   let res = await baseQuery(args, api, extraOptions);
-  console.log(res);
 
   // "refresh token" feature below require testing
   if (res?.error?.status === 'PARSING_ERROR' && res.error.originalStatus === 403) {
-    console.log('sending refresh token');
     const state = api.getState() as RootState;
     const { username, userId } = state.auth;
 
     const refreshResult = await baseQuery(`/users/${userId}/tokens`, api, extraOptions);
-    console.log(refreshResult);
 
     if (refreshResult?.data) {
       const { token: accessToken, refreshToken } = refreshResult.data as SignInResponse;

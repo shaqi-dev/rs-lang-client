@@ -4,16 +4,11 @@ import { ErrorMessage } from '@hookform/error-message';
 import { EMAIL_REQUIRED, PASSWORD_REQUIRED } from '../../../shared/validationErrors';
 import Button from '../../Button';
 import ErrorBanner from '../../ErrorBanner';
-import { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
-import s from './SignInForm.module.scss';
-
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { useAppDispatch } from '../../../hooks/redux';
 import { useLoginMutation } from '../../../store/auth/authApiSlice';
-import {
-  setCredentials,
-  selectCurrentUsername,
-  selectCurrentAccessToken,
-} from '../../../store/auth/authSlice';
+import { setCredentials } from '../../../store/auth/authSlice';
+import type { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
+import s from './SignInForm.module.scss';
 
 const SignInForm: FC = () => {
   const [, setLoading] = useState<boolean>(false);
@@ -21,16 +16,12 @@ const SignInForm: FC = () => {
   const { register, handleSubmit, control } = useForm<SignInUserData>();
   const { errors, isValid } = useFormState<SignInUserData>({ control });
 
-  const currentUser = useAppSelector(selectCurrentUsername);
-  const currentToken = useAppSelector(selectCurrentAccessToken);
   const [loginUser, { isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<SignInUserData> = async (
     userData: SignInUserData,
   ): Promise<void> => {
-    console.log(currentUser, currentToken);
-
     if (isValid) {
       setServerError(null);
       setLoading(true);
