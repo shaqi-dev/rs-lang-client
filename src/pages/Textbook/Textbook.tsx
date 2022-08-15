@@ -90,7 +90,7 @@ const Textbook: FC = () => {
       marginPagesDisplayed={1}
       pageCount={maxPages}
       previousLabel="<"
-      initialPage={currentPage - 1}
+      forcePage={currentPage - 1}
       renderOnZeroPageCount={(): null => null}
       containerClassName={s.pagination_container}
       pageClassName={s.pagination_page}
@@ -126,7 +126,7 @@ const Textbook: FC = () => {
             {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
           </div>
         </div>
-        <div className={s.pagination}>{paginate}</div>
+        <div className={s.pagination}>{currentWords && paginate}</div>
       </section>
     </ContentWrapper>
   );
