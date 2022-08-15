@@ -1,6 +1,7 @@
 import { FC, useState, useEffect, MouseEvent, useCallback } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import EnglishLevelButton from '../../components/EnglishLevelButton';
+import WordButton from '../../components/WordButton';
 import ErrorBanner from '../../components/ErrorBanner';
 import { getWords } from '../../services/words';
 import type { Word } from '../../interfaces/words';
@@ -12,6 +13,7 @@ const Textbook: FC = () => {
   const [currentLevel, setCurrentLevel] = useState<string>(englishLevels[0]);
   const [currentPage] = useState<number>(1);
   const [currentWords, setCurrentWords] = useState<Word[]>([]);
+  const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [serverError, setServerError] = useState<Error | null>(null);
 
   const updateWords = useCallback(async (): Promise<void> => {
@@ -21,7 +23,10 @@ const Textbook: FC = () => {
     });
 
     if (error) setServerError(error);
-    if (data) setCurrentWords(data);
+    if (data) {
+      setCurrentWords(data);
+      setCurrentWord(data[0]);
+    }
   }, [currentLevel, currentPage]);
 
   useEffect(() => {
@@ -31,6 +36,12 @@ const Textbook: FC = () => {
   const handleClickLevel = (e: MouseEvent<HTMLButtonElement>): void => {
     const button = e.target as HTMLButtonElement;
     setCurrentLevel(button.innerText);
+  };
+
+  const handleClickWord = (e: MouseEvent<HTMLButtonElement>): void => {
+    const button = e.target as HTMLButtonElement;
+    const word = currentWords.filter((item) => item.word === button.innerText)[0];
+    setCurrentWord(word);
   };
 
   const levelButtons = englishLevels.map((level) => (
@@ -43,13 +54,21 @@ const Textbook: FC = () => {
     </EnglishLevelButton>
   ));
 
-  const wordElements = currentWords.map((word) => (
-    <button type="button" key={word.word}>
-      {word.word}
-    </button>
-  ));
+  const wordElements = currentWords.map((word, i) => {
+    const isActive = (currentWord && currentWord.word === word.word) || (!currentWord && i === 0);
 
-  const serverErrorString = `${serverError?.name}: ${serverError?.message}`;
+    return (
+      <WordButton key={word.word} active={isActive} onClick={handleClickWord}>
+        {word.word}
+      </WordButton>
+    );
+  });
+
+  const serverErrorBanner = (
+    <ErrorBanner>
+      `${serverError?.name}: ${serverError?.message}`
+    </ErrorBanner>
+  );
 
   return (
     <ContentWrapper className={s.wrapper}>
@@ -57,10 +76,18 @@ const Textbook: FC = () => {
         <p className={s.sectionTitle}>Уровень сложности</p>
         <div className={s.levelsButtons}>{levelButtons}</div>
       </section>
-      <section className={s.words}>
+      <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
-        {serverError && <ErrorBanner>{serverErrorString}</ErrorBanner>}
-        {!serverError && <div className={s.wordsButtons}>{wordElements}</div>}
+        <div className={s.wordsBody}>
+          <div className={s.wordsButtons}>
+            {serverError && serverErrorBanner}
+            {!serverError && wordElements}
+          </div>
+          <div className={s.wordsCard}>
+            {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
+          </div>
+        </div>
+        <div className={s.wordsPagination}>Пагинация</div>
       </section>
     </ContentWrapper>
   );
