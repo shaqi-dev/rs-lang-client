@@ -1,1 +1,16 @@
 @use '../../styles/variables' as *;
+
+.wrapper {
+  gap: 40px;
+}
+
+.levelsSection, .wordsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.levelsButtons {
+  display: flex;
+  gap: 10px;
+}
