@@ -1,0 +1,32 @@
+@use '../../styles/variables' as *;
+
+.wrapper {
+  gap: 40px;
+}
+
+.levelsSection, .wordsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.levelsButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.wordsBody {
+  display: flex;
+  gap: 40px;
+}
+
+.wordsButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wordsCard {
+  min-width: 400px;
+  background-color: #9696ff;
+}

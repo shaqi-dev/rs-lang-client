@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
+import Textbook from './pages/Textbook';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const App: FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/authorization" element={<Auth />} />
+          <Route path="/textbook" element={<Textbook />} />
         </Routes>
       </main>
       <Footer />

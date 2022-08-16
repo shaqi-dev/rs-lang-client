@@ -1,0 +1,17 @@
+@use '../../styles/variables' as *;
+
+.root {
+  width: 200px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $hover;
+  }
+
+  &_active {
+    background-color: $active;
+  }
+}
