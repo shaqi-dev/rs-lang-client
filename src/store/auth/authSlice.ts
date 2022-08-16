@@ -26,8 +26,6 @@ const authSlice = createSlice({
       state.userId = userId;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-
-      localStorage.setItem('auth', JSON.stringify(state));
     },
     logOut: (state) => {
       const { username, userId, accessToken, refreshToken } = initialState;
@@ -36,8 +34,6 @@ const authSlice = createSlice({
       state.userId = userId;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-
-      localStorage.removeItem('auth');
     },
   },
 });
