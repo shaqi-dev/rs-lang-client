@@ -10,13 +10,13 @@
       cursor: pointer;
 
       .link {
-        color: $text-primary;
+        color: $primary;
         text-decoration: none;
       }
 
       &:hover {
         .link {
-          color: $text-primary--hover;
+          color: $hover;
         }
       }
     }

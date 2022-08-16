@@ -1,3 +1,9 @@
+.root {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
 .wrapper {
   flex-direction: row;
   justify-content: space-between;
