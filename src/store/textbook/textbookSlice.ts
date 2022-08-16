@@ -12,7 +12,7 @@ const initialState: TextbookState = {
 };
 
 const textbookSlice = createSlice({
-  name: 'auth',
+  name: 'textbook',
   initialState,
   reducers: {
     setGroup: (state, action: PayloadAction<number>) => {

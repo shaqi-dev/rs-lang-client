@@ -56,8 +56,8 @@ const Textbook: FC = () => {
 
   const handleClickWord = (e: MouseEvent<HTMLButtonElement>): void => {
     const button = e.target as HTMLButtonElement;
-    const word = currentWords.filter((item) => item.word === button.innerText)[0];
-    setCurrentWord(word);
+    const selectedWord = currentWords.filter((word) => word.word === button.innerText)[0];
+    setCurrentWord(selectedWord);
   };
 
   const levelButtons = wordsGroups.map((groupName, i) => {
@@ -136,7 +136,7 @@ const Textbook: FC = () => {
             {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
           </div>
         </div>
-        <div className={s.pagination}>{currentWords && paginate}</div>
+        <div className={s.pagination}>{currentWords.length > 0 && paginate}</div>
       </section>
     </ContentWrapper>
   );
