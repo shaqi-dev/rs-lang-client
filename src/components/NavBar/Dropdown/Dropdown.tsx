@@ -17,7 +17,7 @@ const Dropdown: FC<DropdownProps> = ({ options }) => {
       <span className={s.handler}>Игры</span>
       <ul className={s.list}>
         {options.map((option) => (
-          <li className={s.item}>
+          <li className={s.item} key={`dropdown-${option.name}`}>
             <Link to={option.link} className={s.link}>
               {option.name}
             </Link>

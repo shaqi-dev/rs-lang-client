@@ -1,5 +1,4 @@
 import { FC, FormEvent } from 'react';
-import FormTextField from '../FormTextField';
 import Button from '../../Button';
 import s from './SignInForm.module.scss';
 
@@ -12,11 +11,11 @@ const AuthForm: FC = () => {
 
   return (
     <form className={s.root} onSubmit={handleSubmit}>
-      <FormTextField type="email" htmlFor="auth-email" label="Эл. почта" autoComplete="email" />
-      <FormTextField
+      <input type="email" placeholder="Эл. почта" className={s.textInput} autoComplete="email" />
+      <input
         type="password"
-        htmlFor="auth-password"
-        label="Пароль"
+        placeholder="Пароль"
+        className={s.textInput}
         autoComplete="current-password"
       />
       <Button type="submit" buttonStyle="primary">

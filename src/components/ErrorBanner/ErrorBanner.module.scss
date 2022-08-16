@@ -1,0 +1,10 @@
+@use '../../styles/variables' as *;
+
+.root {
+  padding: 10px 15px;
+  background-color: $error-light;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+}

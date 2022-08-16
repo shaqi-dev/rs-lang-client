@@ -6,6 +6,11 @@
   border: none;
   font-weight: bold;
   cursor: pointer;
+
+  &:disabled {
+    background-color: $disabled;
+    pointer-events: none;
+  }
 }
 
 .primary {
@@ -18,6 +23,7 @@
 }
 
 .secondary {
+  padding: 9px 15px;
   border: #28335b 1px solid;
   color: $primary;
   background: none;

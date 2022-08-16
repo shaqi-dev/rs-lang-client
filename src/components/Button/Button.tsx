@@ -6,6 +6,7 @@ interface ButtonProps {
   buttonStyle?: 'primary' | 'secondary' | 'link';
   className?: string | string[];
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const Button: FC<PropsWithChildren<ButtonProps>> = ({
@@ -14,6 +15,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
   className,
   onClick,
   children,
+  disabled,
 }) => {
   let classNamesFromProps = '';
 
@@ -29,6 +31,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
         buttonStyle === 'primary' ? s.primary : s.secondary
       } ${classNamesFromProps}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>
