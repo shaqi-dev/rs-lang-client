@@ -1,32 +1,48 @@
 import { FC, useState, ReactNode } from 'react';
 import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import loginUser from '../../../services/loginUser';
-import Button from '../../Button';
-import { SignInUserData } from '../../../interfaces/signIn';
-import s from './SignInForm.module.scss';
-import ErrorBanner from '../../ErrorBanner';
 import { EMAIL_REQUIRED, PASSWORD_REQUIRED } from '../../../shared/validationErrors';
+import Button from '../../Button';
+import ErrorBanner from '../../ErrorBanner';
+import { useAppDispatch } from '../../../hooks/redux';
+import { useLoginMutation } from '../../../store/auth/authApiSlice';
+import { setCredentials } from '../../../store/auth/authSlice';
+import type { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
+import s from './SignInForm.module.scss';
 
 const SignInForm: FC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
   const [serverError, setServerError] = useState<Error | null>(null);
   const { register, handleSubmit, control } = useForm<SignInUserData>();
   const { errors, isValid } = useFormState<SignInUserData>({ control });
+
+  const [loginUser, { isLoading }] = useLoginMutation();
+  const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<SignInUserData> = async (
     userData: SignInUserData,
   ): Promise<void> => {
     if (isValid) {
       setServerError(null);
-      setIsLoading(true);
+      setLoading(true);
 
-      const { data, error } = await loginUser(userData);
+      try {
+        const data: SignInResponse = await loginUser(userData).unwrap();
+        const { name: username, userId, token: accessToken, refreshToken } = data;
 
-      setIsLoading(false);
+        dispatch(
+          setCredentials({
+            username,
+            userId,
+            accessToken,
+            refreshToken,
+          }),
+        );
+      } catch (e) {
+        setServerError(e as Error);
+      }
 
-      if (error) setServerError(error);
-      if (data) console.log(data);
+      setLoading(false);
     }
   };
 

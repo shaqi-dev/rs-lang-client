@@ -1,5 +1,8 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { logOut, selectCurrentUsername } from '../../store/auth/authSlice';
+import Button from '../Button';
 import Dropdown, { DropdownOption } from './Dropdown';
 import s from './NavBar.module.scss';
 
@@ -11,6 +14,13 @@ const gamesOptions: DropdownOption[] = [
 ];
 
 const NavBar: FC = () => {
+  const dispatch = useAppDispatch();
+  const currentUsername = useAppSelector(selectCurrentUsername);
+
+  const handleLogout = (): void => {
+    dispatch(logOut());
+  };
+
   return (
     <nav className={s.root}>
       <ul className={s.main}>
@@ -28,9 +38,19 @@ const NavBar: FC = () => {
           </Link>
         </li>
         <li className={s.item}>
-          <Link to="/authorization" className={s.link}>
-            Войти
-          </Link>
+          {currentUsername && (
+            <>
+              <span>{currentUsername}, </span>
+              <Button type="button" buttonStyle="link" onClick={handleLogout}>
+                Выйти
+              </Button>
+            </>
+          )}
+          {!currentUsername && (
+            <Link to="/authorization" className={s.link}>
+              Войти
+            </Link>
+          )}
         </li>
       </ul>
     </nav>
