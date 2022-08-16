@@ -1,3 +1,5 @@
+@use '../../../styles/variables' as *;
+
 .root {
   display: flex;
   flex-direction: column;
@@ -9,4 +11,21 @@
   width: 100%;
   border-radius: 5px;
   border: none;
+
+  &:disabled {
+    color: $disabled;
+    background-color: $disabled-light;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+}
+
+.validateError {
+  color: $error;
+  font-size: 1.6rem;
+
+  &::before {
+    display: inline;
+    content: "⚠ ";
+  }
 }
