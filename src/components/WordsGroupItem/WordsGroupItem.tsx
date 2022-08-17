@@ -1,13 +1,13 @@
 import { FC, MouseEvent, PropsWithChildren } from 'react';
-import s from './EnglishLevelButton.module.scss';
+import s from './WordsGroupItem.module.scss';
 
-interface EnglishLevelButtonProps {
+interface WordsGroupItemProps {
   active?: boolean;
   className?: string | string[];
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-const EnglishLevelButton: FC<PropsWithChildren<EnglishLevelButtonProps>> = ({
+const WordsGroupItem: FC<PropsWithChildren<WordsGroupItemProps>> = ({
   active,
   className,
   onClick,
@@ -30,4 +30,4 @@ const EnglishLevelButton: FC<PropsWithChildren<EnglishLevelButtonProps>> = ({
   );
 };
 
-export default EnglishLevelButton;
+export default WordsGroupItem;
