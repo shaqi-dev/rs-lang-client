@@ -2,7 +2,11 @@
 
 .root {
   width: 200px;
-  height: 40px;
+  height: 80px;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -13,5 +17,20 @@
 
   &_active {
     background-color: $active;
+
+    .wordTranslate {
+      opacity: 1;
+    }
   }
+}
+
+.wordOriginal {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.wordTranslate {
+  opacity: 0.3;
+  font-size: 1.6rem;
+  align-self: flex-end;
 }

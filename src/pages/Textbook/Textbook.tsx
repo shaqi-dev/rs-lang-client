@@ -44,12 +44,6 @@ const Textbook: FC = () => {
     }
   };
 
-  const handleClickWord = (e: MouseEvent<HTMLButtonElement>): void => {
-    const button = e.target as HTMLButtonElement;
-    const word = currentWords.filter((item) => item.word === button.innerText)[0];
-    setCurrentWord(word);
-  };
-
   const levelButtons = englishLevels.map((level) => (
     <EnglishLevelButton
       key={level.toLowerCase()}
@@ -62,12 +56,7 @@ const Textbook: FC = () => {
 
   const wordElements = currentWords.map((word, i) => {
     const isActive = (currentWord && currentWord.word === word.word) || (!currentWord && i === 0);
-
-    return (
-      <WordButton key={word.word} active={isActive} onClick={handleClickWord}>
-        {word.word}
-      </WordButton>
-    );
+    return <WordButton key={word.word} word={word} active={isActive} onClick={setCurrentWord} />;
   });
 
   const handleChangePage = ({ selected }: { selected: number }): void =>
