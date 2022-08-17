@@ -13,6 +13,8 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
     transcription,
     textMeaning,
     textMeaningTranslate,
+    textExample,
+    textExampleTranslate,
   } = word;
 
   return (
@@ -22,14 +24,23 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
         <span className={s.word_transcription}>{transcription}</span>
         <p className={s.word_translate}>{wordTranslate}</p>
       </div>
-      <div className={s.textMeaning}>
-        <p className={s.textBlockTitle}>Значение слова:</p>
+      <div className={s.textBlock}>
+        <p className={s.textBlock_title}>Значение слова:</p>
         {/* dangerouslySetInnerHTML is used to parse JSX from string, to avoid adding large third party bundle */}
         <p
-          className={s.textMeaning_original}
+          className={s.textBlock_original}
           dangerouslySetInnerHTML={{ __html: `- ${textMeaning}` }}
         />
-        <p className={s.textMeaning_translate}>- {textMeaningTranslate}</p>
+        <p className={s.textBlock_translate}>- {textMeaningTranslate}</p>
+      </div>
+      <div className={s.textBlock}>
+        <p className={s.textBlock_title}>Пример использования:</p>
+        {/* dangerouslySetInnerHTML is used to parse JSX from string, to avoid adding large third party bundle */}
+        <p
+          className={s.textBlock_original}
+          dangerouslySetInnerHTML={{ __html: `- ${textExample}` }}
+        />
+        <p className={s.textBlock_translate}>- {textExampleTranslate}</p>
       </div>
     </div>
   );

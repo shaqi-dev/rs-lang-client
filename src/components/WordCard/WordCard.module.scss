@@ -27,11 +27,7 @@
   }
 }
 
-.textBlockTitle {
-  font-size: 2rem;
-}
-
-.textMeaning {
+.textBlock {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -40,6 +36,10 @@
   i {
     font-style: normal;
     font-weight: bold;
+  }
+
+  &_title {
+    font-size: 2rem;
   }
 
   // &_original {
