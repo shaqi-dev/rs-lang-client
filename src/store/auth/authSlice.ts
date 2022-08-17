@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AuthState } from '../../interfaces/auth';
 import type { RootState } from '..';
-
-export interface AuthState {
-  username: string | null;
-  userId: string | null;
-  accessToken: string | null;
-  refreshToken: string | null;
-}
 
 const initialState: AuthState = {
   username: null,
@@ -26,8 +20,6 @@ const authSlice = createSlice({
       state.userId = userId;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-
-      localStorage.setItem('auth', JSON.stringify(state));
     },
     logOut: (state) => {
       const { username, userId, accessToken, refreshToken } = initialState;
@@ -36,8 +28,6 @@ const authSlice = createSlice({
       state.userId = userId;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
-
-      localStorage.removeItem('auth');
     },
   },
 });

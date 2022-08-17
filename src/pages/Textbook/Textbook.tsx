@@ -6,23 +6,31 @@ import WordButton from '../../components/WordButton';
 import ErrorBanner from '../../components/ErrorBanner';
 import { getWords } from '../../services/words';
 import type { Word } from '../../interfaces/words';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+  selectCurrentGroup,
+  selectCurrentPage,
+  setGroup,
+  setPage,
+} from '../../store/textbook/textbookSlice';
 import s from './Textbook.module.scss';
 
-const englishLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+const wordsGroups = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const Textbook: FC = () => {
-  const [currentLevel, setCurrentLevel] = useState<string>(englishLevels[0]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const dispatch = useAppDispatch();
+  const group = useAppSelector(selectCurrentGroup);
+  const page = useAppSelector(selectCurrentPage);
+  const maxPages = 30;
+
   const [currentWords, setCurrentWords] = useState<Word[]>([]);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [serverError, setServerError] = useState<Error | null>(null);
 
-  const maxPages = 30;
-
   const updateWords = useCallback(async (): Promise<void> => {
     const { data, error } = await getWords({
-      group: englishLevels.indexOf(currentLevel),
-      page: currentPage - 1,
+      group,
+      page,
     });
 
     if (error) setServerError(error);
@@ -30,52 +38,54 @@ const Textbook: FC = () => {
       setCurrentWords(data);
       setCurrentWord(data[0]);
     }
-  }, [currentLevel, currentPage]);
+  }, [group, page]);
 
   useEffect(() => {
     updateWords();
-  }, [currentLevel, currentPage, updateWords]);
+  }, [group, page, updateWords]);
 
-  const handleClickLevel = (e: MouseEvent<HTMLButtonElement>): void => {
+  const handleClickGroup = (e: MouseEvent<HTMLButtonElement>): void => {
     const { innerText } = e.target as HTMLButtonElement;
-    if (currentLevel !== innerText) {
-      setCurrentLevel(innerText);
-      setCurrentPage(1);
+    const selectedGroup = wordsGroups.indexOf(innerText);
+
+    if (group !== selectedGroup) {
+      dispatch(setGroup(selectedGroup));
+      dispatch(setPage(0));
     }
   };
 
   const handleClickWord = (e: MouseEvent<HTMLButtonElement>): void => {
     const button = e.target as HTMLButtonElement;
-    const word = currentWords.filter((item) => item.word === button.innerText)[0];
-    setCurrentWord(word);
+    const selectedWord = currentWords.filter((word) => word.word === button.innerText)[0];
+    setCurrentWord(selectedWord);
   };
 
-  const levelButtons = englishLevels.map((level) => (
-    <EnglishLevelButton
-      key={level.toLowerCase()}
-      active={currentLevel === level}
-      onClick={handleClickLevel}
-    >
-      {level}
-    </EnglishLevelButton>
-  ));
+  const levelButtons = wordsGroups.map((groupName, i) => {
+    const active = i === group;
+    return (
+      <EnglishLevelButton key={groupName} active={active} onClick={handleClickGroup}>
+        {groupName}
+      </EnglishLevelButton>
+    );
+  });
 
   const wordElements = currentWords.map((word, i) => {
-    const isActive = (currentWord && currentWord.word === word.word) || (!currentWord && i === 0);
+    const active = (currentWord && currentWord.word === word.word) || (!currentWord && i === 0);
 
     return (
-      <WordButton key={word.word} active={isActive} onClick={handleClickWord}>
+      <WordButton key={word.word} active={active} onClick={handleClickWord}>
         {word.word}
       </WordButton>
     );
   });
 
-  const handleChangePage = ({ selected }: { selected: number }): void =>
-    setCurrentPage(selected + 1);
+  const handleChangePage = ({ selected }: { selected: number }): void => {
+    dispatch(setPage(selected));
+  };
 
   const getPageRangeDisplayedValue = (): number => {
-    if (currentPage === 1 || currentPage === 29 || currentPage === 30) return 5;
-    if (currentPage === 2 || currentPage === 3 || currentPage === 28) {
+    if (page === 0 || page === 28 || page === 29) return 5;
+    if (page === 1 || page === 2 || page === 27) {
       return 4;
     }
     return 2;
@@ -90,7 +100,7 @@ const Textbook: FC = () => {
       marginPagesDisplayed={1}
       pageCount={maxPages}
       previousLabel="<"
-      forcePage={currentPage - 1}
+      forcePage={page}
       renderOnZeroPageCount={(): null => null}
       containerClassName={s.pagination_container}
       pageClassName={s.pagination_page}
@@ -126,7 +136,7 @@ const Textbook: FC = () => {
             {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
           </div>
         </div>
-        <div className={s.pagination}>{currentWords && paginate}</div>
+        <div className={s.pagination}>{currentWords.length > 0 && paginate}</div>
       </section>
     </ContentWrapper>
   );
