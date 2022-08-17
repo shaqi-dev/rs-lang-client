@@ -4,10 +4,19 @@
   gap: 40px;
 }
 
-.levelsSection, .wordsSection {
+.groupsSection, .wordsSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+}
+
+.groupsSection {
+  align-self: baseline;
+}
+
+.sectionTitle {
+  font-weight: bold;
+  font-size: 3.2rem;
 }
 
 .wordsBody {

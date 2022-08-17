@@ -1,13 +1,11 @@
 import { FC, useState, useEffect, useCallback } from 'react';
-import Paginate from '../../components/Paginate';
 import ContentWrapper from '../../layouts/ContentWrapper';
+import WordsGroupList from '../../components/WordsGroupList';
 import WordList from '../../components/WordList';
 import WordCard from '../../components/WordCard';
-import WordsGroupList from '../../components/WordsGroupList';
-import wordsGroupNames from '../../shared/wordsGroupNames';
+import Paginate from '../../components/Paginate';
 import ErrorBanner from '../../components/ErrorBanner';
-import { getWords } from '../../services/words';
-import type { Word } from '../../interfaces/words';
+import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   selectCurrentGroup,
@@ -15,6 +13,8 @@ import {
   setGroup,
   setPage,
 } from '../../store/textbook/textbookSlice';
+import { getWords } from '../../services/words';
+import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
 
 const Textbook: FC = () => {
@@ -57,22 +57,20 @@ const Textbook: FC = () => {
     dispatch(setPage(selected));
   };
 
-  const serverErrorBanner = (
-    <ErrorBanner>
-      `${serverError?.name}: ${serverError?.message}`
-    </ErrorBanner>
-  );
-
   return (
     <ContentWrapper className={s.wrapper}>
-      <section className={s.levelsSection}>
+      <section className={s.groupsSection}>
         <p className={s.sectionTitle}>Уровень сложности</p>
         <WordsGroupList onClickItem={handleClickWordsGroupItem} />
       </section>
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
         <div className={s.wordsBody}>
-          {serverError && serverErrorBanner}
+          {serverError && (
+            <ErrorBanner>
+              `${serverError?.name}: ${serverError?.message}`
+            </ErrorBanner>
+          )}
           {!serverError && (
             <WordList words={currentWords} activeWord={currentWord} onClickItem={setCurrentWord} />
           )}
