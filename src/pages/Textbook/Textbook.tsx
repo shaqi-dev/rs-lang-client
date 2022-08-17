@@ -3,6 +3,7 @@ import Paginate from '../../components/Paginate';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import EnglishLevelButton from '../../components/EnglishLevelButton';
 import WordList from '../../components/WordList';
+import WordCard from '../../components/WordCard';
 import ErrorBanner from '../../components/ErrorBanner';
 import { getWords } from '../../services/words';
 import type { Word } from '../../interfaces/words';
@@ -73,9 +74,7 @@ const Textbook: FC = () => {
           {!serverError && (
             <WordList words={currentWords} activeWord={currentWord} onClickItem={setCurrentWord} />
           )}
-          <div className={s.wordsCard}>
-            {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
-          </div>
+          {currentWord && <WordCard word={currentWord} />}
         </div>
         {currentWords && (
           <Paginate
