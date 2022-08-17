@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { TextbookState } from '../../interfaces/textBook';
 import type { RootState } from '..';
-
-export interface TextbookState {
-  group: number;
-  page: number;
-}
 
 const initialState: TextbookState = {
   group: 0,
