@@ -1,5 +1,5 @@
 import { FC, useState, useEffect, MouseEvent, useCallback } from 'react';
-import ReactPaginate from 'react-paginate';
+import Paginate from '../../components/Paginate';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import EnglishLevelButton from '../../components/EnglishLevelButton';
 import WordList from '../../components/WordList';
@@ -54,39 +54,6 @@ const Textbook: FC = () => {
     </EnglishLevelButton>
   ));
 
-  const handleChangePage = ({ selected }: { selected: number }): void =>
-    setCurrentPage(selected + 1);
-
-  const getPageRangeDisplayedValue = (): number => {
-    if (currentPage === 1 || currentPage === 29 || currentPage === 30) return 5;
-    if (currentPage === 2 || currentPage === 3 || currentPage === 28) {
-      return 4;
-    }
-    return 2;
-  };
-
-  const paginate = (
-    <ReactPaginate
-      breakLabel="..."
-      nextLabel=">"
-      onPageChange={handleChangePage}
-      pageRangeDisplayed={getPageRangeDisplayedValue()}
-      marginPagesDisplayed={1}
-      pageCount={maxPages}
-      previousLabel="<"
-      forcePage={currentPage - 1}
-      renderOnZeroPageCount={(): null => null}
-      containerClassName={s.pagination_container}
-      pageClassName={s.pagination_page}
-      pageLinkClassName={s.pagination_link}
-      previousClassName={s.pagination_prev}
-      nextClassName={s.pagination_next}
-      activeLinkClassName={s.pagination_activeLink}
-      disabledClassName={s.pagination_disabled}
-      breakClassName={s.pagination_break}
-    />
-  );
-
   const serverErrorBanner = (
     <ErrorBanner>
       `${serverError?.name}: ${serverError?.message}`
@@ -110,7 +77,13 @@ const Textbook: FC = () => {
             {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
           </div>
         </div>
-        <div className={s.pagination}>{currentWords && paginate}</div>
+        {currentWords && (
+          <Paginate
+            pageCount={maxPages}
+            forcePage={currentPage - 1}
+            onPageChage={({ selected }): void => setCurrentPage(selected + 1)}
+          />
+        )}
       </section>
     </ContentWrapper>
   );
