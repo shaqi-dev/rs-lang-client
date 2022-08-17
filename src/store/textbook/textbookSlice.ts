@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { TextbookState } from '../../interfaces/textBook';
+import type { TextbookState } from '../../interfaces/textbook';
 import type { RootState } from '..';
 
 const initialState: TextbookState = {
