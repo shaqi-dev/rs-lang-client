@@ -1,21 +1,30 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import WordItem from '../WordItem';
 import type { Word } from '../../interfaces/words';
 import s from './WordList.module.scss';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useGetWordsQuery } from '../../services/wordsApi';
-import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
+import {
+  setWord,
+  selectCurrentGroup,
+  selectCurrentPage,
+  selectCurrentWord,
+} from '../../store/textbook/textbookSlice';
 import ErrorBanner from '../ErrorBanner';
 
-interface WordListProps {
-  activeWord: Word | null;
-  onClickItem: (word: Word) => void;
-}
-
-const WordList: FC<WordListProps> = ({ activeWord, onClickItem }) => {
+const WordList: FC = () => {
+  const dispatch = useAppDispatch();
   const group: number = useAppSelector(selectCurrentGroup);
   const page: number = useAppSelector(selectCurrentPage);
+  const activeWord: Word | null = useAppSelector(selectCurrentWord);
+
   const { data, error, isLoading } = useGetWordsQuery({ group, page });
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setWord(data[0]));
+    }
+  }, [data, dispatch]);
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -30,6 +39,10 @@ const WordList: FC<WordListProps> = ({ activeWord, onClickItem }) => {
   }
 
   if (data) {
+    const handleClickWordItem = (word: Word): void => {
+      dispatch(setWord(word));
+    };
+
     return (
       <ul className={s.root}>
         {data.map((word, i) => {
@@ -37,7 +50,7 @@ const WordList: FC<WordListProps> = ({ activeWord, onClickItem }) => {
 
           return (
             <li key={word.word} className={s.listItem}>
-              <WordItem word={word} active={active} onClick={onClickItem} />
+              <WordItem word={word} active={active} onClick={handleClickWordItem} />
             </li>
           );
         })}
