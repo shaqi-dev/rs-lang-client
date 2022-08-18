@@ -1,10 +1,10 @@
 import useAuth from '../../services/useAuth';
-import { SignInUserData } from '../../interfaces/signIn';
+import type { SignInUserData, SignInResponse } from '../../interfaces/signIn';
 
 export const authApiSlice = useAuth.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation({
-      query: (userData: SignInUserData) => ({
+    login: builder.mutation<SignInResponse, SignInUserData>({
+      query: (userData) => ({
         url: 'signin',
         method: 'POST',
         body: { ...userData },

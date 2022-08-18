@@ -1,14 +1,9 @@
-import { BaseQueryApi, QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import {
-  FetchArgs,
-  FetchBaseQueryError,
-  FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
+import type { BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { logOut, setCredentials } from '../store/auth/authSlice';
+import { logout, setCredentials } from '../store/auth/authSlice';
 import { API_BASE } from './endpoints';
 import type { RootState } from '../store';
-import { SignInResponse } from '../interfaces/signIn';
+import type { SignInResponse } from '../interfaces/signIn';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE,
@@ -25,29 +20,27 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithReauth = async (
-  args: string | FetchArgs,
-  api: BaseQueryApi,
-  extraOptions: {},
-): Promise<QueryReturnValue<unknown, FetchBaseQueryError, FetchBaseQueryMeta>> => {
+const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let res = await baseQuery(args, api, extraOptions);
 
-  // "refresh token" feature below require testing
-  if (res?.error?.status === 'PARSING_ERROR' && res.error.originalStatus === 403) {
+  const isExpiredToken = res.error?.status === 'PARSING_ERROR' && res.error.originalStatus === 403;
+
+  if (isExpiredToken) {
     const state = api.getState() as RootState;
     const { username, userId } = state.auth;
 
-    const refreshResult = await baseQuery(`/users/${userId}/tokens`, api, extraOptions);
+    // Require testing
+    const { data } = await baseQuery(`/users/${userId}/tokens`, api, extraOptions);
 
-    if (refreshResult?.data) {
-      const { token: accessToken, refreshToken } = refreshResult.data as SignInResponse;
+    if (data) {
+      const { token: accessToken, refreshToken } = data as SignInResponse;
 
       api.dispatch(setCredentials({ username, userId, accessToken, refreshToken }));
 
       res = await baseQuery(args, api, extraOptions);
     }
   } else {
-    api.dispatch(logOut());
+    api.dispatch(logout());
   }
 
   return res;

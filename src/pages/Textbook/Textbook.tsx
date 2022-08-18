@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC, useState } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import WordsGroupList from '../../components/WordsGroupList';
 import WordList from '../../components/WordList';
@@ -13,7 +13,7 @@ import {
   setGroup,
   setPage,
 } from '../../store/textbook/textbookSlice';
-import { getWords } from '../../services/words';
+// import { getWords } from '../../services/words';
 import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
 
@@ -23,26 +23,26 @@ const Textbook: FC = () => {
   const page: number = useAppSelector(selectCurrentPage);
   const maxPages = 30;
 
-  const [currentWords, setCurrentWords] = useState<Word[]>([]);
+  const [currentWords] = useState<Word[]>([]);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
-  const [serverError, setServerError] = useState<Error | null>(null);
+  const [serverError] = useState<Error | null>(null);
 
-  const updateWords = useCallback(async (): Promise<void> => {
-    const { data, error } = await getWords({
-      group,
-      page,
-    });
+  // const updateWords = useCallback(async (): Promise<void> => {
+  //   const { data, error } = await getWords({
+  //     group,
+  //     page,
+  //   });
 
-    if (error) setServerError(error);
-    if (data) {
-      setCurrentWords(data);
-      setCurrentWord(data[0]);
-    }
-  }, [group, page]);
+  //   if (error) setServerError(error);
+  //   if (data) {
+  //     setCurrentWords(data);
+  //     setCurrentWord(data[0]);
+  //   }
+  // }, [group, page]);
 
-  useEffect(() => {
-    updateWords();
-  }, [group, page, updateWords]);
+  // useEffect(() => {
+  //   updateWords();
+  // }, [group, page, updateWords]);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -71,9 +71,7 @@ const Textbook: FC = () => {
               `${serverError?.name}: ${serverError?.message}`
             </ErrorBanner>
           )}
-          {!serverError && (
-            <WordList words={currentWords} activeWord={currentWord} onClickItem={setCurrentWord} />
-          )}
+          {!serverError && <WordList activeWord={currentWord} onClickItem={setCurrentWord} />}
           {currentWord && <WordCard word={currentWord} />}
         </div>
         {currentWords && (

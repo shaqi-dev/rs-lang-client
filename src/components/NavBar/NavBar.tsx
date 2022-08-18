@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { logOut, selectCurrentUsername } from '../../store/auth/authSlice';
+import { logout, selectCurrentUsername } from '../../store/auth/authSlice';
 import Button from '../Button';
 import Dropdown, { DropdownOption } from './Dropdown';
 import s from './NavBar.module.scss';
@@ -18,7 +18,7 @@ const NavBar: FC = () => {
   const currentUsername = useAppSelector(selectCurrentUsername);
 
   const handleLogout = (): void => {
-    dispatch(logOut());
+    dispatch(logout());
   };
 
   return (

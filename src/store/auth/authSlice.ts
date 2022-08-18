@@ -21,7 +21,7 @@ const authSlice = createSlice({
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
     },
-    logOut: (state) => {
+    logout: (state) => {
       const { username, userId, accessToken, refreshToken } = initialState;
 
       state.username = username;
@@ -32,7 +32,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setCredentials, logout } = authSlice.actions;
 
 export const selectCurrentUsername = (state: RootState): string | null => state.auth.username;
 export const selectCurrentUserId = (state: RootState): string | null => state.auth.userId;
