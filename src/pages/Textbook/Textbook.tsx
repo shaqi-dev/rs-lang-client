@@ -1,19 +1,19 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import WordsGroupList from '../../components/WordsGroupList';
 import WordList from '../../components/WordList';
 import WordCard from '../../components/WordCard';
 import Paginate from '../../components/Paginate';
-import ErrorBanner from '../../components/ErrorBanner';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   selectCurrentGroup,
   selectCurrentPage,
+  selectCurrentWord,
   setGroup,
   setPage,
 } from '../../store/textbook/textbookSlice';
-import { getWords } from '../../services/words';
+// import { getWords } from '../../services/words';
 import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
 
@@ -21,28 +21,27 @@ const Textbook: FC = () => {
   const dispatch = useAppDispatch();
   const group: number = useAppSelector(selectCurrentGroup);
   const page: number = useAppSelector(selectCurrentPage);
+  const word: Word | null = useAppSelector(selectCurrentWord);
   const maxPages = 30;
 
-  const [currentWords, setCurrentWords] = useState<Word[]>([]);
-  const [currentWord, setCurrentWord] = useState<Word | null>(null);
-  const [serverError, setServerError] = useState<Error | null>(null);
+  // const [currentWords] = useState<Word[]>([]);
 
-  const updateWords = useCallback(async (): Promise<void> => {
-    const { data, error } = await getWords({
-      group,
-      page,
-    });
+  // const updateWords = useCallback(async (): Promise<void> => {
+  //   const { data, error } = await getWords({
+  //     group,
+  //     page,
+  //   });
 
-    if (error) setServerError(error);
-    if (data) {
-      setCurrentWords(data);
-      setCurrentWord(data[0]);
-    }
-  }, [group, page]);
+  //   if (error) setServerError(error);
+  //   if (data) {
+  //     setCurrentWords(data);
+  //     setCurrentWord(data[0]);
+  //   }
+  // }, [group, page]);
 
-  useEffect(() => {
-    updateWords();
-  }, [group, page, updateWords]);
+  // useEffect(() => {
+  //   updateWords();
+  // }, [group, page, updateWords]);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -66,19 +65,10 @@ const Textbook: FC = () => {
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
         <div className={s.wordsBody}>
-          {serverError && (
-            <ErrorBanner>
-              `${serverError?.name}: ${serverError?.message}`
-            </ErrorBanner>
-          )}
-          {!serverError && (
-            <WordList words={currentWords} activeWord={currentWord} onClickItem={setCurrentWord} />
-          )}
-          {currentWord && <WordCard word={currentWord} />}
+          <WordList />
+          {word && <WordCard word={word} />}
         </div>
-        {currentWords && (
-          <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
-        )}
+        <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
       </section>
     </ContentWrapper>
   );
