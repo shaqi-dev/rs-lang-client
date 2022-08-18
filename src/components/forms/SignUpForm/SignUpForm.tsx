@@ -1,9 +1,9 @@
-import { FC, useRef, useState, ReactNode } from 'react';
+import { FC, useRef, ReactNode, useState } from 'react';
 import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import ErrorBanner from '../../ErrorBanner';
 import Button from '../../Button';
-import createUser from '../../../services/createUser';
+import { useCreateUserMutation } from '../../../services/authApi';
 import { RE_EMAIL, RE_USERNAME, RE_PASSWORD } from '../../../shared/validationRE';
 import {
   EMAIL_REQUIRED,
@@ -15,16 +15,18 @@ import {
   PASSWORD_REPEAT_REQUIRED,
   PASSWORD_TOO_WEAK,
 } from '../../../shared/validationErrors';
-import { SignUpUserData, SignUpFormData } from '../../../interfaces/signUp';
+import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/queryErrorHelpers';
+import { SignUpUserData, SignUpFormData, SignUpResponse } from '../../../interfaces/signUp';
 import s from './SignUpForm.module.scss';
 
 const SignUpForm: FC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [serverError, setServerError] = useState<Error | null>(null);
-  const { register, handleSubmit, control, watch } = useForm<SignUpFormData>();
+  const { register, handleSubmit, control, watch, reset } = useForm<SignUpFormData>();
   const { errors, isValid } = useFormState<SignUpFormData>({ control });
   const passwordRef = useRef<string>('');
   passwordRef.current = watch('password', '');
+
+  const [apiError, setApiError] = useState<string>('');
+  const [createUser, { isLoading }] = useCreateUserMutation();
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (
     formData: SignUpFormData,
@@ -38,20 +40,20 @@ const SignUpForm: FC = () => {
         password,
       };
 
-      setServerError(null);
-      setIsLoading(true);
+      try {
+        const data: SignUpResponse = await createUser(userData).unwrap();
 
-      const { data, error } = await createUser(userData);
-
-      setIsLoading(false);
-
-      if (error) setServerError(error);
-      if (data) console.log(data);
+        console.log(data);
+        reset();
+      } catch (e) {
+        if (isFetchBaseQueryError(e)) {
+          const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
+          setApiError(errorMessage);
+        } else if (isErrorWithMessage(e)) {
+          setApiError(e.message);
+        }
+      }
     }
-  };
-
-  const handleChange = (): void => {
-    if (serverError) setServerError(null);
   };
 
   const renderErrorMessage = ({ message }: { message: string }): ReactNode => (
@@ -59,8 +61,8 @@ const SignUpForm: FC = () => {
   );
 
   return (
-    <form className={s.root} onSubmit={handleSubmit(onSubmit)} onChange={handleChange}>
-      {serverError && <ErrorBanner>{serverError.message}</ErrorBanner>}
+    <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
+      {apiError && <ErrorBanner>API Error: {apiError}</ErrorBanner>}
       <input
         type="email"
         placeholder="Эл. почта"

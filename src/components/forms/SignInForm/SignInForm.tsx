@@ -9,23 +9,21 @@ import { useLoginMutation } from '../../../services/authApi';
 import { setCredentials } from '../../../store/auth/authSlice';
 import type { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
 import s from './SignInForm.module.scss';
+import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/queryErrorHelpers';
 
 const SignInForm: FC = () => {
-  const [, setLoading] = useState<boolean>(false);
-  const [serverError, setServerError] = useState<Error | null>(null);
-  const { register, handleSubmit, control } = useForm<SignInUserData>();
+  const dispatch = useAppDispatch();
+
+  const { register, handleSubmit, control, reset } = useForm<SignInUserData>();
   const { errors, isValid } = useFormState<SignInUserData>({ control });
 
+  const [apiError, setApiError] = useState<string>('');
   const [loginUser, { isLoading }] = useLoginMutation();
-  const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<SignInUserData> = async (
     userData: SignInUserData,
   ): Promise<void> => {
     if (isValid) {
-      setServerError(null);
-      setLoading(true);
-
       try {
         const data: SignInResponse = await loginUser(userData).unwrap();
         const { name: username, userId, token: accessToken, refreshToken } = data;
@@ -38,16 +36,16 @@ const SignInForm: FC = () => {
             refreshToken,
           }),
         );
+        reset();
       } catch (e) {
-        setServerError(e as Error);
+        if (isFetchBaseQueryError(e)) {
+          const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
+          setApiError(errorMessage);
+        } else if (isErrorWithMessage(e)) {
+          setApiError(e.message);
+        }
       }
-
-      setLoading(false);
     }
-  };
-
-  const handleChange = (): void => {
-    if (serverError) setServerError(null);
   };
 
   const renderErrorMessage = ({ message }: { message: string }): ReactNode => (
@@ -55,8 +53,8 @@ const SignInForm: FC = () => {
   );
 
   return (
-    <form className={s.root} onSubmit={handleSubmit(onSubmit)} onChange={handleChange}>
-      {serverError && <ErrorBanner>{serverError.message}</ErrorBanner>}
+    <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
+      {apiError && <ErrorBanner>API Error: {apiError}</ErrorBanner>}
       <input
         type="email"
         placeholder="Эл. почта"
