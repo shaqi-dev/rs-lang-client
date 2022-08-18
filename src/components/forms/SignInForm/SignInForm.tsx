@@ -5,7 +5,7 @@ import { EMAIL_REQUIRED, PASSWORD_REQUIRED } from '../../../shared/validationErr
 import Button from '../../Button';
 import ErrorBanner from '../../ErrorBanner';
 import { useAppDispatch } from '../../../hooks/redux';
-import { useLoginMutation } from '../../../store/auth/authApiSlice';
+import { useLoginMutation } from '../../../services/authApi';
 import { setCredentials } from '../../../store/auth/authSlice';
 import type { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
 import s from './SignInForm.module.scss';

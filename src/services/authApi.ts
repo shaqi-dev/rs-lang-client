@@ -1,5 +1,5 @@
-import useAuth from '../../services/useAuth';
-import type { SignInUserData, SignInResponse } from '../../interfaces/signIn';
+import useAuth from '../hooks/useAuth';
+import type { SignInUserData, SignInResponse } from '../interfaces/signIn';
 
 export const authApiSlice = useAuth.injectEndpoints({
   endpoints: (builder) => ({

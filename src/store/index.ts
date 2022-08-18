@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { loadState, saveState } from '../shared/localStorage';
 import counter from './counter/counter.slice';
-import useAuth from '../services/useAuth';
+import useAuth from '../hooks/useAuth';
 import auth from './auth/authSlice';
 import textbook from './textbook/textbookSlice';
 import { wordsApi } from '../services/wordsApi';

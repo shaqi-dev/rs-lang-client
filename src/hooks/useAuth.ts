@@ -1,7 +1,7 @@
 import type { BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout, setCredentials } from '../store/auth/authSlice';
-import { API_BASE } from './endpoints';
+import { API_BASE } from '../services/endpoints';
 import type { RootState } from '../store';
 import type { SignInResponse } from '../interfaces/signIn';
 
