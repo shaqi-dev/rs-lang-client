@@ -2,7 +2,8 @@
 
 .root {
   width: 200px;
-  height: 80px;
+  height: 100%;
+  min-height: 80px;
   padding: 10px 15px;
   display: flex;
   flex-direction: column;
