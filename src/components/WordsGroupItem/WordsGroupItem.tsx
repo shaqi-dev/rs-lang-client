@@ -1,13 +1,13 @@
-import { FC, PropsWithChildren, MouseEvent } from 'react';
-import s from './WordButton.module.scss';
+import { FC, MouseEvent, PropsWithChildren } from 'react';
+import s from './WordsGroupItem.module.scss';
 
-export interface WordButtonProps {
+interface WordsGroupItemProps {
   active?: boolean;
   className?: string | string[];
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-const WordButton: FC<PropsWithChildren<WordButtonProps>> = ({
+const WordsGroupItem: FC<PropsWithChildren<WordsGroupItemProps>> = ({
   active,
   className,
   onClick,
@@ -30,4 +30,4 @@ const WordButton: FC<PropsWithChildren<WordButtonProps>> = ({
   );
 };
 
-export default WordButton;
+export default WordsGroupItem;

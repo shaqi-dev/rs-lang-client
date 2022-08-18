@@ -1,11 +1,11 @@
-import { FC, useState, useEffect, MouseEvent, useCallback } from 'react';
-import ReactPaginate from 'react-paginate';
+import { FC, useState, useEffect, useCallback } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
-import EnglishLevelButton from '../../components/EnglishLevelButton';
-import WordButton from '../../components/WordButton';
+import WordsGroupList from '../../components/WordsGroupList';
+import WordList from '../../components/WordList';
+import WordCard from '../../components/WordCard';
+import Paginate from '../../components/Paginate';
 import ErrorBanner from '../../components/ErrorBanner';
-import { getWords } from '../../services/words';
-import type { Word } from '../../interfaces/words';
+import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   selectCurrentGroup,
@@ -13,14 +13,14 @@ import {
   setGroup,
   setPage,
 } from '../../store/textbook/textbookSlice';
+import { getWords } from '../../services/words';
+import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
-
-const wordsGroups = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
 const Textbook: FC = () => {
   const dispatch = useAppDispatch();
-  const group = useAppSelector(selectCurrentGroup);
-  const page = useAppSelector(selectCurrentPage);
+  const group: number = useAppSelector(selectCurrentGroup);
+  const page: number = useAppSelector(selectCurrentPage);
   const maxPages = 30;
 
   const [currentWords, setCurrentWords] = useState<Word[]>([]);
@@ -44,9 +44,8 @@ const Textbook: FC = () => {
     updateWords();
   }, [group, page, updateWords]);
 
-  const handleClickGroup = (e: MouseEvent<HTMLButtonElement>): void => {
-    const { innerText } = e.target as HTMLButtonElement;
-    const selectedGroup = wordsGroups.indexOf(innerText);
+  const handleClickWordsGroupItem = (groupName: string): void => {
+    const selectedGroup: number = wordsGroupNames.indexOf(groupName);
 
     if (group !== selectedGroup) {
       dispatch(setGroup(selectedGroup));
@@ -54,89 +53,32 @@ const Textbook: FC = () => {
     }
   };
 
-  const handleClickWord = (e: MouseEvent<HTMLButtonElement>): void => {
-    const button = e.target as HTMLButtonElement;
-    const selectedWord = currentWords.filter((word) => word.word === button.innerText)[0];
-    setCurrentWord(selectedWord);
-  };
-
-  const levelButtons = wordsGroups.map((groupName, i) => {
-    const active = i === group;
-    return (
-      <EnglishLevelButton key={groupName} active={active} onClick={handleClickGroup}>
-        {groupName}
-      </EnglishLevelButton>
-    );
-  });
-
-  const wordElements = currentWords.map((word, i) => {
-    const active = (currentWord && currentWord.word === word.word) || (!currentWord && i === 0);
-
-    return (
-      <WordButton key={word.word} active={active} onClick={handleClickWord}>
-        {word.word}
-      </WordButton>
-    );
-  });
-
   const handleChangePage = ({ selected }: { selected: number }): void => {
     dispatch(setPage(selected));
   };
 
-  const getPageRangeDisplayedValue = (): number => {
-    if (page === 0 || page === 28 || page === 29) return 5;
-    if (page === 1 || page === 2 || page === 27) {
-      return 4;
-    }
-    return 2;
-  };
-
-  const paginate = (
-    <ReactPaginate
-      breakLabel="..."
-      nextLabel=">"
-      onPageChange={handleChangePage}
-      pageRangeDisplayed={getPageRangeDisplayedValue()}
-      marginPagesDisplayed={1}
-      pageCount={maxPages}
-      previousLabel="<"
-      forcePage={page}
-      renderOnZeroPageCount={(): null => null}
-      containerClassName={s.pagination_container}
-      pageClassName={s.pagination_page}
-      pageLinkClassName={s.pagination_link}
-      previousClassName={s.pagination_prev}
-      nextClassName={s.pagination_next}
-      activeLinkClassName={s.pagination_activeLink}
-      disabledClassName={s.pagination_disabled}
-      breakClassName={s.pagination_break}
-    />
-  );
-
-  const serverErrorBanner = (
-    <ErrorBanner>
-      `${serverError?.name}: ${serverError?.message}`
-    </ErrorBanner>
-  );
-
   return (
     <ContentWrapper className={s.wrapper}>
-      <section className={s.levelsSection}>
+      <section className={s.groupsSection}>
         <p className={s.sectionTitle}>Уровень сложности</p>
-        <div className={s.levelsButtons}>{levelButtons}</div>
+        <WordsGroupList onClickItem={handleClickWordsGroupItem} />
       </section>
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
         <div className={s.wordsBody}>
-          <div className={s.wordsButtons}>
-            {serverError && serverErrorBanner}
-            {!serverError && wordElements}
-          </div>
-          <div className={s.wordsCard}>
-            {currentWord && `${currentWord.word} - ${currentWord.wordTranslate}`}
-          </div>
+          {serverError && (
+            <ErrorBanner>
+              `${serverError?.name}: ${serverError?.message}`
+            </ErrorBanner>
+          )}
+          {!serverError && (
+            <WordList words={currentWords} activeWord={currentWord} onClickItem={setCurrentWord} />
+          )}
+          {currentWord && <WordCard word={currentWord} />}
         </div>
-        <div className={s.pagination}>{currentWords.length > 0 && paginate}</div>
+        {currentWords && (
+          <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
+        )}
       </section>
     </ContentWrapper>
   );

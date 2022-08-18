@@ -4,69 +4,22 @@
   gap: 40px;
 }
 
-.levelsSection, .wordsSection {
+.groupsSection, .wordsSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
-.levelsButtons {
-  display: flex;
-  gap: 10px;
+.groupsSection {
+  align-self: baseline;
+}
+
+.sectionTitle {
+  font-weight: bold;
+  font-size: 3.2rem;
 }
 
 .wordsBody {
   display: flex;
   gap: 40px;
-}
-
-.wordsButtons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.wordsCard {
-  min-width: 400px;
-  background-color: #9696ff;
-}
-
-.pagination {
-  &_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &_page, &_break, &_prev, &_next {
-    width: 40px;
-    height: 40px;
-    list-style: none;
-    text-align: center;
-  }
-
-  &_link, &_break a, &_prev a, &_next a {
-    height: 40px;
-    line-height: 40px;
-    display: block;
-    cursor: pointer;
-    border-radius: 20px;
-
-    &:hover {
-      background-color: $hover;
-    }
-  }
-
-  &_activeLink {
-    background-color: $active;
-  }
-
-  &_disabled {
-    color: $disabled;
-    pointer-events: none;
-  }
-
-  &_break {
-    pointer-events: none;
-  }
 }
