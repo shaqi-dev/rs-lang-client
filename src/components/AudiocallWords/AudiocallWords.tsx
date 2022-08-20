@@ -1,15 +1,21 @@
 import { FC, useState } from 'react';
 import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
+import AudiocallAnswers from '../AudiocallAnswers';
 
 const AudiocallWords: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
   const [currentWord, setCurrentWord] = useState(0);
-  const words = data?.slice(0, 10);
+  const [shouldContinue, setShouldContinue] = useState(false);
 
-  function showNextWord(): void {
+  const continueTest = (): void => {
+    setShouldContinue(true);
+  };
+
+  const showNextWord = (): void => {
     setCurrentWord(currentWord + 1);
-  }
+    setShouldContinue(false);
+  };
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -23,17 +29,23 @@ const AudiocallWords: FC = () => {
     return <ErrorBanner>{error.message}</ErrorBanner>;
   }
 
-  if (words && currentWord < words.length) {
+  if (data && currentWord < 10) {
     return (
       <div>
-        <button type="button" onClick={showNextWord}>
-          {currentWord}
-        </button>
-        <p>{words[currentWord].word}</p>
+        <p>{data[currentWord].word}</p>
+        <div>
+          <AudiocallAnswers words={data} handler={continueTest} />
+        </div>
+        {shouldContinue ? (
+          <button type="button" onClick={showNextWord}>
+            Continue
+          </button>
+        ) : null}
       </div>
     );
   }
-  if (words && currentWord === words.length) {
+
+  if (data && currentWord === 10) {
     return <p>Thats it!</p>;
   }
 
