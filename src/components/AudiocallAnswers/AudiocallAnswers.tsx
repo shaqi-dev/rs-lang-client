@@ -1,23 +1,14 @@
 import { FC } from 'react';
-import { Word } from '../../interfaces/words';
 
-const AudiocallAnswers: FC<{ words: Word[]; handler: () => void }> = (props) => {
-  const { words, handler } = props;
-  const choices: number[] = [];
-
-  for (let i = 0; i < 5; i += 1) {
-    const index: number = Math.floor(Math.random() * words.length);
-    if (choices.indexOf(index) !== -1) {
-      i -= 1;
-    } else choices.push(index);
-  }
+const AudiocallAnswers: FC<{ words: string[]; chooseWord: () => void }> = (props) => {
+  const { words, chooseWord } = props;
 
   return (
     <div>
-      {choices.map((wordIndex) => {
+      {words.map((word) => {
         return (
-          <button type="button" key={wordIndex} onClick={handler}>
-            {words[wordIndex].wordTranslate}
+          <button type="button" key={word} onClick={chooseWord}>
+            {word}
           </button>
         );
       })}
