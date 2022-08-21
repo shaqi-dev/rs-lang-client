@@ -10,7 +10,7 @@ const AudiocallAnswers: FC<{
     <div>
       {answers.map((word) => {
         return (
-          <button type="button" key={word} onClick={(e): void => chooseWord(e)}>
+          <button type="button" key={word} id={word} onClick={(e): void => chooseWord(e)}>
             {word}
           </button>
         );

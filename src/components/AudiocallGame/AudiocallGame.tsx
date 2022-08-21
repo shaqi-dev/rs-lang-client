@@ -8,6 +8,7 @@ const AudiocallGame: FC = () => {
   const [correctAnswer, setCorrectAnswer] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
+  const [wrongAnswer, setWrongAnswer] = useState<HTMLButtonElement | null>(null);
 
   if (data) {
     const generateAnswers = (): void => {
@@ -38,13 +39,26 @@ const AudiocallGame: FC = () => {
       if (chosenAnswer.textContent === data[correctAnswer].word) {
         chosenAnswer.style.backgroundColor = 'green';
       } else {
+        setWrongAnswer(chosenAnswer);
+        const rightAnswer: HTMLButtonElement = document.querySelector(
+          `#${data[correctAnswer].word}`,
+        ) as HTMLButtonElement;
+
         chosenAnswer.style.backgroundColor = 'red';
+        rightAnswer.style.backgroundColor = 'green';
       }
 
       setShouldContinue(true);
     };
 
     const setNextCorrectAnswer = (): void => {
+      const rightAnswer: HTMLButtonElement = document.querySelector(
+        `#${data[correctAnswer].word}`,
+      ) as HTMLButtonElement;
+
+      if (wrongAnswer) wrongAnswer.style.backgroundColor = '';
+      rightAnswer.style.backgroundColor = '';
+
       setCorrectAnswer(correctAnswer + 1);
       setShouldContinue(false);
       setAnswers([]);
