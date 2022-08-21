@@ -35,6 +35,11 @@ const AudiocallGame: FC = () => {
 
     const chooseWord = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
       const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
+      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
+
+      allAnswers?.forEach((button) => {
+        button.disabled = true;
+      });
 
       if (chosenAnswer.textContent === data[correctAnswer].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
@@ -55,6 +60,11 @@ const AudiocallGame: FC = () => {
       const rightAnswer: HTMLButtonElement = document.querySelector(
         `#${data[correctAnswer].wordTranslate}`,
       ) as HTMLButtonElement;
+      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
+
+      allAnswers?.forEach((button) => {
+        button.disabled = false;
+      });
 
       if (wrongAnswer) wrongAnswer.style.backgroundColor = '';
       rightAnswer.style.backgroundColor = '';
@@ -80,7 +90,7 @@ const AudiocallGame: FC = () => {
 
     if (data && correctAnswer < 10) {
       return (
-        <div>
+        <div className="audiocall-answers">
           <p>{data[correctAnswer].wordTranslate}</p>
           <div>
             <AudiocallAnswers answers={answers} chooseWord={chooseWord} />
