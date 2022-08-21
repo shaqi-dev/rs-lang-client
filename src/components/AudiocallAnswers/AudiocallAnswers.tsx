@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
-const AudiocallAnswers: FC<{ words: string[]; chooseWord: () => void }> = (props) => {
-  const { words, chooseWord } = props;
+const AudiocallAnswers: FC<{ answers: string[]; chooseWord: () => void }> = (props) => {
+  const { answers, chooseWord } = props;
 
   return (
     <div>
-      {words.map((word) => {
+      {answers.map((word) => {
         return (
           <button type="button" key={word} onClick={chooseWord}>
             {word}

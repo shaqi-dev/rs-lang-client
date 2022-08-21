@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import s from './Audiocall.module.scss';
 import ContentWrapper from '../../layouts/ContentWrapper';
-import AudiocallWords from '../../components/AudiocallWords';
+import AudiocallGame from '../../components/AudiocallGame';
 
 const Audiocall: FC = () => {
   const [gameStarted, setGameStart] = useState(false);
@@ -13,7 +13,7 @@ const Audiocall: FC = () => {
           Start Game
         </button>
       ) : (
-        <AudiocallWords />
+        <AudiocallGame />
       )}
     </ContentWrapper>
   );

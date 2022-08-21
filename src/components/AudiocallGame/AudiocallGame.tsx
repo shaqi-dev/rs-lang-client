@@ -3,17 +3,19 @@ import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
 
-const AudiocallWords: FC = () => {
+const AudiocallGame: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
-  const [currentWord, setCurrentWord] = useState(0);
-  const [shouldContinue, setShouldContinue] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const choices: string[] = [];
+  const [shouldContinue, setShouldContinue] = useState(false);
 
-  const generateWords = (): void => {
+  const generateAnswers = (): void => {
     if (data) {
+      const choices: string[] = [];
+
       for (let i = 0; i < 5; i += 1) {
         const index: number = Math.floor(Math.random() * data.length);
+
         if (choices.indexOf(data[index].word) !== -1) {
           i -= 1;
         } else choices.push(data[index].word);
@@ -23,12 +25,12 @@ const AudiocallWords: FC = () => {
     }
   };
 
-  const continueTest = (): void => {
+  const chooseWord = (): void => {
     setShouldContinue(true);
   };
 
-  const showNextWord = (): void => {
-    setCurrentWord(currentWord + 1);
+  const setNextCorrectAnswer = (): void => {
+    setCorrectAnswer(correctAnswer + 1);
     setShouldContinue(false);
     setAnswers([]);
   };
@@ -45,17 +47,17 @@ const AudiocallWords: FC = () => {
     return <ErrorBanner>{error.message}</ErrorBanner>;
   }
 
-  if (answers.length === 0) generateWords();
+  if (answers.length === 0) generateAnswers();
 
-  if (data && currentWord < 10) {
+  if (data && correctAnswer < 10) {
     return (
       <div>
-        <p>{data[currentWord].word}</p>
+        <p>{data[correctAnswer].word}</p>
         <div>
-          <AudiocallAnswers words={answers} chooseWord={continueTest} />
+          <AudiocallAnswers answers={answers} chooseWord={chooseWord} />
         </div>
         {shouldContinue ? (
-          <button type="button" onClick={showNextWord}>
+          <button type="button" onClick={setNextCorrectAnswer}>
             Continue
           </button>
         ) : null}
@@ -63,11 +65,11 @@ const AudiocallWords: FC = () => {
     );
   }
 
-  if (data && currentWord === 10) {
+  if (data && correctAnswer === 10) {
     return <p>Thats it!</p>;
   }
 
   return null;
 };
 
-export default AudiocallWords;
+export default AudiocallGame;
