@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Word } from '../../interfaces/words';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
@@ -11,6 +11,7 @@ export interface WordCardProps {
 }
 
 const WordCard: FC<WordCardProps> = ({ word }) => {
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const {
     word: wordOriginal,
     wordTranslate,
@@ -27,14 +28,19 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
 
   const imageSource = `${API_BASE}/${image}`;
 
-  const playAudio = async (): Promise<void> => {
-    const audio = new Audio(`${API_BASE}/${audioSrc}`);
-    const audioExample = new Audio(`${API_BASE}/${audioExampleSrc}`);
-    const audioMeaning = new Audio(`${API_BASE}/${audioMeaningSrc}`);
+  const audio = new Audio(`${API_BASE}/${audioSrc}`);
+  const audioMeaning = new Audio(`${API_BASE}/${audioMeaningSrc}`);
+  const audioExample = new Audio(`${API_BASE}/${audioExampleSrc}`);
 
-    audio.addEventListener('ended', () => audioMeaning.play());
-    audioMeaning.addEventListener('ended', () => audioExample.play());
-    audio.play();
+  audio.addEventListener('ended', () => audioMeaning.play());
+  audioMeaning.addEventListener('ended', () => audioExample.play());
+  audioExample.addEventListener('ended', () => setIsPlaying(false));
+
+  const playAudio = (): void => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+      audio.play();
+    }
   };
 
   return (
