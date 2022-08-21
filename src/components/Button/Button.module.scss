@@ -33,3 +33,23 @@
     color: $hover;
   }
 }
+
+.link {
+  font-size: 1.8rem;
+  padding: 0px;
+  border: none;
+  color: $primary;
+  background: none;
+
+  &:hover {
+    color: $hover;
+  }
+}
+
+.active {
+  color: $active;
+}
+
+.inactive {
+  opacity: 0.5;
+}

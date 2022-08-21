@@ -9,6 +9,16 @@
   font-size: 3.2rem;
 }
 
+.viewSection {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  &_button {
+    font-size: 3.2rem;
+  }
+}
+
 .groupsSection, .wordsSection, .gamesSection {
   display: flex;
   flex-direction: column;
