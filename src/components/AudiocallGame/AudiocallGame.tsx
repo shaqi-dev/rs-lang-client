@@ -20,14 +20,14 @@ const AudiocallGame: FC = () => {
           const index: number = Math.floor(Math.random() * data.length);
 
           if (
-            choices.indexOf(data[index].word) !== -1 ||
-            data[correctAnswer].word === data[index].word
+            choices.indexOf(data[index].wordTranslate) !== -1 ||
+            data[correctAnswer].wordTranslate === data[index].wordTranslate
           ) {
             i -= 1;
-          } else choices.push(data[index].word);
+          } else choices.push(data[index].wordTranslate);
         }
 
-        choices.splice(correctAnswerIndex, 0, data[correctAnswer].word);
+        choices.splice(correctAnswerIndex, 0, data[correctAnswer].wordTranslate);
 
         setAnswers([...choices]);
       }
@@ -36,12 +36,12 @@ const AudiocallGame: FC = () => {
     const chooseWord = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
       const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
 
-      if (chosenAnswer.textContent === data[correctAnswer].word) {
+      if (chosenAnswer.textContent === data[correctAnswer].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
       } else {
         setWrongAnswer(chosenAnswer);
         const rightAnswer: HTMLButtonElement = document.querySelector(
-          `#${data[correctAnswer].word}`,
+          `#${data[correctAnswer].wordTranslate}`,
         ) as HTMLButtonElement;
 
         chosenAnswer.style.backgroundColor = 'red';
@@ -53,7 +53,7 @@ const AudiocallGame: FC = () => {
 
     const setNextCorrectAnswer = (): void => {
       const rightAnswer: HTMLButtonElement = document.querySelector(
-        `#${data[correctAnswer].word}`,
+        `#${data[correctAnswer].wordTranslate}`,
       ) as HTMLButtonElement;
 
       if (wrongAnswer) wrongAnswer.style.backgroundColor = '';
@@ -81,7 +81,7 @@ const AudiocallGame: FC = () => {
     if (data && correctAnswer < 10) {
       return (
         <div>
-          <p>{data[correctAnswer].word}</p>
+          <p>{data[correctAnswer].wordTranslate}</p>
           <div>
             <AudiocallAnswers answers={answers} chooseWord={chooseWord} />
           </div>
