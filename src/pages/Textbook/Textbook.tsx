@@ -138,7 +138,8 @@ const Textbook: FC = () => {
           {view === 'vocabulary' &&
             ((userWordsIsLoading && <p>Loading...</p>) ||
               (userWordsError && wordsListErrorElement(userWordsError)) ||
-              (!userWordsError && userWords && <WordList words={userWords} />))}
+              (!userWordsError && !userWords.length && <p>В этом разделе еще нет слов</p>) ||
+              (!userWordsError && userWords.length && <WordList words={userWords} />))}
 
           {((view === 'textbook' && !wordsError) || (view === 'vocabulary' && !userWordsError)) &&
             word && <WordCard word={word} />}
