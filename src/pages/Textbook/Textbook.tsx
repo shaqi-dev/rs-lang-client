@@ -39,6 +39,10 @@ const Textbook: FC = () => {
   const textbookMaxPages = 30;
   let vocabularyMaxPages = 0;
 
+  const userWordsFilter = {
+    $and: [{ 'userWord.difficulty': 'weak' }],
+  };
+
   const {
     data: words,
     error: wordsError,
@@ -52,9 +56,8 @@ const Textbook: FC = () => {
     userId,
     group,
     page,
-    filter: JSON.stringify({
-      $and: [{ 'userWord.difficulty': 'weak' }],
-    }),
+    wordsPerPage,
+    filter: JSON.stringify(userWordsFilter),
   });
 
   let userWords: AggregatedWord[] = [];

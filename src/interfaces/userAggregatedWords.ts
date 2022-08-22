@@ -1,8 +1,8 @@
 export interface GetUserAggregatedWordsData {
   userId: string | null;
-  group: number;
-  page: number;
-  wordsPerPage?: string;
+  group: number | string;
+  page: number | string;
+  wordsPerPage?: number | string;
   filter?: string;
 }
 

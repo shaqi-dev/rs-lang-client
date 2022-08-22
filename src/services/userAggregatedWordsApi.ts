@@ -1,9 +1,9 @@
 import useAuth from '../hooks/useAuth';
 import type {
+  AggregatedWord,
   GetUserAggregatedWordByIdData,
   GetUserAggregatedWordsData,
   GetUserAggregatedWordsResponse,
-  UserWord,
 } from '../interfaces/userAggregatedWords';
 
 export const userWordsApi = useAuth.injectEndpoints({
@@ -18,7 +18,7 @@ export const userWordsApi = useAuth.injectEndpoints({
         }&filter=${filter}`,
       providesTags: ['UserWords'],
     }),
-    getUserAggregatedWordById: builder.query<UserWord, GetUserAggregatedWordByIdData>({
+    getUserAggregatedWordById: builder.query<AggregatedWord, GetUserAggregatedWordByIdData>({
       query: ({ userId, wordId }) => `users/${userId}/aggregatedWords/${wordId}`,
       providesTags: ['UserWords'],
     }),
