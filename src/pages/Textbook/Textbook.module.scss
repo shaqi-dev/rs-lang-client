@@ -4,7 +4,12 @@
   gap: 40px;
 }
 
-.groupsSection, .wordsSection {
+.sectionTitle {
+  font-weight: bold;
+  font-size: 3.2rem;
+}
+
+.groupsSection, .wordsSection, .gamesSection {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -14,12 +19,15 @@
   align-self: baseline;
 }
 
-.sectionTitle {
-  font-weight: bold;
-  font-size: 3.2rem;
+.gamesSection {
+  width: 100%;
 }
 
-.wordsBody {
+.wordsBody, .gamesBody {
   display: flex;
   gap: 40px;
+}
+
+.gamesBody {
+  justify-content: center;
 }
