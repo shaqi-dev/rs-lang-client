@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { Word } from '../../interfaces/words';
 import { API_BASE } from '../../services/endpoints';
+import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
 import s from './WordCard.module.scss';
+import useAudio from '../../hooks/useAudio';
 
 export interface WordCardProps {
   word: Word;
@@ -21,6 +23,8 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
 
   const imageSource = `${API_BASE}/${image}`;
 
+  const [play] = useAudio(word);
+
   return (
     <div className={s.root}>
       <div className={s.image}>
@@ -30,6 +34,7 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
         <div className={s.word}>
           <span className={s.word_original}>{wordOriginal} </span>
           <span className={s.word_transcription}>{transcription}</span>
+          <PlayIcon className={s.word_playButton} onClick={play} />
           <p className={s.word_translate}>{wordTranslate}</p>
         </div>
         <div className={s.textBlock}>
