@@ -1,6 +1,7 @@
 @use '../../styles/variables' as *;
 
 .root {
+  height: fit-content;
   padding: 10px 15px;
   background-color: $error-light;
   border-radius: 5px;

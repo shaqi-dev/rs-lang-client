@@ -1,5 +1,12 @@
-export interface GetUserWordByIdData {
+export interface UserWord {
   id: string;
+  difficulty: string;
+  optional: {};
+  wordId: string;
+}
+
+export interface GetUserWordByIdData {
+  userId: string;
   wordId: string;
 }
 
@@ -9,7 +16,7 @@ export interface MutateUserWordBody {
 }
 
 export interface MutateUserWordData {
-  id: string;
+  userId: string;
   wordId: string;
   body: MutateUserWordBody;
 }

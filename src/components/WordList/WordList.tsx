@@ -1,64 +1,36 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import WordItem from '../WordItem';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setWord, selectCurrentWord } from '../../store/textbook/textbookSlice';
 import type { Word } from '../../interfaces/words';
 import s from './WordList.module.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { useGetWordsQuery } from '../../services/wordsApi';
-import {
-  setWord,
-  selectCurrentGroup,
-  selectCurrentPage,
-  selectCurrentWord,
-} from '../../store/textbook/textbookSlice';
-import ErrorBanner from '../ErrorBanner';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 
-const WordList: FC = () => {
+interface WordListProps {
+  words: Word[] | AggregatedWord[];
+}
+
+const WordList: FC<WordListProps> = ({ words }) => {
   const dispatch = useAppDispatch();
-  const group: number = useAppSelector(selectCurrentGroup);
-  const page: number = useAppSelector(selectCurrentPage);
-  const activeWord: Word | null = useAppSelector(selectCurrentWord);
+  const activeWord: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
 
-  const { data, error, isLoading } = useGetWordsQuery({ group, page });
+  const handleClickWordItem = (word: Word | AggregatedWord): void => {
+    dispatch(setWord(word));
+  };
 
-  useEffect(() => {
-    if (data) {
-      dispatch(setWord(data[0]));
-    }
-  }, [data, dispatch]);
+  return (
+    <ul className={s.root}>
+      {words.map((word, i) => {
+        const active = (activeWord && activeWord.word === word.word) || (!activeWord && i === 0);
 
-  if (isLoading) return <p>Loading...</p>;
-
-  if (error) {
-    if ('status' in error) {
-      const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
-
-      return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
-    }
-
-    return <ErrorBanner>{error.message}</ErrorBanner>;
-  }
-
-  if (data) {
-    const handleClickWordItem = (word: Word): void => {
-      dispatch(setWord(word));
-    };
-
-    return (
-      <ul className={s.root}>
-        {data.map((word, i) => {
-          const active = (activeWord && activeWord.word === word.word) || (!activeWord && i === 0);
-
-          return (
-            <li key={word.word} className={s.listItem}>
-              <WordItem word={word} active={active} onClick={handleClickWordItem} />
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-
-  return null;
+        return (
+          <li key={word.word} className={s.listItem}>
+            <WordItem word={word} active={active} onClick={handleClickWordItem} />
+          </li>
+        );
+      })}
+    </ul>
+  );
 };
 
 export default WordList;

@@ -1,10 +1,11 @@
 import { FC } from 'react';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
 import s from './WordItem.module.scss';
 
 export interface WordItemProps {
-  word: Word;
-  onClick: (word: Word) => void;
+  word: Word | AggregatedWord;
+  onClick: (word: Word | AggregatedWord) => void;
   active?: boolean;
   className?: string | string[];
 }

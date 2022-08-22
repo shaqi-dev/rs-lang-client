@@ -1,44 +1,52 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_BASE } from './endpoints';
-import type { Word } from '../interfaces/words';
+import useAuth from '../hooks/useAuth';
 import type {
   GetUserWordByIdData,
   MutateUserWordData,
   MutateUserWordBody,
+  UserWord,
 } from '../interfaces/userWords';
 
-export const userWordsApi = createApi({
-  reducerPath: 'userWordsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API_BASE }),
+export const userWordsApi = useAuth.injectEndpoints({
   endpoints: (builder) => ({
-    getUserWords: builder.query<Word[], string>({
-      query: (id) => `users/${id}/words`,
+    getUserWords: builder.query<UserWord[], string | null>({
+      query: (userId) => `users/${userId}/words`,
+      providesTags: ['UserWords'],
     }),
-    getUserWordById: builder.query<Word, GetUserWordByIdData>({
-      query: ({ id, wordId }) => `users/${id}/words/${wordId}`,
+    getUserWordById: builder.query<UserWord, GetUserWordByIdData>({
+      query: ({ userId, wordId }) => `users/${userId}/words/${wordId}`,
+      providesTags: ['UserWords'],
     }),
     createUserWord: builder.mutation<MutateUserWordBody, MutateUserWordData>({
-      query: ({ id, wordId, body }) => ({
-        url: `users/${id}/words/${wordId}`,
+      query: ({ userId, wordId, body }) => ({
+        url: `users/${userId}/words/${wordId}`,
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['UserWords'],
     }),
     updateUserWord: builder.mutation<MutateUserWordBody, MutateUserWordData>({
-      query: ({ id, wordId, body }) => ({
-        url: `users/${id}/words/${wordId}`,
+      query: ({ userId, wordId, body }) => ({
+        url: `users/${userId}/words/${wordId}`,
         method: 'PUT',
         body,
       }),
+      invalidatesTags: ['UserWords'],
     }),
     deleteUserWord: builder.mutation<void, MutateUserWordData>({
-      query: ({ id, wordId, body }) => ({
-        url: `users/${id}/words/${wordId}`,
+      query: ({ userId, wordId, body }) => ({
+        url: `users/${userId}/words/${wordId}`,
         method: 'DELETE',
         body,
       }),
+      invalidatesTags: ['UserWords'],
     }),
   }),
 });
 
-export const { useGetUserWordsQuery, useGetUserWordByIdQuery } = userWordsApi;
+export const {
+  useGetUserWordsQuery,
+  useGetUserWordByIdQuery,
+  useCreateUserWordMutation,
+  useUpdateUserWordMutation,
+  useDeleteUserWordMutation,
+} = userWordsApi;
