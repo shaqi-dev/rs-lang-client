@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
+import { API_BASE } from '../../services/endpoints';
 
 const AudiocallGame: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
@@ -11,26 +12,32 @@ const AudiocallGame: FC = () => {
   const [wrongAnswer, setWrongAnswer] = useState<HTMLButtonElement | null>(null);
 
   if (data) {
+    const playAudio = (): void => {
+      const audioSource = `${API_BASE}/${data[correctAnswer].audio}`;
+      const audio = new Audio(audioSource);
+      audio.play();
+    };
+
     const generateAnswers = (): void => {
-      if (data) {
-        const choices: string[] = [];
-        const correctAnswerIndex: number = Math.floor(Math.random() * 5);
+      playAudio();
 
-        for (let i = 0; i < 4; i += 1) {
-          const index: number = Math.floor(Math.random() * data.length);
+      const choices: string[] = [];
+      const correctAnswerIndex: number = Math.floor(Math.random() * 5);
 
-          if (
-            choices.indexOf(data[index].wordTranslate) !== -1 ||
-            data[correctAnswer].wordTranslate === data[index].wordTranslate
-          ) {
-            i -= 1;
-          } else choices.push(data[index].wordTranslate);
-        }
+      for (let i = 0; i < 4; i += 1) {
+        const index: number = Math.floor(Math.random() * data.length);
 
-        choices.splice(correctAnswerIndex, 0, data[correctAnswer].wordTranslate);
-
-        setAnswers([...choices]);
+        if (
+          choices.indexOf(data[index].wordTranslate) !== -1 ||
+          data[correctAnswer].wordTranslate === data[index].wordTranslate
+        ) {
+          i -= 1;
+        } else choices.push(data[index].wordTranslate);
       }
+
+      choices.splice(correctAnswerIndex, 0, data[correctAnswer].wordTranslate);
+
+      setAnswers([...choices]);
     };
 
     const chooseWord = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
@@ -86,13 +93,15 @@ const AudiocallGame: FC = () => {
       return <ErrorBanner>{error.message}</ErrorBanner>;
     }
 
-    if (answers.length === 0) generateAnswers();
+    if (answers.length === 0 && correctAnswer < 10) generateAnswers();
 
     if (data && correctAnswer < 10) {
       return (
-        <div className="audiocall-answers">
-          <p>{data[correctAnswer].wordTranslate}</p>
-          <div>
+        <div>
+          <button type="button" onClick={playAudio}>
+            Play Audio
+          </button>
+          <div className="audiocall-answers">
             <AudiocallAnswers answers={answers} chooseWord={chooseWord} />
           </div>
           {shouldContinue ? (
