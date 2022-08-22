@@ -59,9 +59,10 @@ const Textbook: FC = () => {
 
   let userWords: AggregatedWord[] = [];
 
-  if (userWordsData) {
+  if (userWordsData && userWordsData[0]) {
     userWords = userWordsData[0].paginatedResults;
-    vocabularyMaxPages = Math.floor(userWordsData[0].totalCount[0].count / wordsPerPage);
+    const totalCount = userWordsData[0].totalCount[0] && userWordsData[0].totalCount[0].count;
+    vocabularyMaxPages = Math.ceil(totalCount / wordsPerPage) || 0;
   }
 
   const wordsListErrorElement = (error: FetchBaseQueryError | SerializedError): JSX.Element => {
