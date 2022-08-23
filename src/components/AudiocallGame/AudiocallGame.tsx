@@ -64,13 +64,15 @@ const AudiocallGame: FC = () => {
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
       } else {
-        setWrongAnswer(chosenAnswer);
-        setCorrectAnswer(
-          document.querySelector(`#${data[currentWord].wordTranslate}`) as HTMLButtonElement,
-        );
+        const rightAnswer: HTMLButtonElement = document.querySelector(
+          `#${data[currentWord].wordTranslate}`,
+        ) as HTMLButtonElement;
 
         chosenAnswer.style.backgroundColor = 'red';
-        if (correctAnswer) correctAnswer.style.backgroundColor = 'green';
+        rightAnswer.style.backgroundColor = 'green';
+
+        setWrongAnswer(chosenAnswer);
+        setCorrectAnswer(rightAnswer);
       }
 
       setShouldContinue(true);
@@ -96,12 +98,13 @@ const AudiocallGame: FC = () => {
     if (data && currentWord < 10) {
       return (
         <div>
+          {shouldContinue ? (
+            <img src={`${API_BASE}/${data[currentWord].image}`} alt={`${data[currentWord].word}`} />
+          ) : null}
           <button type="button" onClick={playAudio}>
             Play Audio
           </button>
-          <div className="audiocall-answers">
-            <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
-          </div>
+          <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
           {shouldContinue ? (
             <button type="button" onClick={continueGame}>
               Continue

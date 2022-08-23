@@ -7,7 +7,7 @@ const AudiocallAnswers: FC<{
   const { answers, chooseAnswer } = props;
 
   return (
-    <div>
+    <div className="audiocall-answers">
       {answers.map((word) => {
         return (
           <button type="button" key={word} id={word} onClick={(e): void => chooseAnswer(e)}>
