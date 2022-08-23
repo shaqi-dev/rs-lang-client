@@ -20,7 +20,7 @@ export const userWordsApi = useAuth.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'UserWords', id: 'CREATE_HARD_WORD' }],
+      invalidatesTags: [{ type: 'UserWords', id: 'CREATE_WORD' }],
     }),
     updateUserWord: builder.mutation<MutateUserWordBody, MutateUserWordData>({
       query: ({ userId, wordId, body }) => ({
@@ -28,20 +28,21 @@ export const userWordsApi = useAuth.injectEndpoints({
         method: 'PUT',
         body,
       }),
+      invalidatesTags: [{ type: 'UserWords', id: 'UPDATE_WORD' }],
     }),
     deleteUserWord: builder.mutation<void, GetUserWordByIdData>({
       query: ({ userId, wordId }) => ({
         url: `users/${userId}/words/${wordId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'UserWords', id: 'DELETE_HARD_WORD' }],
+      invalidatesTags: [{ type: 'UserWords', id: 'DELETE_WORD' }],
     }),
   }),
 });
 
 export const {
   useGetUserWordsQuery,
-  useGetUserWordByIdQuery,
+  useLazyGetUserWordByIdQuery,
   useCreateUserWordMutation,
   useUpdateUserWordMutation,
   useDeleteUserWordMutation,

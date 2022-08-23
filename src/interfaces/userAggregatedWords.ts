@@ -1,4 +1,5 @@
 import { Word } from './words';
+import UserWordDifficulty from '../shared/userWordDifficulty';
 
 export interface GetUserAggregatedWordsData {
   userId: string | null;
@@ -9,7 +10,7 @@ export interface GetUserAggregatedWordsData {
 }
 
 export interface UserWord {
-  difficulty: string;
+  difficulty: UserWordDifficulty;
   optional: {};
 }
 

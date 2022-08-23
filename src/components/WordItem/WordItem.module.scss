@@ -37,6 +37,25 @@
       border-radius: 3px;
     }
   }
+
+  &_weak {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 8px;
+      background-color: #37fc89;
+      border-radius: 3px;
+    }
+  }
+
+  &_weak:not(&_active) {
+    span {
+      opacity: 0.5;
+    } 
+  }
 }
 
 .wordOriginal {

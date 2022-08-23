@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
+import UserWordDifficulty from '../../shared/userWordDifficulty';
 import s from './WordItem.module.scss';
 
 export interface WordItemProps {
@@ -19,8 +20,12 @@ const WordItem: FC<WordItemProps> = ({ word, active, className, onClick }) => {
   }
 
   if ('userWord' in word) {
-    if (word.userWord.difficulty === 'hard') {
+    if (word.userWord.difficulty === UserWordDifficulty.hard) {
       difficultyClass = s.root_hard;
+    }
+
+    if (word.userWord.difficulty === UserWordDifficulty.weak) {
+      difficultyClass = s.root_weak;
     }
   }
 

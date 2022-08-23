@@ -52,6 +52,11 @@
   }
 }
 
+.userActions {
+  display: flex;
+  gap: 5px;
+}
+
 .textBlock {
   display: flex;
   flex-direction: column;
