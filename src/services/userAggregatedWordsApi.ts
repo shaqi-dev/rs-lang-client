@@ -12,10 +12,19 @@ export const userWordsApi = useAuth.injectEndpoints({
       GetUserAggregatedWordsResponse,
       GetUserAggregatedWordsData
     >({
-      query: ({ userId, group, page, wordsPerPage, filter }) =>
-        `users/${userId}/aggregatedWords?group=${group}&page=${page}&=${
-          wordsPerPage || '20'
-        }&filter=${filter}`,
+      query: ({ userId, group, page, wordsPerPage, filter }) => {
+        let result = `users/${userId}/aggregatedWords?group=${group}&page=${page}`;
+
+        if (wordsPerPage) {
+          result += `&wordsPerPage=${wordsPerPage}`;
+        }
+
+        if (filter) {
+          result += `&filter=${filter}`;
+        }
+
+        return result;
+      },
       providesTags: ['UserWords'],
     }),
     getUserAggregatedWordById: builder.query<AggregatedWord, GetUserAggregatedWordByIdData>({
@@ -25,4 +34,5 @@ export const userWordsApi = useAuth.injectEndpoints({
   }),
 });
 
-export const { useGetUserAggregatedWordsQuery, useGetUserAggregatedWordByIdQuery } = userWordsApi;
+export const { useLazyGetUserAggregatedWordsQuery, useLazyGetUserAggregatedWordByIdQuery } =
+  userWordsApi;
