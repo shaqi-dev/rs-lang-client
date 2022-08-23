@@ -6,4 +6,5 @@ export interface TextbookState {
   group: number;
   page: number;
   word: Word | AggregatedWord | null;
+  maxPages: number;
 }

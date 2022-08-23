@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import WordItem from '../WordItem';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setWord, selectCurrentWord } from '../../store/textbook/textbookSlice';
+import { setWord, selectCurrentWord, setMaxPages } from '../../store/textbook/textbookSlice';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { useGetTextbookWords } from '../../hooks/useGetTextbookWords';
 import ErrorBanner from '../ErrorBanner';
@@ -12,11 +12,15 @@ const WordList: FC = () => {
   const dispatch = useAppDispatch();
   const activeWord: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
 
-  const { words, error, isLoading } = useGetTextbookWords();
+  const { words, error, isLoading, maxPages } = useGetTextbookWords();
 
   useEffect(() => {
     dispatch(setWord((words && words[0]) || null));
   }, [dispatch, words]);
+
+  useEffect(() => {
+    dispatch(setMaxPages(maxPages));
+  }, [dispatch, maxPages]);
 
   if (isLoading) return <p>Loading...</p>;
 

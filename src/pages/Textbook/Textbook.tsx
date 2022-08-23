@@ -13,6 +13,7 @@ import {
   selectCurrentGroup,
   selectCurrentPage,
   selectCurrentWord,
+  selectCurrentMaxPages,
   setGroup,
   setPage,
   setView,
@@ -31,6 +32,7 @@ const Textbook: FC = () => {
   const group = useAppSelector<number>(selectCurrentGroup);
   const page = useAppSelector<number>(selectCurrentPage);
   const word = useAppSelector<Word | AggregatedWord | null>(selectCurrentWord);
+  const maxPages = useAppSelector(selectCurrentMaxPages);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -90,7 +92,7 @@ const Textbook: FC = () => {
           <WordList />
           {word && <WordCard word={word} />}
         </div>
-        <Paginate pageCount={30} forcePage={page} onPageChage={handleChangePage} />
+        <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
       </section>
       <section className={s.gamesSection}>
         <p className={s.sectionTitle}>Игры</p>

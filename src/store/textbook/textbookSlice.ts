@@ -9,6 +9,7 @@ const initialState: TextbookState = {
   group: 0,
   page: 0,
   word: null,
+  maxPages: 30,
 };
 
 const textbookSlice = createSlice({
@@ -27,15 +28,19 @@ const textbookSlice = createSlice({
     setWord: (state, action: PayloadAction<Word | AggregatedWord | null>) => {
       state.word = action.payload;
     },
+    setMaxPages: (state, action: PayloadAction<number>) => {
+      state.maxPages = action.payload;
+    },
   },
 });
 
-export const { setView, setGroup, setPage, setWord } = textbookSlice.actions;
+export const { setView, setGroup, setPage, setWord, setMaxPages } = textbookSlice.actions;
 
 export const selectCurrentView = (state: RootState): 'main' | 'user' => state.textbook.view;
 export const selectCurrentGroup = (state: RootState): number => state.textbook.group;
 export const selectCurrentPage = (state: RootState): number => state.textbook.page;
 export const selectCurrentWord = (state: RootState): Word | AggregatedWord | null =>
   state.textbook.word;
+export const selectCurrentMaxPages = (state: RootState): number => state.textbook.maxPages;
 
 export default textbookSlice.reducer;
