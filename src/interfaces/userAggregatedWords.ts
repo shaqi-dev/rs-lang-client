@@ -1,3 +1,5 @@
+import { Word } from './words';
+
 export interface GetUserAggregatedWordsData {
   userId: string | null;
   group: number | string;
@@ -11,7 +13,7 @@ export interface UserWord {
   optional: {};
 }
 
-export interface AggregatedWord {
+export interface AggregatedWord extends Word {
   audio: string;
   audioExample: string;
   audioMeaning: string;

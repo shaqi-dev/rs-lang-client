@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
+import Button from '../Button';
 import useAudio from '../../hooks/useAudio';
+import { useAppSelector } from '../../hooks/redux';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
+import { selectCurrentView } from '../../store/textbook/textbookSlice';
+import { useCreateUserWordMutation, useDeleteUserWordMutation } from '../../services/userWordsApi';
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import s from './WordCard.module.scss';
@@ -22,6 +27,33 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
     image,
   } = word;
 
+  const view = useAppSelector(selectCurrentView);
+  const userId = useAppSelector(selectCurrentUserId);
+  const [createWord] = useCreateUserWordMutation();
+  const [deleteWord] = useDeleteUserWordMutation();
+
+  const handleAddHardWord = (): void => {
+    if (userId && '_id' in word && word._id) {
+      createWord({
+        userId,
+        wordId: word._id,
+        body: {
+          difficulty: 'hard',
+          optional: {},
+        },
+      });
+    }
+  };
+
+  const handleRemoveHardWord = (): void => {
+    if (userId && '_id' in word && word._id) {
+      deleteWord({
+        userId,
+        wordId: word._id,
+      });
+    }
+  };
+
   const imageSource = `${API_BASE}/${image}`;
 
   const [play] = useAudio(word);
@@ -38,6 +70,16 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
           <PlayIcon className={s.word_playButton} onClick={play} />
           <p className={s.word_translate}>{wordTranslate}</p>
         </div>
+        {userId && (
+          <div className={s.userActions}>
+            <Button
+              type="button"
+              onClick={view === 'main' ? handleAddHardWord : handleRemoveHardWord}
+            >
+              {view === 'main' ? 'Добавить в сложные слова' : 'Удалить из сложных слов'}
+            </Button>
+          </div>
+        )}
         <div className={s.textBlock}>
           <p className={s.textBlock_title}>Значение слова:</p>
           {/* dangerouslySetInnerHTML is used to parse JSX from a string, to avoid adding a large third party package */}

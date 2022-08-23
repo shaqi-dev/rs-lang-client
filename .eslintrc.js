@@ -28,6 +28,7 @@ module.exports = {
     'no-param-reassign': ['off'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
     'react/require-default-props': ['off'],
+    'no-underscore-dangle': ['warn'],
     'react/function-component-definition': [
       2,
       {
