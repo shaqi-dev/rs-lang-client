@@ -4,6 +4,7 @@ import counter from './counter/counter.slice';
 import useAuth from '../hooks/useAuth';
 import auth from './auth/authSlice';
 import textbook from './textbook/textbookSlice';
+import audiocall from './audiocall/audiocallSlice';
 import { wordsApi } from '../services/wordsApi';
 
 // parsing state from localStorage
@@ -16,6 +17,7 @@ export const store = configureStore({
     counter,
     auth,
     textbook,
+    audiocall,
   },
   preloadedState,
   middleware: (getDefaultMiddleware) =>
