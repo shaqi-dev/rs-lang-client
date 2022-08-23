@@ -20,7 +20,7 @@ export interface GetTextbookWordsResponse {
   maxPages: number;
 }
 
-const userWordsFilter = { $and: [{ 'userWord.difficulty': 'weak' }] };
+const userWordsFilter = { $and: [{ 'userWord.difficulty': 'hard' }] };
 
 export const useGetTextbookWords = (): GetTextbookWordsResponse => {
   const view = useAppSelector<'main' | 'user'>(selectCurrentView);
