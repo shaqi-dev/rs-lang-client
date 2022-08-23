@@ -20,8 +20,8 @@ const WordList: FC<WordListProps> = ({ words }) => {
 
   return (
     <ul className={s.root}>
-      {words.map((word, i) => {
-        const active = (activeWord && activeWord.word === word.word) || (!activeWord && i === 0);
+      {words.map((word) => {
+        const active = !!activeWord && activeWord.word === word.word;
 
         return (
           <li key={word.word} className={s.listItem}>

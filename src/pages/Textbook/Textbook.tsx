@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SerializedError } from '@reduxjs/toolkit';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
+import type { SerializedError } from '@reduxjs/toolkit';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import WordsGroupList from '../../components/WordsGroupList';
 import WordList from '../../components/WordList';
@@ -9,71 +9,40 @@ import WordCard from '../../components/WordCard';
 import Paginate from '../../components/Paginate';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { useGetWordsQuery } from '../../services/wordsApi';
-import { useGetUserAggregatedWordsQuery } from '../../services/userAggregatedWordsApi';
-import { selectCurrentUserId } from '../../store/auth/authSlice';
 import {
+  selectCurrentView,
   selectCurrentGroup,
   selectCurrentPage,
   selectCurrentWord,
   setGroup,
   setPage,
   setWord,
+  setView,
 } from '../../store/textbook/textbookSlice';
-import s from './Textbook.module.scss';
 import Button from '../../components/Button';
 import ErrorBanner from '../../components/ErrorBanner';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import type { Word } from '../../interfaces/words';
+import s from './Textbook.module.scss';
+import { useGetTextbookWords } from './useGetTextbookWords';
 
 const Textbook: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [view, setView] = useState<'textbook' | 'vocabulary'>('textbook');
-  const group: number = useAppSelector(selectCurrentGroup);
-  const page: number = useAppSelector(selectCurrentPage);
-  const word: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
-  const userId = useAppSelector(selectCurrentUserId);
-  const wordsPerPage = 20;
-  const textbookMaxPages = 30;
-  let vocabularyMaxPages = 0;
+  const view = useAppSelector<'main' | 'user'>(selectCurrentView);
+  const group = useAppSelector<number>(selectCurrentGroup);
+  const page = useAppSelector<number>(selectCurrentPage);
+  const word = useAppSelector<Word | AggregatedWord | null>(selectCurrentWord);
 
-  const userWordsFilter = {
-    $and: [{ 'userWord.difficulty': 'weak' }],
-  };
+  const { words, error, isLoading, maxPages } = useGetTextbookWords();
 
-  const {
-    data: words,
-    error: wordsError,
-    isLoading: wordsIsLoading,
-  } = useGetWordsQuery({ group, page });
-  const {
-    data: userWordsData,
-    error: userWordsError,
-    isLoading: userWordsIsLoading,
-  } = useGetUserAggregatedWordsQuery({
-    userId,
-    group,
-    page,
-    wordsPerPage,
-    filter: JSON.stringify(userWordsFilter),
-  });
-
-  let userWords: AggregatedWord[] = [];
-
-  if (userWordsData && userWordsData[0]) {
-    userWords = userWordsData[0].paginatedResults;
-    const totalCount = userWordsData[0].totalCount[0] && userWordsData[0].totalCount[0].count;
-    vocabularyMaxPages = Math.ceil(totalCount / wordsPerPage) || 0;
-  }
-
-  const wordsListErrorElement = (error: FetchBaseQueryError | SerializedError): JSX.Element => {
-    if ('status' in error) {
-      const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
+  const wordsListErrorElement = (err: FetchBaseQueryError | SerializedError): JSX.Element => {
+    if ('status' in err) {
+      const errorMessage = 'error' in err ? err.error : JSON.stringify(err.data);
       return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
     }
-    return <ErrorBanner>{error.message}</ErrorBanner>;
+    return <ErrorBanner>{err.message}</ErrorBanner>;
   };
 
   const handleClickWordsGroupItem = (groupName: string): void => {
@@ -81,28 +50,27 @@ const Textbook: FC = () => {
 
     if (group !== selectedGroup) {
       dispatch(setGroup(selectedGroup));
-      dispatch(setPage(0));
     }
   };
+
+  useEffect(() => {
+    dispatch(setPage(0));
+  }, [dispatch, group, view]);
 
   const handleChangePage = ({ selected }: { selected: number }): void => {
     dispatch(setPage(selected));
   };
 
+  useEffect(() => {
+    dispatch(setWord((words && words[0]) || null));
+  }, [dispatch, page, group, view, words]);
+
   const handleClickTextbook = (): void => {
-    setView('textbook');
-    dispatch(setPage(0));
-    if (words) {
-      dispatch(setWord(words[0]));
-    }
+    dispatch(setView('main'));
   };
 
   const handleClickVocabulary = (): void => {
-    setView('vocabulary');
-    dispatch(setPage(0));
-    if (userWords) {
-      dispatch(setWord(userWords[0]));
-    }
+    dispatch(setView('user'));
   };
 
   return (
@@ -111,7 +79,7 @@ const Textbook: FC = () => {
         <Button
           type="button"
           buttonStyle="link"
-          inactive={view === 'vocabulary'}
+          inactive={view === 'user'}
           className={s.viewSection_button}
           onClick={handleClickTextbook}
         >
@@ -120,7 +88,7 @@ const Textbook: FC = () => {
         <Button
           type="button"
           buttonStyle="link"
-          inactive={view === 'textbook'}
+          inactive={view === 'main'}
           className={s.viewSection_button}
           onClick={handleClickVocabulary}
         >
@@ -134,24 +102,13 @@ const Textbook: FC = () => {
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
         <div className={s.wordsBody}>
-          {view === 'textbook' &&
-            ((wordsIsLoading && <p>Loading...</p>) ||
-              (wordsError && wordsListErrorElement(wordsError)) ||
-              (!wordsError && words && <WordList words={words} />))}
-          {view === 'vocabulary' &&
-            ((userWordsIsLoading && <p>Loading...</p>) ||
-              (userWordsError && wordsListErrorElement(userWordsError)) ||
-              (!userWordsError && !userWords.length && <p>В этом разделе еще нет слов</p>) ||
-              (!userWordsError && userWords.length && <WordList words={userWords} />))}
-
-          {((view === 'textbook' && !wordsError) || (view === 'vocabulary' && !userWordsError)) &&
-            word && <WordCard word={word} />}
+          {isLoading && <p>Loading...</p>}
+          {error && wordsListErrorElement(error)}
+          {!error && words && !words.length && <p>В этом разделе еще нет слов</p>}
+          {!error && words && !!words.length && <WordList words={words} />}
+          {word && <WordCard word={word} />}
         </div>
-        <Paginate
-          pageCount={view === 'textbook' ? textbookMaxPages : vocabularyMaxPages}
-          forcePage={page}
-          onPageChage={handleChangePage}
-        />
+        <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
       </section>
       <section className={s.gamesSection}>
         <p className={s.sectionTitle}>Игры</p>

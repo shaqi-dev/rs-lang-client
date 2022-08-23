@@ -35,7 +35,7 @@ export type GetUserAggregatedWordsResponse = [
     totalCount: [
       {
         count: number;
-      },
+      }?,
     ];
   },
 ];
