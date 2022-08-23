@@ -12,9 +12,16 @@ export interface WordItemProps {
 
 const WordItem: FC<WordItemProps> = ({ word, active, className, onClick }) => {
   let classNamesFromProps = '';
+  let difficultyClass = '';
 
   if (className) {
     classNamesFromProps = typeof className === 'string' ? className : className?.join(' ');
+  }
+
+  if ('userWord' in word) {
+    if (word.userWord.difficulty === 'hard') {
+      difficultyClass = s.root_hard;
+    }
   }
 
   const handleClick = (): void => onClick(word);
@@ -22,7 +29,7 @@ const WordItem: FC<WordItemProps> = ({ word, active, className, onClick }) => {
   return (
     <button
       type="button"
-      className={`${s.root} ${active && s.root_active} ${classNamesFromProps}`}
+      className={`${s.root} ${active && s.root_active} ${classNamesFromProps} ${difficultyClass}`}
       onClick={handleClick}
     >
       <span className={s.wordOriginal}>{word.word}</span>

@@ -1,6 +1,7 @@
 @use '../../styles/variables' as *;
 
 .root {
+  position: relative;
   width: 200px;
   height: 100px;
   padding: 10px 15px;
@@ -9,6 +10,7 @@
   justify-content: space-between;
   border: none;
   border-radius: 5px;
+  overflow: hidden;
   cursor: pointer;
 
   &:hover {
@@ -22,9 +24,23 @@
       opacity: 1;
     }
   }
+
+  &_hard {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 8px;
+      background-color: #ff5252;
+      border-radius: 3px;
+    }
+  }
 }
 
 .wordOriginal {
+  text-align: left;
   font-weight: bold;
   font-size: 2.4rem;
 }
