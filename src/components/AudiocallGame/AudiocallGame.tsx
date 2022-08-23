@@ -3,6 +3,8 @@ import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
 import { API_BASE } from '../../services/endpoints';
+import Button from '../Button';
+import AudiocallMeaning from '../AudiocallMeaning';
 
 const AudiocallGame: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
@@ -99,16 +101,20 @@ const AudiocallGame: FC = () => {
       return (
         <div>
           {shouldContinue ? (
-            <img src={`${API_BASE}/${data[currentWord].image}`} alt={`${data[currentWord].word}`} />
+            <AudiocallMeaning
+              imageLink={`${API_BASE}/${data[currentWord].image}`}
+              imageAlt={`${data[currentWord].word}`}
+              currentWord={`${data[currentWord].word}`}
+            />
           ) : null}
-          <button type="button" onClick={playAudio}>
+          <Button type="button" onClick={playAudio}>
             Play Audio
-          </button>
+          </Button>
           <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
           {shouldContinue ? (
-            <button type="button" onClick={continueGame}>
+            <Button type="button" onClick={continueGame}>
               Continue
-            </button>
+            </Button>
           ) : null}
         </div>
       );
