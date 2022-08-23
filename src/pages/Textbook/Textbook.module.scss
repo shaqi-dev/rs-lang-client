@@ -9,7 +9,18 @@
   font-size: 3.2rem;
 }
 
+.viewSection {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  &_button {
+    font-size: 3.2rem;
+  }
+}
+
 .groupsSection, .wordsSection, .gamesSection {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -26,6 +37,10 @@
 .wordsBody, .gamesBody {
   display: flex;
   gap: 40px;
+}
+
+.wordsBody {
+  justify-content: space-between;
 }
 
 .gamesBody {

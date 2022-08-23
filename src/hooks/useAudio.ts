@@ -1,7 +1,8 @@
-import { Word } from '../interfaces/words';
 import { API_BASE } from '../services/endpoints';
+import type { Word } from '../interfaces/words';
+import type { AggregatedWord } from '../interfaces/userAggregatedWords';
 
-const useAudio = (word: Word): [() => void, () => void] => {
+const useAudio = (word: Word | AggregatedWord): [() => void, () => void] => {
   const { audio: audioSrc, audioExample: audioExampleSrc, audioMeaning: audioMeaningSrc } = word;
   const audio = new Audio(`${API_BASE}/${audioSrc}`);
   const audioExample = new Audio(`${API_BASE}/${audioExampleSrc}`);

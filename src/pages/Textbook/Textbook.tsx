@@ -1,46 +1,87 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import WordsGroupList from '../../components/WordsGroupList';
 import WordList from '../../components/WordList';
 import WordCard from '../../components/WordCard';
 import Paginate from '../../components/Paginate';
+import Button from '../../components/Button';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
+  selectCurrentView,
   selectCurrentGroup,
   selectCurrentPage,
   selectCurrentWord,
+  selectCurrentMaxPages,
   setGroup,
   setPage,
+  setView,
 } from '../../store/textbook/textbookSlice';
+import { selectCurrentUsername } from '../../store/auth/authSlice';
+import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
-import Button from '../../components/Button';
 
 const Textbook: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const group: number = useAppSelector(selectCurrentGroup);
-  const page: number = useAppSelector(selectCurrentPage);
-  const word: Word | null = useAppSelector(selectCurrentWord);
-  const maxPages = 30;
+
+  const username = useAppSelector(selectCurrentUsername);
+  const view = useAppSelector<'main' | 'user'>(selectCurrentView);
+  const group = useAppSelector<number>(selectCurrentGroup);
+  const page = useAppSelector<number>(selectCurrentPage);
+  const word = useAppSelector<Word | AggregatedWord | null>(selectCurrentWord);
+  const maxPages = useAppSelector(selectCurrentMaxPages);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
 
     if (group !== selectedGroup) {
       dispatch(setGroup(selectedGroup));
-      dispatch(setPage(0));
     }
   };
+
+  useEffect(() => {
+    dispatch(setPage(0));
+  }, [dispatch, group, view]);
 
   const handleChangePage = ({ selected }: { selected: number }): void => {
     dispatch(setPage(selected));
   };
 
+  const handleClickTextbook = (): void => {
+    dispatch(setView('main'));
+  };
+
+  const handleClickVocabulary = (): void => {
+    dispatch(setView('user'));
+  };
+
   return (
     <ContentWrapper className={s.wrapper}>
+      <section className={s.viewSection}>
+        <Button
+          type="button"
+          buttonStyle="link"
+          inactive={view === 'user'}
+          className={s.viewSection_button}
+          onClick={handleClickTextbook}
+        >
+          Учебник
+        </Button>
+        {username && (
+          <Button
+            type="button"
+            buttonStyle="link"
+            inactive={view === 'main'}
+            className={s.viewSection_button}
+            onClick={handleClickVocabulary}
+          >
+            Словарь
+          </Button>
+        )}
+      </section>
       <section className={s.groupsSection}>
         <p className={s.sectionTitle}>Уровень сложности</p>
         <WordsGroupList onClickItem={handleClickWordsGroupItem} />

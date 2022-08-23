@@ -6,6 +6,8 @@ interface ButtonProps {
   buttonStyle?: 'primary' | 'secondary' | 'link';
   className?: string | string[];
   onClick?: () => void;
+  active?: boolean;
+  inactive?: boolean;
   disabled?: boolean;
 }
 
@@ -15,6 +17,8 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
   className,
   onClick,
   children,
+  active,
+  inactive,
   disabled,
 }) => {
   let classNamesFromProps = '';
@@ -23,12 +27,17 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
     classNamesFromProps = typeof className === 'string' ? className : className?.join(' ');
   }
 
+  const style =
+    (buttonStyle === 'primary' && s.primary) ||
+    (buttonStyle === 'secondary' && s.secondary) ||
+    (buttonStyle === 'link' && s.link);
+
   return (
     <button
       // eslint-disable-next-line react/button-has-type
       type={type}
-      className={`${s.root} ${
-        buttonStyle === 'primary' ? s.primary : s.secondary
+      className={`${s.root} ${style} ${active ? s.active : ''} ${
+        inactive ? s.inactive : ''
       } ${classNamesFromProps}`}
       onClick={onClick}
       disabled={disabled}

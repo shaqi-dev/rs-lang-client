@@ -1,12 +1,13 @@
 import { FC } from 'react';
-import { Word } from '../../interfaces/words';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
-import s from './WordCard.module.scss';
 import useAudio from '../../hooks/useAudio';
+import type { Word } from '../../interfaces/words';
+import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import s from './WordCard.module.scss';
 
 export interface WordCardProps {
-  word: Word;
+  word: Word | AggregatedWord;
 }
 
 const WordCard: FC<WordCardProps> = ({ word }) => {
