@@ -7,4 +7,5 @@ export interface TextbookState {
   page: number;
   word: Word | AggregatedWord | null;
   maxPages: number;
+  pageLearned: boolean;
 }

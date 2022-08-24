@@ -29,6 +29,10 @@
 
   .activeLink {
     background-color: $active;
+
+    &_learned {
+      outline: 4px #2e9a00 dashed;
+    }
   }
 
   .disabled {

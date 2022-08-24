@@ -17,6 +17,7 @@ import {
   setGroup,
   setPage,
   setView,
+  selectCurrentPageLearned,
 } from '../../store/textbook/textbookSlice';
 import { selectCurrentUsername } from '../../store/auth/authSlice';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
@@ -33,6 +34,7 @@ const Textbook: FC = () => {
   const page = useAppSelector<number>(selectCurrentPage);
   const word = useAppSelector<Word | AggregatedWord | null>(selectCurrentWord);
   const maxPages = useAppSelector(selectCurrentMaxPages);
+  const pageLearned: boolean = useAppSelector(selectCurrentPageLearned);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -92,15 +94,30 @@ const Textbook: FC = () => {
           <WordList />
           {word && <WordCard word={word} />}
         </div>
-        <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
+        <Paginate
+          pageCount={maxPages}
+          forcePage={page}
+          onPageChage={handleChangePage}
+          learned={pageLearned}
+        />
       </section>
       <section className={s.gamesSection}>
         <p className={s.sectionTitle}>Игры</p>
         <div className={s.gamesBody}>
-          <Button type="button" buttonStyle="primary" onClick={(): void => navigate('sprint')}>
+          <Button
+            type="button"
+            buttonStyle="primary"
+            onClick={(): void => navigate('sprint')}
+            disabled={pageLearned}
+          >
             Спринт
           </Button>
-          <Button type="button" buttonStyle="primary" onClick={(): void => navigate('audiocall')}>
+          <Button
+            type="button"
+            buttonStyle="primary"
+            onClick={(): void => navigate('audiocall')}
+            disabled={pageLearned}
+          >
             Аудиовызов
           </Button>
         </div>

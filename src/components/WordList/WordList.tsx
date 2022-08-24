@@ -1,7 +1,13 @@
 import { FC, useEffect } from 'react';
 import WordItem from '../WordItem';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setWord, selectCurrentWord, setMaxPages } from '../../store/textbook/textbookSlice';
+import {
+  setWord,
+  selectCurrentWord,
+  setMaxPages,
+  setPageLearned,
+  selectCurrentPageLearned,
+} from '../../store/textbook/textbookSlice';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { useGetTextbookWords } from '../../hooks/useGetTextbookWords';
 import ErrorBanner from '../ErrorBanner';
@@ -11,12 +17,25 @@ import s from './WordList.module.scss';
 const WordList: FC = () => {
   const dispatch = useAppDispatch();
   const activeWord: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
+  const pageLearned: boolean = useAppSelector(selectCurrentPageLearned);
 
   const { words, error, isLoading, maxPages } = useGetTextbookWords();
 
   useEffect(() => {
     dispatch(setWord((words && words[0]) || null));
+
+    if (words) {
+      const isLearnedPage = words.every(
+        (word: Word | AggregatedWord) => 'userWord' in word && word.userWord.difficulty === 'weak',
+      );
+
+      console.log(isLearnedPage);
+
+      dispatch(setPageLearned(isLearnedPage));
+    }
   }, [dispatch, words]);
+
+  console.log(pageLearned);
 
   useEffect(() => {
     dispatch(setMaxPages(maxPages));
@@ -40,7 +59,7 @@ const WordList: FC = () => {
     };
 
     return (
-      <ul className={s.root}>
+      <ul className={`${s.root}${pageLearned ? ` ${s.root_learned}` : ''}`}>
         {words.map((word) => {
           const active = !!activeWord && activeWord.word === word.word;
 
