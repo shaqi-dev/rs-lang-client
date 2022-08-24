@@ -9,8 +9,9 @@ const AudiocallAnswers: FC<{
   return (
     <div className="audiocall-answers">
       {answers.map((word) => {
+        const wordId = word.replaceAll(' ', '-');
         return (
-          <button type="button" key={word} id={word} onClick={(e): void => chooseAnswer(e)}>
+          <button type="button" key={word} id={wordId} onClick={(e): void => chooseAnswer(e)}>
             {word}
           </button>
         );

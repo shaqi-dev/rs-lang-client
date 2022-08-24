@@ -4,11 +4,15 @@ import type { RootState } from '..';
 interface AudiocallState {
   audiocallGroup: number;
   audiocallPage: number;
+  audiocallWrongAnswers: string[];
+  audiocallCorrectAnswers: string[];
 }
 
 const initialState: AudiocallState = {
   audiocallGroup: 0,
   audiocallPage: 0,
+  audiocallWrongAnswers: [],
+  audiocallCorrectAnswers: [],
 };
 
 const audiocallSlice = createSlice({
@@ -21,12 +25,27 @@ const audiocallSlice = createSlice({
     setAudiocallPage: (state, action: PayloadAction<number>) => {
       state.audiocallPage = action.payload;
     },
+    setAudiocallWrongAnswers: (state, action: PayloadAction<string[]>) => {
+      state.audiocallWrongAnswers = action.payload;
+    },
+    setAudiocallCorrectAnswers: (state, action: PayloadAction<string[]>) => {
+      state.audiocallCorrectAnswers = action.payload;
+    },
   },
 });
 
-export const { setAudiocallGroup, setAudiocallPage } = audiocallSlice.actions;
+export const {
+  setAudiocallGroup,
+  setAudiocallPage,
+  setAudiocallCorrectAnswers,
+  setAudiocallWrongAnswers,
+} = audiocallSlice.actions;
 
 export const selectAudiocallGroup = (state: RootState): number => state.audiocall.audiocallGroup;
 export const selectAudiocallPage = (state: RootState): number => state.audiocall.audiocallPage;
+export const selectAudiocallWrongAnswers = (state: RootState): string[] =>
+  state.audiocall.audiocallWrongAnswers;
+export const selectAudiocallCorrectAnswers = (state: RootState): string[] =>
+  state.audiocall.audiocallCorrectAnswers;
 
 export default audiocallSlice.reducer;

@@ -1,10 +1,18 @@
 import { FC, useState } from 'react';
+import { API_BASE } from '../../services/endpoints';
 import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
-import { API_BASE } from '../../services/endpoints';
 import Button from '../Button';
 import AudiocallMeaning from '../AudiocallMeaning';
+import AudiocallResult from '../AudiocallResult';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+  setAudiocallWrongAnswers,
+  setAudiocallCorrectAnswers,
+  selectAudiocallWrongAnswers,
+  selectAudiocallCorrectAnswers,
+} from '../../store/audiocall/audiocallSlice';
 
 const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
   const { selectedGroup, pageNumber } = props;
@@ -12,8 +20,9 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
   const [currentWord, setCurrentWord] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
-  const [correctAnswer, setCorrectAnswer] = useState<HTMLButtonElement>();
-  const [wrongAnswer, setWrongAnswer] = useState<HTMLButtonElement>();
+  const dispatch = useAppDispatch();
+  const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
+  const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -67,17 +76,18 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
 
-        setCorrectAnswer(chosenAnswer);
+        dispatch(setAudiocallCorrectAnswers([...correctAnswers, chosenAnswer.textContent]));
       } else {
+        const wordId = data[currentWord].wordTranslate.replaceAll(' ', '-');
         const rightAnswer: HTMLButtonElement = document.querySelector(
-          `#${data[currentWord].wordTranslate}`,
+          `#${wordId}`,
         ) as HTMLButtonElement;
+        const rightAnswerValue: string = rightAnswer.textContent as string;
 
         chosenAnswer.style.backgroundColor = 'red';
         rightAnswer.style.backgroundColor = 'green';
 
-        setWrongAnswer(chosenAnswer);
-        setCorrectAnswer(rightAnswer);
+        dispatch(setAudiocallWrongAnswers([...wrongAnswers, rightAnswerValue]));
       }
 
       setShouldContinue(true);
@@ -88,10 +98,8 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
 
       allAnswers?.forEach((button) => {
         button.disabled = false;
+        button.style.backgroundColor = '';
       });
-
-      if (wrongAnswer) wrongAnswer.style.backgroundColor = '';
-      if (correctAnswer) correctAnswer.style.backgroundColor = '';
 
       setCurrentWord(currentWord + 1);
       setShouldContinue(false);
@@ -124,7 +132,7 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
     }
 
     if (currentWord === 10) {
-      return <p>Thats it!</p>;
+      return <AudiocallResult />;
     }
   }
 

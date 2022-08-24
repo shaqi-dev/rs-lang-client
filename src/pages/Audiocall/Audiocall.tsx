@@ -9,6 +9,8 @@ import {
   setAudiocallPage,
   selectAudiocallGroup,
   selectAudiocallPage,
+  setAudiocallCorrectAnswers,
+  setAudiocallWrongAnswers,
 } from '../../store/audiocall/audiocallSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 
@@ -28,12 +30,18 @@ const Audiocall: FC = () => {
     }
   };
 
+  const startGame = (): void => {
+    dispatch(setAudiocallCorrectAnswers([]));
+    dispatch(setAudiocallWrongAnswers([]));
+    setGameStart(!gameStarted);
+  };
+
   return (
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted ? (
         <>
           <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />
-          <button type="button" onClick={(): void => setGameStart(!gameStarted)}>
+          <button type="button" onClick={startGame}>
             Start Game
           </button>
         </>
