@@ -1,6 +1,8 @@
+import UserWordDifficulty from '../shared/userWordDifficulty';
+
 export interface UserWord {
   id: string;
-  difficulty: string;
+  difficulty: UserWordDifficulty;
   optional: {};
   wordId: string;
 }
@@ -11,7 +13,7 @@ export interface GetUserWordByIdData {
 }
 
 export interface MutateUserWordBody {
-  difficulty: string;
+  difficulty: UserWordDifficulty;
   optional: {};
 }
 

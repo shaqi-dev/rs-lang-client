@@ -6,9 +6,15 @@ import useAudio from '../../hooks/useAudio';
 import { useAppSelector } from '../../hooks/redux';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 import { selectCurrentView } from '../../store/textbook/textbookSlice';
-import { useCreateUserWordMutation, useDeleteUserWordMutation } from '../../services/userWordsApi';
+import {
+  useCreateUserWordMutation,
+  useUpdateUserWordMutation,
+  useDeleteUserWordMutation,
+  useLazyGetUserWordByIdQuery,
+} from '../../services/userWordsApi';
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import UserWordDifficulty from '../../shared/userWordDifficulty';
 import s from './WordCard.module.scss';
 
 export interface WordCardProps {
@@ -29,25 +35,40 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
 
   const view = useAppSelector(selectCurrentView);
   const userId = useAppSelector(selectCurrentUserId);
-  const [createWord] = useCreateUserWordMutation();
-  const [deleteWord] = useDeleteUserWordMutation();
+  const [getUserWord] = useLazyGetUserWordByIdQuery();
+  const [createUserWord] = useCreateUserWordMutation();
+  const [updateUserWord] = useUpdateUserWordMutation();
+  const [deleteUserWord] = useDeleteUserWordMutation();
 
-  const handleAddHardWord = (): void => {
+  const handleChangeWordDifficulty = async (difficulty: UserWordDifficulty): Promise<void> => {
     if (userId && '_id' in word && word._id) {
-      createWord({
+      const wordId = word._id;
+      const requestData = {
         userId,
-        wordId: word._id,
+        wordId,
         body: {
-          difficulty: 'hard',
+          difficulty,
           optional: {},
         },
-      });
+      };
+
+      try {
+        await getUserWord({ userId, wordId });
+        await updateUserWord(requestData).unwrap();
+      } catch {
+        await createUserWord(requestData).unwrap();
+      }
     }
   };
 
-  const handleRemoveHardWord = (): void => {
+  const handleAddHardWord = (): Promise<void> =>
+    handleChangeWordDifficulty(UserWordDifficulty.hard);
+  const handleAddWeakWord = (): Promise<void> =>
+    handleChangeWordDifficulty(UserWordDifficulty.weak);
+
+  const handleRemoveWord = (): void => {
     if (userId && '_id' in word && word._id) {
-      deleteWord({
+      deleteUserWord({
         userId,
         wordId: word._id,
       });
@@ -74,9 +95,22 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
           <div className={s.userActions}>
             <Button
               type="button"
-              onClick={view === 'main' ? handleAddHardWord : handleRemoveHardWord}
+              onClick={view === 'main' ? handleAddHardWord : handleRemoveWord}
+              disabled={'userWord' in word && word.userWord.difficulty === UserWordDifficulty.hard}
             >
-              {view === 'main' ? 'Добавить в сложные слова' : 'Удалить из сложных слов'}
+              {view === 'main' ? 'Добавить в сложные' : 'Удалить из сложных'}
+            </Button>
+            <Button
+              type="button"
+              onClick={
+                'userWord' in word && word.userWord.difficulty === UserWordDifficulty.weak
+                  ? handleRemoveWord
+                  : handleAddWeakWord
+              }
+            >
+              {'userWord' in word && word.userWord.difficulty === UserWordDifficulty.weak
+                ? 'Удалить из изученных'
+                : 'Добавить в изученные'}
             </Button>
           </div>
         )}
