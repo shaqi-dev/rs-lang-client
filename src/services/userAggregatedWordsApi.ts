@@ -31,7 +31,7 @@ export const userWordsApi = useAuth.injectEndpoints({
         { type: 'UserWords', id: 'UPDATE_WORD' },
       ],
     }),
-    getUserAggregatedWordById: builder.query<AggregatedWord, GetUserAggregatedWordByIdData>({
+    getUserAggregatedWordById: builder.query<AggregatedWord[], GetUserAggregatedWordByIdData>({
       query: ({ userId, wordId }) => `users/${userId}/aggregatedWords/${wordId}`,
     }),
   }),

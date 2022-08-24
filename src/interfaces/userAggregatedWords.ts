@@ -1,5 +1,5 @@
 import { Word } from './words';
-import UserWordDifficulty from '../shared/userWordDifficulty';
+import WordDifficulty from '../shared/enums/WordDifficulty';
 
 export interface GetUserAggregatedWordsData {
   userId: string | null;
@@ -10,7 +10,7 @@ export interface GetUserAggregatedWordsData {
 }
 
 export interface UserWord {
-  difficulty: UserWordDifficulty;
+  difficulty: WordDifficulty;
   optional: {};
 }
 
@@ -26,7 +26,7 @@ export interface AggregatedWord extends Word {
   textMeaning: string;
   textMeaningTranslate: string;
   transcription: string;
-  userWord: UserWord;
+  userWord?: UserWord;
   word: string;
   wordTranslate: string;
   _id: string;
