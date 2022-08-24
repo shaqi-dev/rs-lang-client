@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useAppSelector } from '../../hooks/redux';
+import { Word } from '../../interfaces/words';
 import {
   selectAudiocallWrongAnswers,
   selectAudiocallCorrectAnswers,
@@ -12,14 +13,26 @@ const AudiocallResult: FC = () => {
     <div>
       <p>{`Correct answers (${audiocallCorrectAnswers.length}):`}</p>
       <ul>
-        {audiocallCorrectAnswers.map((word) => {
-          return <li key={word}>{word}</li>;
+        {audiocallCorrectAnswers.map((answer: Word) => {
+          return (
+            <li key={answer.word}>
+              <p>
+                {answer.word} - {answer.wordTranslate}
+              </p>
+            </li>
+          );
         })}
       </ul>
       <p>{`Wrong answers (${audiocallWrongAnswers.length}):`}</p>
       <ul>
-        {audiocallWrongAnswers.map((word) => {
-          return <li key={word}>{word}</li>;
+        {audiocallWrongAnswers.map((answer) => {
+          return (
+            <li key={answer.word}>
+              <p>
+                {answer.word} - {answer.wordTranslate}
+              </p>
+            </li>
+          );
         })}
       </ul>
     </div>

@@ -18,7 +18,7 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
   const { selectedGroup, pageNumber } = props;
   const { data, error, isLoading } = useGetWordsQuery({ group: selectedGroup, page: pageNumber });
   const [currentWord, setCurrentWord] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<{ word: string; wordIndex: number }[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
   const dispatch = useAppDispatch();
   const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
@@ -46,21 +46,28 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
     const generateAnswers = (): void => {
       playAudio();
 
-      const choices: string[] = [];
+      const choices: { word: string; wordIndex: number }[] = [];
+      const pushedChoices: string[] = [];
       const correctAnswerIndex: number = Math.floor(Math.random() * 5);
 
       for (let i = 0; i < 4; i += 1) {
         const index: number = Math.floor(Math.random() * data.length);
 
         if (
-          choices.indexOf(data[index].wordTranslate) !== -1 ||
+          pushedChoices.indexOf(data[index].wordTranslate) !== -1 ||
           data[currentWord].wordTranslate === data[index].wordTranslate
         ) {
           i -= 1;
-        } else choices.push(data[index].wordTranslate);
+        } else {
+          choices.push({ word: data[index].wordTranslate, wordIndex: index });
+          pushedChoices.push(data[index].wordTranslate);
+        }
       }
 
-      choices.splice(correctAnswerIndex, 0, data[currentWord].wordTranslate);
+      choices.splice(correctAnswerIndex, 0, {
+        word: data[currentWord].wordTranslate,
+        wordIndex: currentWord,
+      });
 
       setAnswers([...choices]);
     };
@@ -76,18 +83,17 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
 
-        dispatch(setAudiocallCorrectAnswers([...correctAnswers, chosenAnswer.textContent]));
+        dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[Number(chosenAnswer.name)]]));
       } else {
         const wordId = data[currentWord].wordTranslate.replaceAll(' ', '-');
         const rightAnswer: HTMLButtonElement = document.querySelector(
           `#${wordId}`,
         ) as HTMLButtonElement;
-        const rightAnswerValue: string = rightAnswer.textContent as string;
 
         chosenAnswer.style.backgroundColor = 'red';
         rightAnswer.style.backgroundColor = 'green';
 
-        dispatch(setAudiocallWrongAnswers([...wrongAnswers, rightAnswerValue]));
+        dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
       }
 
       setShouldContinue(true);
