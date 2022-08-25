@@ -34,6 +34,10 @@ const Audiocall: FC = () => {
     }
   };
 
+  const tryAgain = (): void => {
+    setGameStart(false);
+  };
+
   const startGame = (): void => {
     dispatch(setAudiocallCurrentWord(0));
     dispatch(setAudiocallShouldContinue(false));
@@ -49,13 +53,18 @@ const Audiocall: FC = () => {
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted ? (
         <div className={s.audiocallWrapper_groupsAndButton}>
+          <h1>Audiocall Game</h1>
           <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />
           <button className={s.startAudiocallButton} type="button" onClick={startGame}>
             Start Game
           </button>
         </div>
       ) : (
-        <AudiocallGame selectedGroup={audiocallGroup} pageNumber={audiocallPage} />
+        <AudiocallGame
+          selectedGroup={audiocallGroup}
+          pageNumber={audiocallPage}
+          tryAgain={tryAgain}
+        />
       )}
     </ContentWrapper>
   );

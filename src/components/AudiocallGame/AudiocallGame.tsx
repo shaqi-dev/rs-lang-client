@@ -17,9 +17,10 @@ import {
   setAudiocallWrongChoise,
 } from '../../store/audiocall/audiocallSlice';
 import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
+import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
 
-const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
-  const { selectedGroup, pageNumber } = props;
+const AudiocallGame: FC<AudiocallGameProps> = (props) => {
+  const { selectedGroup, pageNumber, tryAgain } = props;
   const { data, error, isLoading } = useGetAudiocallWords(selectedGroup, pageNumber);
   const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
@@ -107,7 +108,14 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
     }
 
     if (currentWord === 10) {
-      return <AudiocallResult />;
+      return (
+        <>
+          <AudiocallResult />
+          <button type="button" onClick={tryAgain} className={s.tryAgainButton}>
+            Try Again
+          </button>
+        </>
+      );
     }
   }
 
