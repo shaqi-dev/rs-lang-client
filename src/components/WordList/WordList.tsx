@@ -1,22 +1,21 @@
 import { FC, useEffect } from 'react';
 import WordItem from '../WordItem';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setWord, selectCurrentWord, setMaxPages } from '../../store/textbook/textbookSlice';
+import { useAppDispatch } from '../../hooks/redux';
+import { setWord, setMaxPages } from '../../store/textbook/textbookSlice';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
-import { useGetTextbookWords } from '../../hooks/useGetTextbookWords';
 import ErrorBanner from '../ErrorBanner';
 import type { Word } from '../../interfaces/words';
+import type { GetTextbookWordsResponse } from '../../interfaces/useGetTextbookWords';
 import s from './WordList.module.scss';
 
-const WordList: FC = () => {
+interface WordListProps {
+  wordsResponse: GetTextbookWordsResponse;
+  activeWord: Word | AggregatedWord | null;
+}
+
+const WordList: FC<WordListProps> = ({ wordsResponse, activeWord }) => {
   const dispatch = useAppDispatch();
-  const activeWord: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
-
-  const { words, error, isLoading, maxPages } = useGetTextbookWords();
-
-  useEffect(() => {
-    dispatch(setWord((words && words[0]) || null));
-  }, [dispatch, words]);
+  const { words, error, isLearned, isLoading, maxPages } = wordsResponse;
 
   useEffect(() => {
     dispatch(setMaxPages(maxPages));
@@ -35,18 +34,18 @@ const WordList: FC = () => {
   if (words && !words.length) return <p>В этом разделе еще нет слов</p>;
 
   if (words && !!words.length) {
-    const handleClickWordItem = (word: Word | AggregatedWord): void => {
+    const handleClickItem = (word: Word | AggregatedWord): void => {
       dispatch(setWord(word));
     };
 
     return (
-      <ul className={s.root}>
+      <ul className={`${s.root}${isLearned ? ` ${s.root_learned}` : ''}`}>
         {words.map((word) => {
           const active = !!activeWord && activeWord.word === word.word;
 
           return (
             <li key={word.word} className={s.listItem}>
-              <WordItem word={word} active={active} onClick={handleClickWordItem} />
+              <WordItem word={word} active={active} onClick={handleClickItem} />
             </li>
           );
         })}
