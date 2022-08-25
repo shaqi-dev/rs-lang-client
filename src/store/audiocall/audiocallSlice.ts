@@ -15,6 +15,7 @@ const initialState: AudiocallState = {
   audiocallWrongChoise: '',
   audiocallWrongAnswers: [],
   audiocallCorrectAnswers: [],
+  audiocallResultPage: '',
 };
 
 const audiocallSlice = createSlice({
@@ -51,6 +52,9 @@ const audiocallSlice = createSlice({
     setAudiocallCorrectAnswers: (state, action: PayloadAction<Word[]>) => {
       state.audiocallCorrectAnswers = action.payload;
     },
+    setAudiocallResultPage: (state, action: PayloadAction<string>) => {
+      state.audiocallResultPage = action.payload;
+    },
   },
 });
 
@@ -65,6 +69,7 @@ export const {
   setAudiocallWrongChoise,
   setAudiocallCorrectAnswers,
   setAudiocallWrongAnswers,
+  setAudiocallResultPage,
 } = audiocallSlice.actions;
 
 export const selectAudiocallGroup = (state: RootState): number => state.audiocall.audiocallGroup;
@@ -85,5 +90,7 @@ export const selectAudiocallWrongAnswers = (state: RootState): Word[] =>
   state.audiocall.audiocallWrongAnswers;
 export const selectAudiocallCorrectAnswers = (state: RootState): Word[] =>
   state.audiocall.audiocallCorrectAnswers;
+export const selectAudiocallResultPage = (state: RootState): string =>
+  state.audiocall.audiocallResultPage;
 
 export default audiocallSlice.reducer;

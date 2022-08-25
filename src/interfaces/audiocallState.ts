@@ -9,6 +9,7 @@ interface AudiocallState {
   audiocallDisableAnswers: boolean;
   audiocallCorrectChoise: string;
   audiocallWrongChoise: string;
+  audiocallResultPage: string;
   audiocallWrongAnswers: Word[];
   audiocallCorrectAnswers: Word[];
 }

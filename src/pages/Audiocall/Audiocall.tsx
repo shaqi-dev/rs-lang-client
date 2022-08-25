@@ -15,6 +15,7 @@ import {
   setAudiocallWrongAnswers,
   selectAudiocallGroup,
   selectAudiocallPage,
+  setAudiocallResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 
@@ -45,6 +46,7 @@ const Audiocall: FC = () => {
     dispatch(setAudiocallCorrectAnswers([]));
     dispatch(setAudiocallWrongAnswers([]));
     dispatch(setAudiocallDisableAnswers(false));
+    dispatch(setAudiocallResultPage('pieChart'));
 
     setGameStart(!gameStarted);
   };
