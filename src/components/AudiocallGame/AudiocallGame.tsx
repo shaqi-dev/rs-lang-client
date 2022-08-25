@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { API_BASE } from '../../services/endpoints';
-import { useGetWordsQuery } from '../../services/wordsApi';
+import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
 import Button from '../Button';
@@ -16,7 +16,7 @@ import {
 
 const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
   const { selectedGroup, pageNumber } = props;
-  const { data, error, isLoading } = useGetWordsQuery({ group: selectedGroup, page: pageNumber });
+  const { data, error, isLoading } = useGetAudiocallWords(selectedGroup, pageNumber);
   const [currentWord, setCurrentWord] = useState(0);
   const [answers, setAnswers] = useState<{ word: string; wordIndex: number }[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
