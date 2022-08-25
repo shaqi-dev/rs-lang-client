@@ -11,12 +11,13 @@ const AudiocallGroupList: FC<AudiocallGroupListProps> = ({ onClickItem }) => {
   const activeGroupName: string = wordsGroupNames[activeGroup];
 
   return (
-    <ul className={s.root}>
+    <ul className={s.audiocallGroups}>
       {wordsGroupNames.map((name) => (
         <li className={s.listItem} key={name}>
           <AudiocallGroupItem
             active={activeGroupName === name}
             onClick={(): void => onClickItem(name)}
+            className={name}
           >
             {name}
           </AudiocallGroupItem>

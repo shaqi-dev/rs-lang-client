@@ -46,12 +46,12 @@ const Audiocall: FC = () => {
   return (
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted ? (
-        <>
+        <div className={s.audiocallWrapper_groupsAndButton}>
           <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />
-          <button type="button" onClick={startGame}>
+          <button className={s.startAudiocallButton} type="button" onClick={startGame}>
             Start Game
           </button>
-        </>
+        </div>
       ) : (
         <AudiocallGame selectedGroup={audiocallGroup} pageNumber={audiocallPage} />
       )}

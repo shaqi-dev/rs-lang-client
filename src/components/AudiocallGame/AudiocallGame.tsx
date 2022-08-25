@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   setAudiocallCurrentWord,
   setAudiocallShouldContinue,
+  setAudiocallDisableAnswers,
   setAudiocallWrongAnswers,
   setAudiocallCorrectAnswers,
   selectAudiocallCurrentWord,
@@ -79,11 +80,8 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
 
     const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
       const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
-      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
 
-      allAnswers?.forEach((button) => {
-        button.disabled = true;
-      });
+      dispatch(setAudiocallDisableAnswers(true));
 
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
@@ -105,13 +103,7 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
     };
 
     const continueGame = (): void => {
-      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
-
-      allAnswers?.forEach((button) => {
-        button.disabled = false;
-        button.style.backgroundColor = '';
-      });
-
+      dispatch(setAudiocallDisableAnswers(false));
       dispatch(setAudiocallCurrentWord(currentWord + 1));
       dispatch(setAudiocallShouldContinue(false));
       setAnswers([]);
