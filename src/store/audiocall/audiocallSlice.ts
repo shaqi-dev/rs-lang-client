@@ -11,6 +11,8 @@ const initialState: AudiocallState = {
   audiocallAnswers: [],
   audiocallShouldContinue: false,
   audiocallDisableAnswers: false,
+  audiocallCorrectChoise: '',
+  audiocallWrongChoise: '',
   audiocallWrongAnswers: [],
   audiocallCorrectAnswers: [],
 };
@@ -37,6 +39,12 @@ const audiocallSlice = createSlice({
     setAudiocallDisableAnswers: (state, action: PayloadAction<boolean>) => {
       state.audiocallDisableAnswers = action.payload;
     },
+    setAudiocallCorrectChoise: (state, action: PayloadAction<string>) => {
+      state.audiocallCorrectChoise = action.payload;
+    },
+    setAudiocallWrongChoise: (state, action: PayloadAction<string>) => {
+      state.audiocallWrongChoise = action.payload;
+    },
     setAudiocallWrongAnswers: (state, action: PayloadAction<Word[]>) => {
       state.audiocallWrongAnswers = action.payload;
     },
@@ -53,6 +61,8 @@ export const {
   setAudiocallAnswers,
   setAudiocallShouldContinue,
   setAudiocallDisableAnswers,
+  setAudiocallCorrectChoise,
+  setAudiocallWrongChoise,
   setAudiocallCorrectAnswers,
   setAudiocallWrongAnswers,
 } = audiocallSlice.actions;
@@ -67,6 +77,10 @@ export const selectAudiocallShouldContinue = (state: RootState): boolean =>
   state.audiocall.audiocallShouldContinue;
 export const selectAudiocallDisableAnswers = (state: RootState): boolean =>
   state.audiocall.audiocallDisableAnswers;
+export const selectAudiocallCorrectChoise = (state: RootState): string =>
+  state.audiocall.audiocallCorrectChoise;
+export const selectAudiocallWrongChoise = (state: RootState): string =>
+  state.audiocall.audiocallWrongChoise;
 export const selectAudiocallWrongAnswers = (state: RootState): Word[] =>
   state.audiocall.audiocallWrongAnswers;
 export const selectAudiocallCorrectAnswers = (state: RootState): Word[] =>

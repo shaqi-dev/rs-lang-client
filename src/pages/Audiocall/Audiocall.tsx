@@ -10,6 +10,7 @@ import {
   setAudiocallCurrentWord,
   setAudiocallShouldContinue,
   setAudiocallAnswers,
+  setAudiocallDisableAnswers,
   setAudiocallCorrectAnswers,
   setAudiocallWrongAnswers,
   selectAudiocallGroup,
@@ -39,6 +40,7 @@ const Audiocall: FC = () => {
     dispatch(setAudiocallAnswers([]));
     dispatch(setAudiocallCorrectAnswers([]));
     dispatch(setAudiocallWrongAnswers([]));
+    dispatch(setAudiocallDisableAnswers(false));
 
     setGameStart(!gameStarted);
   };

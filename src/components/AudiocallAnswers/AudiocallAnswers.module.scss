@@ -27,3 +27,19 @@
     }
   }
 }
+
+.correctAnswer {
+  background-color: rgb(79, 197, 0);
+
+  &[disabled]:hover {
+    background: rgb(79, 197, 0);
+  }
+}
+
+.wrongAnswer {
+  background-color: rgb(235, 0, 0);
+
+  &[disabled]:hover {
+    background: rgb(235, 0, 0);
+  }
+}
