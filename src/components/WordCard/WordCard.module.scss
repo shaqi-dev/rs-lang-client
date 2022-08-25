@@ -1,5 +1,6 @@
 .root {
   min-width: 400px;
+  max-width: 400px;
   border-radius: 15px;
   background-color: #d8d8ff;
 }
@@ -43,6 +44,17 @@
     font-size: 3rem;
     opacity: 0.5;
   }
+
+  &_playButton {
+    width: 37px;
+    vertical-align: bottom;
+    cursor: pointer;
+  }
+}
+
+.userActions {
+  display: flex;
+  gap: 5px;
 }
 
 .textBlock {
@@ -59,10 +71,6 @@
   &_title {
     font-size: 2rem;
   }
-
-  // &_original {
-
-  // }
 
   &_translate {
     opacity: 0.5;

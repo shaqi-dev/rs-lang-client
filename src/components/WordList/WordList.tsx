@@ -1,52 +1,48 @@
 import { FC, useEffect } from 'react';
 import WordItem from '../WordItem';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setWord, selectCurrentWord, setMaxPages } from '../../store/textbook/textbookSlice';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import { useGetTextbookWords } from '../../hooks/useGetTextbookWords';
+import ErrorBanner from '../ErrorBanner';
 import type { Word } from '../../interfaces/words';
 import s from './WordList.module.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { useGetWordsQuery } from '../../services/wordsApi';
-import {
-  setWord,
-  selectCurrentGroup,
-  selectCurrentPage,
-  selectCurrentWord,
-} from '../../store/textbook/textbookSlice';
-import ErrorBanner from '../ErrorBanner';
 
 const WordList: FC = () => {
   const dispatch = useAppDispatch();
-  const group: number = useAppSelector(selectCurrentGroup);
-  const page: number = useAppSelector(selectCurrentPage);
-  const activeWord: Word | null = useAppSelector(selectCurrentWord);
+  const activeWord: Word | AggregatedWord | null = useAppSelector(selectCurrentWord);
 
-  const { data, error, isLoading } = useGetWordsQuery({ group, page });
+  const { words, error, isLoading, maxPages } = useGetTextbookWords();
 
   useEffect(() => {
-    if (data) {
-      dispatch(setWord(data[0]));
-    }
-  }, [data, dispatch]);
+    dispatch(setWord((words && words[0]) || null));
+  }, [dispatch, words]);
+
+  useEffect(() => {
+    dispatch(setMaxPages(maxPages));
+  }, [dispatch, maxPages]);
 
   if (isLoading) return <p>Loading...</p>;
 
   if (error) {
     if ('status' in error) {
       const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
-
       return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
     }
-
     return <ErrorBanner>{error.message}</ErrorBanner>;
   }
 
-  if (data) {
-    const handleClickWordItem = (word: Word): void => {
+  if (words && !words.length) return <p>В этом разделе еще нет слов</p>;
+
+  if (words && !!words.length) {
+    const handleClickWordItem = (word: Word | AggregatedWord): void => {
       dispatch(setWord(word));
     };
 
     return (
       <ul className={s.root}>
-        {data.map((word, i) => {
-          const active = (activeWord && activeWord.word === word.word) || (!activeWord && i === 0);
+        {words.map((word) => {
+          const active = !!activeWord && activeWord.word === word.word;
 
           return (
             <li key={word.word} className={s.listItem}>

@@ -4,7 +4,23 @@
   gap: 40px;
 }
 
-.groupsSection, .wordsSection {
+.sectionTitle {
+  font-weight: bold;
+  font-size: 3.2rem;
+}
+
+.viewSection {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  &_button {
+    font-size: 3.2rem;
+  }
+}
+
+.groupsSection, .wordsSection, .gamesSection {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -14,12 +30,19 @@
   align-self: baseline;
 }
 
-.sectionTitle {
-  font-weight: bold;
-  font-size: 3.2rem;
+.gamesSection {
+  width: 100%;
+}
+
+.wordsBody, .gamesBody {
+  display: flex;
+  gap: 40px;
 }
 
 .wordsBody {
-  display: flex;
-  gap: 40px;
+  justify-content: space-between;
+}
+
+.gamesBody {
+  justify-content: center;
 }
