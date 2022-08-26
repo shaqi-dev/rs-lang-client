@@ -17,22 +17,43 @@ import {
   setGroup,
   setPage,
   setView,
+  setWord,
 } from '../../store/textbook/textbookSlice';
-import { selectCurrentUsername } from '../../store/auth/authSlice';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
+import useGetTextbookWords from '../../hooks/useGetTextbookWords';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import type { Word } from '../../interfaces/words';
 import s from './Textbook.module.scss';
+import TextbookView from '../../shared/enums/TextbookView';
 
 const Textbook: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const username = useAppSelector(selectCurrentUsername);
-  const view = useAppSelector<'main' | 'user'>(selectCurrentView);
+  const userId = useAppSelector<string | null>(selectCurrentUserId);
+  const view = useAppSelector<TextbookView>(selectCurrentView);
   const group = useAppSelector<number>(selectCurrentGroup);
   const page = useAppSelector<number>(selectCurrentPage);
   const word = useAppSelector<Word | AggregatedWord | null>(selectCurrentWord);
-  const maxPages = useAppSelector(selectCurrentMaxPages);
+  const maxPages = useAppSelector<number>(selectCurrentMaxPages);
+
+  const wordsResponse = useGetTextbookWords({ view, group, page, userId });
+  const firstWordOnPage = wordsResponse?.words?.[0] || null;
+
+  useEffect(() => {
+    dispatch(setPage(0));
+  }, [dispatch, group, view]);
+
+  useEffect(() => {
+    dispatch(setWord(firstWordOnPage));
+  }, [dispatch, firstWordOnPage, group, page, view]);
+
+  // Update word card when delete word from hard words
+  useEffect(() => {
+    if (view === TextbookView.USER) {
+      dispatch(setWord(firstWordOnPage));
+    }
+  }, [dispatch, firstWordOnPage, view, wordsResponse.words]);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -51,11 +72,11 @@ const Textbook: FC = () => {
   };
 
   const handleClickTextbook = (): void => {
-    dispatch(setView('main'));
+    dispatch(setView(TextbookView.MAIN));
   };
 
   const handleClickVocabulary = (): void => {
-    dispatch(setView('user'));
+    dispatch(setView(TextbookView.USER));
   };
 
   return (
@@ -70,7 +91,7 @@ const Textbook: FC = () => {
         >
           Учебник
         </Button>
-        {username && (
+        {userId && (
           <Button
             type="button"
             buttonStyle="link"
@@ -89,10 +110,36 @@ const Textbook: FC = () => {
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
         <div className={s.wordsBody}>
-          <WordList />
-          {word && <WordCard word={word} />}
+          <WordList wordsResponse={wordsResponse} activeWord={word} />
+          {word && <WordCard word={word} view={view} userId={userId} />}
         </div>
-        <Paginate pageCount={maxPages} forcePage={page} onPageChage={handleChangePage} />
+        <Paginate
+          pageCount={maxPages}
+          forcePage={page}
+          onPageChage={handleChangePage}
+          learned={wordsResponse.isLearned}
+        />
+      </section>
+      <section className={s.gamesSection}>
+        <p className={s.sectionTitle}>Игры</p>
+        <div className={s.gamesBody}>
+          <Button
+            type="button"
+            buttonStyle="primary"
+            onClick={(): void => navigate('sprint')}
+            disabled={wordsResponse.isLearned}
+          >
+            Спринт
+          </Button>
+          <Button
+            type="button"
+            buttonStyle="primary"
+            onClick={(): void => navigate('audiocall')}
+            disabled={wordsResponse.isLearned}
+          >
+            Аудиовызов
+          </Button>
+        </div>
       </section>
       <section className={s.gamesSection}>
         <p className={s.sectionTitle}>Игры</p>

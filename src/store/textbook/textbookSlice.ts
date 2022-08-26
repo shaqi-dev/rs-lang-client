@@ -3,9 +3,10 @@ import type { TextbookState } from '../../interfaces/textbook';
 import type { RootState } from '..';
 import type { Word } from '../../interfaces/words';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import TextbookView from '../../shared/enums/TextbookView';
 
 const initialState: TextbookState = {
-  view: 'main',
+  view: TextbookView.MAIN,
   group: 0,
   page: 0,
   word: null,
@@ -16,7 +17,7 @@ const textbookSlice = createSlice({
   name: 'textbook',
   initialState,
   reducers: {
-    setView: (state, action: PayloadAction<'main' | 'user'>) => {
+    setView: (state, action: PayloadAction<TextbookView>) => {
       state.view = action.payload;
     },
     setGroup: (state, action: PayloadAction<number>) => {
@@ -36,7 +37,7 @@ const textbookSlice = createSlice({
 
 export const { setView, setGroup, setPage, setWord, setMaxPages } = textbookSlice.actions;
 
-export const selectCurrentView = (state: RootState): 'main' | 'user' => state.textbook.view;
+export const selectCurrentView = (state: RootState): TextbookView => state.textbook.view;
 export const selectCurrentGroup = (state: RootState): number => state.textbook.group;
 export const selectCurrentPage = (state: RootState): number => state.textbook.page;
 export const selectCurrentWord = (state: RootState): Word | AggregatedWord | null =>
