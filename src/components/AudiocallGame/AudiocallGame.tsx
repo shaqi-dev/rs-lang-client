@@ -6,8 +6,9 @@ import { API_BASE } from '../../services/endpoints';
 import Button from '../Button';
 import AudiocallMeaning from '../AudiocallMeaning';
 
-const AudiocallGame: FC = () => {
-  const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
+const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
+  const { selectedGroup, pageNumber } = props;
+  const { data, error, isLoading } = useGetWordsQuery({ group: selectedGroup, page: pageNumber });
   const [currentWord, setCurrentWord] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
@@ -65,6 +66,8 @@ const AudiocallGame: FC = () => {
 
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
+
+        setCorrectAnswer(chosenAnswer);
       } else {
         const rightAnswer: HTMLButtonElement = document.querySelector(
           `#${data[currentWord].wordTranslate}`,
