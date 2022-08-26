@@ -10,8 +10,12 @@ const initialState: AudiocallState = {
   audiocallCurrentWord: 0,
   audiocallAnswers: [],
   audiocallShouldContinue: false,
+  audiocallDisableAnswers: false,
+  audiocallCorrectChoise: '',
+  audiocallWrongChoise: '',
   audiocallWrongAnswers: [],
   audiocallCorrectAnswers: [],
+  audiocallResultPage: '',
 };
 
 const audiocallSlice = createSlice({
@@ -33,11 +37,23 @@ const audiocallSlice = createSlice({
     setAudiocallShouldContinue: (state, action: PayloadAction<boolean>) => {
       state.audiocallShouldContinue = action.payload;
     },
+    setAudiocallDisableAnswers: (state, action: PayloadAction<boolean>) => {
+      state.audiocallDisableAnswers = action.payload;
+    },
+    setAudiocallCorrectChoise: (state, action: PayloadAction<string>) => {
+      state.audiocallCorrectChoise = action.payload;
+    },
+    setAudiocallWrongChoise: (state, action: PayloadAction<string>) => {
+      state.audiocallWrongChoise = action.payload;
+    },
     setAudiocallWrongAnswers: (state, action: PayloadAction<Word[]>) => {
       state.audiocallWrongAnswers = action.payload;
     },
     setAudiocallCorrectAnswers: (state, action: PayloadAction<Word[]>) => {
       state.audiocallCorrectAnswers = action.payload;
+    },
+    setAudiocallResultPage: (state, action: PayloadAction<string>) => {
+      state.audiocallResultPage = action.payload;
     },
   },
 });
@@ -48,8 +64,12 @@ export const {
   setAudiocallCurrentWord,
   setAudiocallAnswers,
   setAudiocallShouldContinue,
+  setAudiocallDisableAnswers,
+  setAudiocallCorrectChoise,
+  setAudiocallWrongChoise,
   setAudiocallCorrectAnswers,
   setAudiocallWrongAnswers,
+  setAudiocallResultPage,
 } = audiocallSlice.actions;
 
 export const selectAudiocallGroup = (state: RootState): number => state.audiocall.audiocallGroup;
@@ -60,9 +80,17 @@ export const selectAudiocallAnswers = (state: RootState): AudiocallAnswerInfo[] 
   state.audiocall.audiocallAnswers;
 export const selectAudiocallShouldContinue = (state: RootState): boolean =>
   state.audiocall.audiocallShouldContinue;
+export const selectAudiocallDisableAnswers = (state: RootState): boolean =>
+  state.audiocall.audiocallDisableAnswers;
+export const selectAudiocallCorrectChoise = (state: RootState): string =>
+  state.audiocall.audiocallCorrectChoise;
+export const selectAudiocallWrongChoise = (state: RootState): string =>
+  state.audiocall.audiocallWrongChoise;
 export const selectAudiocallWrongAnswers = (state: RootState): Word[] =>
   state.audiocall.audiocallWrongAnswers;
 export const selectAudiocallCorrectAnswers = (state: RootState): Word[] =>
   state.audiocall.audiocallCorrectAnswers;
+export const selectAudiocallResultPage = (state: RootState): string =>
+  state.audiocall.audiocallResultPage;
 
 export default audiocallSlice.reducer;

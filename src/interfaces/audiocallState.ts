@@ -6,6 +6,10 @@ interface AudiocallState {
   audiocallCurrentWord: number;
   audiocallAnswers: { word: string; wordIndex: number }[];
   audiocallShouldContinue: boolean;
+  audiocallDisableAnswers: boolean;
+  audiocallCorrectChoise: string;
+  audiocallWrongChoise: string;
+  audiocallResultPage: string;
   audiocallWrongAnswers: Word[];
   audiocallCorrectAnswers: Word[];
 }
