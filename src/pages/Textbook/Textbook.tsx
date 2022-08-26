@@ -63,10 +63,6 @@ const Textbook: FC = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(setPage(0));
-  }, [dispatch, group, view]);
-
   const handleChangePage = ({ selected }: { selected: number }): void => {
     dispatch(setPage(selected));
   };
@@ -137,17 +133,6 @@ const Textbook: FC = () => {
             onClick={(): void => navigate('audiocall')}
             disabled={wordsResponse.isLearned}
           >
-            Аудиовызов
-          </Button>
-        </div>
-      </section>
-      <section className={s.gamesSection}>
-        <p className={s.sectionTitle}>Игры</p>
-        <div className={s.gamesBody}>
-          <Button type="button" buttonStyle="primary" onClick={(): void => navigate('sprint')}>
-            Спринт
-          </Button>
-          <Button type="button" buttonStyle="primary" onClick={(): void => navigate('audiocall')}>
             Аудиовызов
           </Button>
         </div>

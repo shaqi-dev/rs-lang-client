@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 
 const AudiocallAnswers: FC<{
-  answers: AudiocallAnswerInfo[];
+  answers: { word: string; wordIndex: number }[];
   chooseAnswer: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }> = (props) => {
   const { answers, chooseAnswer } = props;

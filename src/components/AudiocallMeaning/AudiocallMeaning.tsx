@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import AudiocallMeaningData from '../../interfaces/audiocallMeaningData';
 
-const AudiocallMeaning: FC<AudiocallMeaningData> = (props) => {
+const AudiocallMeaning: FC<{ imageLink: string; imageAlt: string; currentWord: string }> = (
+  props,
+) => {
   const { imageLink, imageAlt, currentWord } = props;
 
   return (
