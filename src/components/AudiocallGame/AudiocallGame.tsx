@@ -2,38 +2,58 @@ import { FC, useState } from 'react';
 import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
+import { API_BASE } from '../../services/endpoints';
 
 const AudiocallGame: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
-  const [correctAnswer, setCorrectAnswer] = useState(0);
+  const [currentWord, setCurrentWord] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [shouldContinue, setShouldContinue] = useState(false);
-  const [wrongAnswer, setWrongAnswer] = useState<HTMLButtonElement | null>(null);
+  const [correctAnswer, setCorrectAnswer] = useState<HTMLButtonElement>();
+  const [wrongAnswer, setWrongAnswer] = useState<HTMLButtonElement>();
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (error) {
+    if ('status' in error) {
+      const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
+
+      return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
+    }
+
+    return <ErrorBanner>{error.message}</ErrorBanner>;
+  }
 
   if (data) {
-    const generateAnswers = (): void => {
-      if (data) {
-        const choices: string[] = [];
-        const correctAnswerIndex: number = Math.floor(Math.random() * 5);
-
-        for (let i = 0; i < 4; i += 1) {
-          const index: number = Math.floor(Math.random() * data.length);
-
-          if (
-            choices.indexOf(data[index].wordTranslate) !== -1 ||
-            data[correctAnswer].wordTranslate === data[index].wordTranslate
-          ) {
-            i -= 1;
-          } else choices.push(data[index].wordTranslate);
-        }
-
-        choices.splice(correctAnswerIndex, 0, data[correctAnswer].wordTranslate);
-
-        setAnswers([...choices]);
-      }
+    const playAudio = (): void => {
+      const audioSource = `${API_BASE}/${data[currentWord].audio}`;
+      const audio = new Audio(audioSource);
+      audio.play();
     };
 
-    const chooseWord = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    const generateAnswers = (): void => {
+      playAudio();
+
+      const choices: string[] = [];
+      const correctAnswerIndex: number = Math.floor(Math.random() * 5);
+
+      for (let i = 0; i < 4; i += 1) {
+        const index: number = Math.floor(Math.random() * data.length);
+
+        if (
+          choices.indexOf(data[index].wordTranslate) !== -1 ||
+          data[currentWord].wordTranslate === data[index].wordTranslate
+        ) {
+          i -= 1;
+        } else choices.push(data[index].wordTranslate);
+      }
+
+      choices.splice(correctAnswerIndex, 0, data[currentWord].wordTranslate);
+
+      setAnswers([...choices]);
+    };
+
+    const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
       const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
       const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
 
@@ -41,25 +61,22 @@ const AudiocallGame: FC = () => {
         button.disabled = true;
       });
 
-      if (chosenAnswer.textContent === data[correctAnswer].wordTranslate) {
+      if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
       } else {
         setWrongAnswer(chosenAnswer);
-        const rightAnswer: HTMLButtonElement = document.querySelector(
-          `#${data[correctAnswer].wordTranslate}`,
-        ) as HTMLButtonElement;
+        setCorrectAnswer(
+          document.querySelector(`#${data[currentWord].wordTranslate}`) as HTMLButtonElement,
+        );
 
         chosenAnswer.style.backgroundColor = 'red';
-        rightAnswer.style.backgroundColor = 'green';
+        if (correctAnswer) correctAnswer.style.backgroundColor = 'green';
       }
 
       setShouldContinue(true);
     };
 
-    const setNextCorrectAnswer = (): void => {
-      const rightAnswer: HTMLButtonElement = document.querySelector(
-        `#${data[correctAnswer].wordTranslate}`,
-      ) as HTMLButtonElement;
+    const continueGame = (): void => {
       const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
 
       allAnswers?.forEach((button) => {
@@ -67,36 +84,26 @@ const AudiocallGame: FC = () => {
       });
 
       if (wrongAnswer) wrongAnswer.style.backgroundColor = '';
-      rightAnswer.style.backgroundColor = '';
+      if (correctAnswer) correctAnswer.style.backgroundColor = '';
 
-      setCorrectAnswer(correctAnswer + 1);
+      setCurrentWord(currentWord + 1);
       setShouldContinue(false);
       setAnswers([]);
     };
 
-    if (isLoading) return <p>Loading...</p>;
+    if (answers.length === 0 && currentWord < 10) generateAnswers();
 
-    if (error) {
-      if ('status' in error) {
-        const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
-
-        return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
-      }
-
-      return <ErrorBanner>{error.message}</ErrorBanner>;
-    }
-
-    if (answers.length === 0) generateAnswers();
-
-    if (data && correctAnswer < 10) {
+    if (data && currentWord < 10) {
       return (
-        <div className="audiocall-answers">
-          <p>{data[correctAnswer].wordTranslate}</p>
-          <div>
-            <AudiocallAnswers answers={answers} chooseWord={chooseWord} />
+        <div>
+          <button type="button" onClick={playAudio}>
+            Play Audio
+          </button>
+          <div className="audiocall-answers">
+            <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
           </div>
           {shouldContinue ? (
-            <button type="button" onClick={setNextCorrectAnswer}>
+            <button type="button" onClick={continueGame}>
               Continue
             </button>
           ) : null}
@@ -104,7 +111,7 @@ const AudiocallGame: FC = () => {
       );
     }
 
-    if (correctAnswer === 10) {
+    if (currentWord === 10) {
       return <p>Thats it!</p>;
     }
   }

@@ -2,15 +2,15 @@ import { FC } from 'react';
 
 const AudiocallAnswers: FC<{
   answers: string[];
-  chooseWord: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  chooseAnswer: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }> = (props) => {
-  const { answers, chooseWord } = props;
+  const { answers, chooseAnswer } = props;
 
   return (
     <div>
       {answers.map((word) => {
         return (
-          <button type="button" key={word} id={word} onClick={(e): void => chooseWord(e)}>
+          <button type="button" key={word} id={word} onClick={(e): void => chooseAnswer(e)}>
             {word}
           </button>
         );
