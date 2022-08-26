@@ -7,13 +7,10 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   setAudiocallGroup,
   setAudiocallPage,
-  setAudiocallCurrentWord,
-  setAudiocallShouldContinue,
-  setAudiocallAnswers,
-  setAudiocallCorrectAnswers,
-  setAudiocallWrongAnswers,
   selectAudiocallGroup,
   selectAudiocallPage,
+  setAudiocallCorrectAnswers,
+  setAudiocallWrongAnswers,
 } from '../../store/audiocall/audiocallSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 
@@ -34,12 +31,8 @@ const Audiocall: FC = () => {
   };
 
   const startGame = (): void => {
-    dispatch(setAudiocallCurrentWord(0));
-    dispatch(setAudiocallShouldContinue(false));
-    dispatch(setAudiocallAnswers([]));
     dispatch(setAudiocallCorrectAnswers([]));
     dispatch(setAudiocallWrongAnswers([]));
-
     setGameStart(!gameStarted);
   };
 

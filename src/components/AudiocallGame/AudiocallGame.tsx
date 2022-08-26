@@ -1,31 +1,26 @@
 import { FC, useState } from 'react';
 import { API_BASE } from '../../services/endpoints';
-import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
+import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
+import Button from '../Button';
 import AudiocallMeaning from '../AudiocallMeaning';
 import AudiocallResult from '../AudiocallResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallCurrentWord,
-  setAudiocallShouldContinue,
   setAudiocallWrongAnswers,
   setAudiocallCorrectAnswers,
-  selectAudiocallCurrentWord,
-  selectAudiocallShouldContinue,
   selectAudiocallWrongAnswers,
   selectAudiocallCorrectAnswers,
 } from '../../store/audiocall/audiocallSlice';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 
 const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
   const { selectedGroup, pageNumber } = props;
-  const { data, error, isLoading } = useGetAudiocallWords(selectedGroup, pageNumber);
-  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
-
+  const { data, error, isLoading } = useGetWordsQuery({ group: selectedGroup, page: pageNumber });
+  const [currentWord, setCurrentWord] = useState(0);
+  const [answers, setAnswers] = useState<{ word: string; wordIndex: number }[]>([]);
+  const [shouldContinue, setShouldContinue] = useState(false);
   const dispatch = useAppDispatch();
-  const currentWord = useAppSelector(selectAudiocallCurrentWord);
-  const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
   const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
   const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
 
@@ -51,7 +46,7 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
     const generateAnswers = (): void => {
       playAudio();
 
-      const choices: AudiocallAnswerInfo[] = [];
+      const choices: { word: string; wordIndex: number }[] = [];
       const pushedChoices: string[] = [];
       const correctAnswerIndex: number = Math.floor(Math.random() * 5);
 
@@ -101,7 +96,7 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
         dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
       }
 
-      dispatch(setAudiocallShouldContinue(true));
+      setShouldContinue(true);
     };
 
     const continueGame = (): void => {
@@ -112,8 +107,8 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
         button.style.backgroundColor = '';
       });
 
-      dispatch(setAudiocallCurrentWord(currentWord + 1));
-      dispatch(setAudiocallShouldContinue(false));
+      setCurrentWord(currentWord + 1);
+      setShouldContinue(false);
       setAnswers([]);
     };
 
@@ -129,14 +124,14 @@ const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props)
               currentWord={`${data[currentWord].word}`}
             />
           ) : null}
-          <button type="button" onClick={playAudio}>
+          <Button type="button" onClick={playAudio}>
             Play Audio
-          </button>
+          </Button>
           <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
           {shouldContinue ? (
-            <button type="button" onClick={continueGame}>
+            <Button type="button" onClick={continueGame}>
               Continue
-            </button>
+            </Button>
           ) : null}
         </div>
       );

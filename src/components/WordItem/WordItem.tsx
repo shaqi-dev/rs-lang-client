@@ -15,16 +15,6 @@ const WordItem: FC<WordItemProps> = ({ word, active, className, onClick }) => {
   const isHardWord = 'userWord' in word && word.userWord?.difficulty === UserWordDifficulty.HARD;
   const isLearnedWord = 'userWord' in word && word.userWord?.difficulty === UserWordDifficulty.WEAK;
 
-  if ('userWord' in word) {
-    if (word.userWord.difficulty === UserWordDifficulty.hard) {
-      difficultyClass = s.root_hard;
-    }
-
-    if (word.userWord.difficulty === UserWordDifficulty.weak) {
-      difficultyClass = s.root_weak;
-    }
-  }
-
   const handleClick = (): void => onClick(word);
 
   const style =
