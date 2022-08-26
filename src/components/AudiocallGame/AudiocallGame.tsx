@@ -3,6 +3,8 @@ import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
 import { API_BASE } from '../../services/endpoints';
+import Button from '../Button';
+import AudiocallMeaning from '../AudiocallMeaning';
 
 const AudiocallGame: FC = () => {
   const { data, error, isLoading } = useGetWordsQuery({ group: 0, page: 0 });
@@ -64,13 +66,15 @@ const AudiocallGame: FC = () => {
       if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
         chosenAnswer.style.backgroundColor = 'green';
       } else {
-        setWrongAnswer(chosenAnswer);
-        setCorrectAnswer(
-          document.querySelector(`#${data[currentWord].wordTranslate}`) as HTMLButtonElement,
-        );
+        const rightAnswer: HTMLButtonElement = document.querySelector(
+          `#${data[currentWord].wordTranslate}`,
+        ) as HTMLButtonElement;
 
         chosenAnswer.style.backgroundColor = 'red';
-        if (correctAnswer) correctAnswer.style.backgroundColor = 'green';
+        rightAnswer.style.backgroundColor = 'green';
+
+        setWrongAnswer(chosenAnswer);
+        setCorrectAnswer(rightAnswer);
       }
 
       setShouldContinue(true);
@@ -96,16 +100,21 @@ const AudiocallGame: FC = () => {
     if (data && currentWord < 10) {
       return (
         <div>
-          <button type="button" onClick={playAudio}>
-            Play Audio
-          </button>
-          <div className="audiocall-answers">
-            <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
-          </div>
           {shouldContinue ? (
-            <button type="button" onClick={continueGame}>
+            <AudiocallMeaning
+              imageLink={`${API_BASE}/${data[currentWord].image}`}
+              imageAlt={`${data[currentWord].word}`}
+              currentWord={`${data[currentWord].word}`}
+            />
+          ) : null}
+          <Button type="button" onClick={playAudio}>
+            Play Audio
+          </Button>
+          <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
+          {shouldContinue ? (
+            <Button type="button" onClick={continueGame}>
               Continue
-            </button>
+            </Button>
           ) : null}
         </div>
       );
