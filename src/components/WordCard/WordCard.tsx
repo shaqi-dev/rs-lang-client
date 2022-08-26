@@ -13,6 +13,7 @@ import {
 } from '../../services/userWordsApi';
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import UserWordDifficulty from '../../shared/userWordDifficulty';
 import WordDifficulty from '../../shared/enums/WordDifficulty';
 import s from './WordCard.module.scss';
 import TextbookView from '../../shared/enums/TextbookView';

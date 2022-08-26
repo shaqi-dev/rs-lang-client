@@ -104,51 +104,6 @@ const AudiocallResult: FC = () => {
           </div>
         )}
       </div>
-      {/* <div className={s.pieChart} style={pieChartStyle}>
-        <p>{`${correctAnswersPers}%`}</p>
-      </div>
-      <div className={s.audiocallResult}>
-        <p
-          className={s.correctWrongText}
-        >{`Correct answers (${audiocallCorrectAnswers.length}):`}</p>
-        <ul className={s.audiocallResult_list}>
-          {audiocallCorrectAnswers.map((answer: Word) => {
-            return (
-              <li key={answer.word} className={s.listElement}>
-                <button
-                  type="button"
-                  onClick={(): void => playAudio(answer.audio)}
-                  className={s.listElement_audioButton}
-                >
-                  Play Audio
-                </button>
-                <p className={s.listElement_word}>
-                  {answer.word} - {answer.wordTranslate}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-        <p className={s.correctWrongText}>{`Wrong answers (${audiocallWrongAnswers.length}):`}</p>
-        <ul className={s.audiocallResult_list}>
-          {audiocallWrongAnswers.map((answer) => {
-            return (
-              <li key={answer.word} className={s.listElement}>
-                <button
-                  type="button"
-                  onClick={(): void => playAudio(answer.audio)}
-                  className={s.listElement_audioButton}
-                >
-                  Play Audio
-                </button>
-                <p className={s.listElement_word}>
-                  {answer.word} - {answer.wordTranslate}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-      </div> */}
     </div>
   );
 };
