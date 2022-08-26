@@ -4,10 +4,7 @@ import wordsGroupNames from '../../shared/wordsGroupNames';
 import { useAppSelector } from '../../hooks/redux';
 import AudiocallGroupItem from '../AudiocallGroupItem';
 import { selectAudiocallGroup } from '../../store/audiocall/audiocallSlice';
-
-export interface AudiocallGroupListProps {
-  onClickItem: (groupName: string) => void;
-}
+import AudiocallGroupListProps from '../../interfaces/audiocallGroupListProps';
 
 const AudiocallGroupList: FC<AudiocallGroupListProps> = ({ onClickItem }) => {
   const activeGroup: number = useAppSelector(selectAudiocallGroup);

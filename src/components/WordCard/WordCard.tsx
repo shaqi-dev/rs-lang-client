@@ -13,6 +13,7 @@ import {
 } from '../../services/userWordsApi';
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import UserWordDifficulty from '../../shared/userWordDifficulty';
 import WordDifficulty from '../../shared/enums/WordDifficulty';
 import s from './WordCard.module.scss';
 import TextbookView from '../../shared/enums/TextbookView';
@@ -35,6 +36,48 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
     textExampleTranslate,
     image,
   } = word;
+
+  const view = useAppSelector(selectCurrentView);
+  const userId = useAppSelector(selectCurrentUserId);
+  const [getUserWord] = useLazyGetUserWordByIdQuery();
+  const [createUserWord] = useCreateUserWordMutation();
+  const [updateUserWord] = useUpdateUserWordMutation();
+  const [deleteUserWord] = useDeleteUserWordMutation();
+
+  const handleChangeWordDifficulty = async (difficulty: UserWordDifficulty): Promise<void> => {
+    if (userId && '_id' in word && word._id) {
+      const wordId = word._id;
+      const requestData = {
+        userId,
+        wordId,
+        body: {
+          difficulty,
+          optional: {},
+        },
+      };
+
+      try {
+        await getUserWord({ userId, wordId });
+        await updateUserWord(requestData).unwrap();
+      } catch {
+        await createUserWord(requestData).unwrap();
+      }
+    }
+  };
+
+  const handleAddHardWord = (): Promise<void> =>
+    handleChangeWordDifficulty(UserWordDifficulty.hard);
+  const handleAddWeakWord = (): Promise<void> =>
+    handleChangeWordDifficulty(UserWordDifficulty.weak);
+
+  const handleRemoveWord = (): void => {
+    if (userId && '_id' in word && word._id) {
+      deleteUserWord({
+        userId,
+        wordId: word._id,
+      });
+    }
+  };
 
   const imageSource = `${API_BASE}/${image}`;
 
