@@ -3,9 +3,8 @@ import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
 import Button from '../Button';
 import useAudio from '../../hooks/useAudio';
-import { useAppSelector } from '../../hooks/redux';
-import { selectCurrentUserId } from '../../store/auth/authSlice';
-import { selectCurrentView } from '../../store/textbook/textbookSlice';
+import { useAppDispatch } from '../../hooks/redux';
+import { setWord } from '../../store/textbook/textbookSlice';
 import {
   useCreateUserWordMutation,
   useUpdateUserWordMutation,
@@ -15,13 +14,18 @@ import {
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import UserWordDifficulty from '../../shared/userWordDifficulty';
+import WordDifficulty from '../../shared/enums/WordDifficulty';
 import s from './WordCard.module.scss';
+import TextbookView from '../../shared/enums/TextbookView';
+import { useLazyGetUserAggregatedWordByIdQuery } from '../../services/userAggregatedWordsApi';
 
 export interface WordCardProps {
   word: Word | AggregatedWord;
+  view: TextbookView;
+  userId: string | null;
 }
 
-const WordCard: FC<WordCardProps> = ({ word }) => {
+const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
   const {
     word: wordOriginal,
     wordTranslate,
@@ -79,6 +83,66 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
 
   const [play] = useAudio(word);
 
+  const dispatch = useAppDispatch();
+  const [createUserWord] = useCreateUserWordMutation();
+  const [updateUserWord] = useUpdateUserWordMutation();
+  const [deleteUserWord] = useDeleteUserWordMutation();
+  const [getUserWord] = useLazyGetUserWordByIdQuery();
+  const [getUserAggregatedWord] = useLazyGetUserAggregatedWordByIdQuery();
+
+  const wordDifficulty = ('userWord' in word && word.userWord?.difficulty) || undefined;
+  const isHardWord = wordDifficulty === WordDifficulty.HARD;
+  const isLearnedWord = wordDifficulty === WordDifficulty.WEAK;
+  const isMainView = view === TextbookView.MAIN;
+  const isUserView = view === TextbookView.USER;
+
+  const updateCurrentWord = async ({ wordId }: { wordId: string }): Promise<void> => {
+    if (userId && isMainView) {
+      const { data: userWordAfter } = await getUserAggregatedWord({ userId, wordId });
+
+      if (userWordAfter?.[0]) {
+        dispatch(setWord(userWordAfter[0]));
+      }
+    }
+  };
+
+  const handleChangeWordDifficulty = async (difficulty: WordDifficulty): Promise<void> => {
+    if (userId && '_id' in word && word._id) {
+      const wordId = word._id;
+      const requestData = {
+        userId,
+        wordId,
+        body: {
+          difficulty,
+          optional: {},
+        },
+      };
+
+      const { isSuccess } = await getUserWord({ userId, wordId });
+
+      if (isSuccess) {
+        await updateUserWord(requestData).unwrap();
+      } else {
+        await createUserWord(requestData).unwrap();
+      }
+
+      updateCurrentWord({ wordId });
+    }
+  };
+
+  const handleAddHardWord = (): Promise<void> => handleChangeWordDifficulty(WordDifficulty.HARD);
+  const handleAddWeakWord = (): Promise<void> => handleChangeWordDifficulty(WordDifficulty.WEAK);
+
+  const handleRemoveWord = async (): Promise<void> => {
+    if (userId && '_id' in word && word._id) {
+      const wordId = word._id;
+
+      deleteUserWord({ userId, wordId });
+
+      updateCurrentWord({ wordId });
+    }
+  };
+
   return (
     <div className={s.root}>
       <div className={s.image}>
@@ -95,22 +159,13 @@ const WordCard: FC<WordCardProps> = ({ word }) => {
           <div className={s.userActions}>
             <Button
               type="button"
-              onClick={view === 'main' ? handleAddHardWord : handleRemoveWord}
-              disabled={'userWord' in word && word.userWord.difficulty === UserWordDifficulty.hard}
+              onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveWord}
             >
-              {view === 'main' ? 'Добавить в сложные' : 'Удалить из сложных'}
+              {isMainView && (isHardWord ? 'Удалить из сложных' : 'Добавить в сложные')}
+              {isUserView && 'Удалить из сложных'}
             </Button>
-            <Button
-              type="button"
-              onClick={
-                'userWord' in word && word.userWord.difficulty === UserWordDifficulty.weak
-                  ? handleRemoveWord
-                  : handleAddWeakWord
-              }
-            >
-              {'userWord' in word && word.userWord.difficulty === UserWordDifficulty.weak
-                ? 'Удалить из изученных'
-                : 'Добавить в изученные'}
+            <Button type="button" onClick={isLearnedWord ? handleRemoveWord : handleAddWeakWord}>
+              {isLearnedWord ? 'Удалить из изученных' : 'Добавить в изученные'}
             </Button>
           </div>
         )}

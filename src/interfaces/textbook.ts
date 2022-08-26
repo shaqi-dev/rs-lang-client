@@ -1,8 +1,9 @@
+import TextbookView from '../shared/enums/TextbookView';
 import { AggregatedWord } from './userAggregatedWords';
 import type { Word } from './words';
 
 export interface TextbookState {
-  view: 'main' | 'user';
+  view: TextbookView;
   group: number;
   page: number;
   word: Word | AggregatedWord | null;

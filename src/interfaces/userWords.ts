@@ -1,8 +1,8 @@
-import UserWordDifficulty from '../shared/userWordDifficulty';
+import WordDifficulty from '../shared/enums/WordDifficulty';
 
 export interface UserWord {
   id: string;
-  difficulty: UserWordDifficulty;
+  difficulty: WordDifficulty;
   optional: {};
   wordId: string;
 }
@@ -13,7 +13,7 @@ export interface GetUserWordByIdData {
 }
 
 export interface MutateUserWordBody {
-  difficulty: UserWordDifficulty;
+  difficulty: WordDifficulty;
   optional: {};
 }
 
