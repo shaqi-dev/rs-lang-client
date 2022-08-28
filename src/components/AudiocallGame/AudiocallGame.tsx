@@ -1,32 +1,28 @@
 import { FC, useState } from 'react';
-import s from './AudiocallGame.module.scss';
 import { API_BASE } from '../../services/endpoints';
-import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
+import { useGetWordsQuery } from '../../services/wordsApi';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
+import Button from '../Button';
 import AudiocallMeaning from '../AudiocallMeaning';
 import AudiocallResult from '../AudiocallResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallCurrentWord,
-  setAudiocallShouldContinue,
-  setAudiocallDisableAnswers,
-  selectAudiocallCurrentWord,
-  selectAudiocallShouldContinue,
-  setAudiocallCorrectChoise,
-  setAudiocallWrongChoise,
+  setAudiocallWrongAnswers,
+  setAudiocallCorrectAnswers,
+  selectAudiocallWrongAnswers,
+  selectAudiocallCorrectAnswers,
 } from '../../store/audiocall/audiocallSlice';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
-import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
 
-const AudiocallGame: FC<AudiocallGameProps> = (props) => {
-  const { selectedGroup, pageNumber, tryAgain } = props;
-  const { data, error, isLoading } = useGetAudiocallWords(selectedGroup, pageNumber);
-  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
-
+const AudiocallGame: FC<{ selectedGroup: number; pageNumber: number }> = (props) => {
+  const { selectedGroup, pageNumber } = props;
+  const { data, error, isLoading } = useGetWordsQuery({ group: selectedGroup, page: pageNumber });
+  const [currentWord, setCurrentWord] = useState(0);
+  const [answers, setAnswers] = useState<{ word: string; wordIndex: number }[]>([]);
+  const [shouldContinue, setShouldContinue] = useState(false);
   const dispatch = useAppDispatch();
-  const currentWord = useAppSelector(selectAudiocallCurrentWord);
-  const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
+  const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
+  const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -50,7 +46,7 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
     const generateAnswers = (): void => {
       playAudio();
 
-      const choices: AudiocallAnswerInfo[] = [];
+      const choices: { word: string; wordIndex: number }[] = [];
       const pushedChoices: string[] = [];
       const correctAnswerIndex: number = Math.floor(Math.random() * 5);
 
@@ -76,13 +72,43 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
       setAnswers([...choices]);
     };
 
-    const continueGame = (): void => {
-      dispatch(setAudiocallDisableAnswers(false));
-      dispatch(setAudiocallCurrentWord(currentWord + 1));
-      dispatch(setAudiocallShouldContinue(false));
-      dispatch(setAudiocallCorrectChoise(''));
-      dispatch(setAudiocallWrongChoise(''));
+    const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
+      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
 
+      allAnswers?.forEach((button) => {
+        button.disabled = true;
+      });
+
+      if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
+        chosenAnswer.style.backgroundColor = 'green';
+
+        dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[Number(chosenAnswer.name)]]));
+      } else {
+        const wordId = data[currentWord].wordTranslate.replaceAll(' ', '-');
+        const rightAnswer: HTMLButtonElement = document.querySelector(
+          `#${wordId}`,
+        ) as HTMLButtonElement;
+
+        chosenAnswer.style.backgroundColor = 'red';
+        rightAnswer.style.backgroundColor = 'green';
+
+        dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
+      }
+
+      setShouldContinue(true);
+    };
+
+    const continueGame = (): void => {
+      const allAnswers = document.querySelector('.audiocall-answers')?.querySelectorAll('button');
+
+      allAnswers?.forEach((button) => {
+        button.disabled = false;
+        button.style.backgroundColor = '';
+      });
+
+      setCurrentWord(currentWord + 1);
+      setShouldContinue(false);
       setAnswers([]);
     };
 
@@ -90,32 +116,29 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
 
     if (data && currentWord < 10) {
       return (
-        <div className={s.audiocallGame}>
-          <AudiocallMeaning
-            imageLink={`${API_BASE}/${data[currentWord].image}`}
-            imageAlt={`${data[currentWord].word}`}
-            currentWord={`${data[currentWord].word}`}
-            playAudio={playAudio}
-          />
-          <AudiocallAnswers answers={answers} data={data} />
+        <div>
           {shouldContinue ? (
-            <button type="button" onClick={continueGame} className={s.audiocallGame_continueButton}>
+            <AudiocallMeaning
+              imageLink={`${API_BASE}/${data[currentWord].image}`}
+              imageAlt={`${data[currentWord].word}`}
+              currentWord={`${data[currentWord].word}`}
+            />
+          ) : null}
+          <Button type="button" onClick={playAudio}>
+            Play Audio
+          </Button>
+          <AudiocallAnswers answers={answers} chooseAnswer={chooseAnswer} />
+          {shouldContinue ? (
+            <Button type="button" onClick={continueGame}>
               Continue
-            </button>
+            </Button>
           ) : null}
         </div>
       );
     }
 
     if (currentWord === 10) {
-      return (
-        <>
-          <AudiocallResult />
-          <button type="button" onClick={tryAgain} className={s.tryAgainButton}>
-            Try Again
-          </button>
-        </>
-      );
+      return <AudiocallResult />;
     }
   }
 
