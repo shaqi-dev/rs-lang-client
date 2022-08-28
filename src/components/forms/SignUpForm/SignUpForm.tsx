@@ -3,7 +3,9 @@ import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import ErrorBanner from '../../ErrorBanner';
 import Button from '../../Button';
-import { useCreateUserMutation } from '../../../services/authApi';
+import { useCreateUserMutation, useLoginMutation } from '../../../services/authApi';
+import { useAppDispatch } from '../../../hooks/redux';
+import { setCredentials } from '../../../store/auth/authSlice';
 import { RE_EMAIL, RE_USERNAME, RE_PASSWORD } from '../../../shared/validationRE';
 import {
   EMAIL_REQUIRED,
@@ -17,9 +19,11 @@ import {
 } from '../../../shared/validationErrors';
 import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/queryErrorHelpers';
 import { SignUpUserData, SignUpFormData } from '../../../interfaces/signUp';
+import { SignInResponse } from '../../../interfaces/signIn';
 import s from './SignUpForm.module.scss';
 
 const SignUpForm: FC = () => {
+  const dispatch = useAppDispatch();
   const { register, handleSubmit, control, watch, reset } = useForm<SignUpFormData>({
     mode: 'onChange',
   });
@@ -28,7 +32,8 @@ const SignUpForm: FC = () => {
   passwordRef.current = watch('password', '');
 
   const [apiError, setApiError] = useState<string>('');
-  const [createUser, { isLoading }] = useCreateUserMutation();
+  const [createUser, { isLoading, isError }] = useCreateUserMutation();
+  const [loginUser] = useLoginMutation();
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (
     formData: SignUpFormData,
@@ -46,6 +51,19 @@ const SignUpForm: FC = () => {
         await createUser(userData).unwrap();
 
         reset();
+        if (!isError) {
+          const data: SignInResponse = await loginUser({ email, password }).unwrap();
+          const { name: username, userId, token: accessToken, refreshToken } = data;
+
+          dispatch(
+            setCredentials({
+              username,
+              userId,
+              accessToken,
+              refreshToken,
+            }),
+          );
+        }
       } catch (e) {
         if (isFetchBaseQueryError(e)) {
           const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
@@ -53,6 +71,8 @@ const SignUpForm: FC = () => {
         } else if (isErrorWithMessage(e)) {
           setApiError(e.message);
         }
+
+        reset();
       }
     }
   };
