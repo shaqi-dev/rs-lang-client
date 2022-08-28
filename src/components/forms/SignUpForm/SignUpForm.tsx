@@ -1,5 +1,6 @@
 import { FC, useRef, ReactNode, useState } from 'react';
 import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import ErrorBanner from '../../ErrorBanner';
 import Button from '../../Button';
@@ -24,6 +25,7 @@ import s from './SignUpForm.module.scss';
 
 const SignUpForm: FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { register, handleSubmit, control, watch, reset } = useForm<SignUpFormData>({
     mode: 'onChange',
   });
@@ -63,6 +65,8 @@ const SignUpForm: FC = () => {
               refreshToken,
             }),
           );
+
+          navigate(-1);
         }
       } catch (e) {
         if (isFetchBaseQueryError(e)) {

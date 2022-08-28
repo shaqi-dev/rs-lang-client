@@ -1,5 +1,6 @@
 import { FC, useState, ReactNode } from 'react';
 import { useForm, useFormState, SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { ErrorMessage } from '@hookform/error-message';
 import { EMAIL_REQUIRED, PASSWORD_REQUIRED } from '../../../shared/validationErrors';
 import Button from '../../Button';
@@ -13,6 +14,7 @@ import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/query
 
 const SignInForm: FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { register, handleSubmit, control, reset } = useForm<SignInUserData>({ mode: 'onChange' });
   const { errors, isValid } = useFormState<SignInUserData>({ control });
@@ -36,7 +38,9 @@ const SignInForm: FC = () => {
             refreshToken,
           }),
         );
+
         reset();
+        navigate(-1);
       } catch (e) {
         if (isFetchBaseQueryError(e)) {
           const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
