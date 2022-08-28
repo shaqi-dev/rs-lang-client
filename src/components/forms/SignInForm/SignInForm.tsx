@@ -14,7 +14,7 @@ import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/query
 const SignInForm: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { register, handleSubmit, control, reset } = useForm<SignInUserData>();
+  const { register, handleSubmit, control, reset } = useForm<SignInUserData>({ mode: 'onChange' });
   const { errors, isValid } = useFormState<SignInUserData>({ control });
 
   const [apiError, setApiError] = useState<string>('');

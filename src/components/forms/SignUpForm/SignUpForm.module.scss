@@ -19,6 +19,14 @@
     opacity: 0.8;
     pointer-events: none;
   }
+
+  &:-webkit-autofill:disabled {
+    -webkit-text-fill-color: $disabled !important;
+    -webkit-box-shadow: 0 0 0 30px $disabled-light inset !important;
+    box-shadow: 0 0 0 30px $disabled-light inset !important;
+    opacity: 0.8;
+    pointer-events: none;
+  }
 }
 
 .validateError {

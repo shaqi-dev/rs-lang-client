@@ -16,11 +16,13 @@ import {
   PASSWORD_TOO_WEAK,
 } from '../../../shared/validationErrors';
 import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/queryErrorHelpers';
-import { SignUpUserData, SignUpFormData, SignUpResponse } from '../../../interfaces/signUp';
+import { SignUpUserData, SignUpFormData } from '../../../interfaces/signUp';
 import s from './SignUpForm.module.scss';
 
 const SignUpForm: FC = () => {
-  const { register, handleSubmit, control, watch, reset } = useForm<SignUpFormData>();
+  const { register, handleSubmit, control, watch, reset } = useForm<SignUpFormData>({
+    mode: 'onChange',
+  });
   const { errors, isValid } = useFormState<SignUpFormData>({ control });
   const passwordRef = useRef<string>('');
   passwordRef.current = watch('password', '');
@@ -41,9 +43,8 @@ const SignUpForm: FC = () => {
       };
 
       try {
-        const data: SignUpResponse = await createUser(userData).unwrap();
+        await createUser(userData).unwrap();
 
-        console.log(data);
         reset();
       } catch (e) {
         if (isFetchBaseQueryError(e)) {
