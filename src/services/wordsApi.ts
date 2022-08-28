@@ -15,4 +15,4 @@ export const wordsApi = createApi({
   }),
 });
 
-export const { useLazyGetWordsQuery, useGetWordByIdQuery } = wordsApi;
+export const { useGetWordsQuery, useLazyGetWordsQuery, useGetWordByIdQuery } = wordsApi;
