@@ -64,7 +64,7 @@ const Audiocall: FC<{ fromTextbook?: boolean }> = (props) => {
       {!gameStarted ? (
         <div className={s.audiocallWrapper_groupsAndButton}>
           <h1>Audiocall Game</h1>
-          {!fromTextbook ? <AudiocallGroupList onClickItem={handleClickWordsGroupItem} /> : null}
+          {!fromTextbook && <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />}
           <button className={s.startAudiocallButton} type="button" onClick={startGame}>
             Start Game
           </button>
