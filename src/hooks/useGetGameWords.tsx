@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Word } from '../interfaces/words';
 import { useLazyGetWordsQuery } from '../services/wordsApi';
 
-const useGetAudiocallWords = (
+const useGetGameWords = (
   group: number,
   page: number,
 ): {
@@ -25,4 +25,4 @@ const useGetAudiocallWords = (
   };
 };
 
-export default useGetAudiocallWords;
+export default useGetGameWords;

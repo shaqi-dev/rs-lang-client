@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import s from './AudiocallGame.module.scss';
 import { API_BASE } from '../../services/endpoints';
-import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
+import useGetGameWords from '../../hooks/useGetGameWords';
 import ErrorBanner from '../ErrorBanner';
 import AudiocallAnswers from '../AudiocallAnswers';
 import AudiocallMeaning from '../AudiocallMeaning';
@@ -21,7 +21,7 @@ import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
 
 const AudiocallGame: FC<AudiocallGameProps> = (props) => {
   const { selectedGroup, pageNumber, tryAgain } = props;
-  const { data, error, isLoading } = useGetAudiocallWords(selectedGroup, pageNumber);
+  const { data, error, isLoading } = useGetGameWords(selectedGroup, pageNumber);
   const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   const dispatch = useAppDispatch();
