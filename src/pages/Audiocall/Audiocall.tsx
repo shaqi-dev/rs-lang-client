@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import s from './Audiocall.module.scss';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import AudiocallGame from '../../components/AudiocallGame';
@@ -20,8 +21,7 @@ import {
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 
-const Audiocall: FC<{ fromTextbook?: boolean }> = (props) => {
-  const { fromTextbook } = props;
+const Audiocall: FC = () => {
   const dispatch = useAppDispatch();
   const audiocallGroup = useAppSelector(selectAudiocallGroup);
   const audiocallPage = useAppSelector(selectAudiocallPage);
@@ -29,6 +29,14 @@ const Audiocall: FC<{ fromTextbook?: boolean }> = (props) => {
   const textbookPage = useAppSelector(selectCurrentPage);
 
   const [gameStarted, setGameStart] = useState(false);
+
+  let fromTextbook = false;
+  const prevLocation = useLocation();
+  const prevLocationState: { fromTextbook: boolean } | undefined = prevLocation.state as {
+    fromTextbook: boolean;
+  };
+
+  if (prevLocationState && prevLocationState.fromTextbook) fromTextbook = true;
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
