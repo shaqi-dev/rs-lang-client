@@ -35,6 +35,14 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
     if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
       dispatch(setAudiocallCorrectChoise(chosenAnswer.id));
       dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[Number(chosenAnswer.name)]]));
+    } else if (chosenAnswer.textContent === 'Don"t know') {
+      const wordId = data[currentWord].wordTranslate.replaceAll(' ', '-');
+      const rightAnswer: HTMLButtonElement = document.querySelector(
+        `#${wordId}`,
+      ) as HTMLButtonElement;
+
+      dispatch(setAudiocallCorrectChoise(rightAnswer.id));
+      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
     } else {
       const wordId = data[currentWord].wordTranslate.replaceAll(' ', '-');
       const rightAnswer: HTMLButtonElement = document.querySelector(
@@ -70,6 +78,11 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
           </button>
         );
       })}
+      {!disable && (
+        <button type="button" onClick={(e): void => chooseAnswer(e)}>
+          Don't know
+        </button>
+      )}
     </div>
   );
 };
