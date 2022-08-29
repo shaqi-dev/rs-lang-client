@@ -29,7 +29,6 @@ const App: FC = () => {
           <Route path="/authorization" element={<Auth />} />
           <Route path="/textbook" element={<Textbook />} />
           <Route path="/games/audiocall" element={<Audiocall />} />
-          <Route path="/textbook/audiocall" element={<Audiocall />} />
         </Routes>
       </main>
       <Footer />
