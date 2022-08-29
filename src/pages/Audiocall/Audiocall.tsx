@@ -17,12 +17,16 @@ import {
   selectAudiocallPage,
   setAudiocallResultPage,
 } from '../../store/audiocall/audiocallSlice';
+import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 
-const Audiocall: FC = () => {
+const Audiocall: FC<{ fromTextbook?: boolean }> = (props) => {
+  const { fromTextbook } = props;
   const dispatch = useAppDispatch();
   const audiocallGroup = useAppSelector(selectAudiocallGroup);
   const audiocallPage = useAppSelector(selectAudiocallPage);
+  const textbookGroup = useAppSelector(selectCurrentGroup);
+  const textbookPage = useAppSelector(selectCurrentPage);
 
   const [gameStarted, setGameStart] = useState(false);
 
@@ -47,6 +51,10 @@ const Audiocall: FC = () => {
     dispatch(setAudiocallWrongAnswers([]));
     dispatch(setAudiocallDisableAnswers(false));
     dispatch(setAudiocallResultPage('pieChart'));
+    if (fromTextbook) {
+      dispatch(setAudiocallGroup(textbookGroup));
+      dispatch(setAudiocallPage(textbookPage));
+    }
 
     setGameStart(!gameStarted);
   };
@@ -56,7 +64,7 @@ const Audiocall: FC = () => {
       {!gameStarted ? (
         <div className={s.audiocallWrapper_groupsAndButton}>
           <h1>Audiocall Game</h1>
-          <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />
+          {!fromTextbook ? <AudiocallGroupList onClickItem={handleClickWordsGroupItem} /> : null}
           <button className={s.startAudiocallButton} type="button" onClick={startGame}>
             Start Game
           </button>
