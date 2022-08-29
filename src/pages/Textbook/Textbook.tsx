@@ -122,7 +122,7 @@ const Textbook: FC = () => {
           <Button
             type="button"
             buttonStyle="primary"
-            onClick={(): void => navigate('sprint')}
+            onClick={(): void => navigate('../games/sprint')}
             disabled={wordsResponse.isLearned}
           >
             Спринт
@@ -130,7 +130,7 @@ const Textbook: FC = () => {
           <Button
             type="button"
             buttonStyle="primary"
-            onClick={(): void => navigate('audiocall')}
+            onClick={(): void => navigate('../games/audiocall')}
             disabled={wordsResponse.isLearned}
           >
             Аудиовызов
