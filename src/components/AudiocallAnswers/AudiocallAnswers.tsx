@@ -58,28 +58,30 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
     dispatch(setAudiocallShouldContinue(true));
   };
   return (
-    <div className={s.audiocallAnswers}>
-      {answers.map((answer) => {
-        const wordId = answer.word.replaceAll(' ', '-');
+    <div className={s.audiocallAnswersContainer}>
+      <div className={s.audiocallAnswers}>
+        {answers.map((answer) => {
+          const wordId = answer.word.replaceAll(' ', '-');
 
-        return (
-          <button
-            type="button"
-            key={answer.word}
-            id={wordId}
-            onClick={(e): void => chooseAnswer(e)}
-            name={answer.wordIndex.toString()}
-            className={`${s.audiocallAnswers_answer} ${
-              wordId === correctChoise ? s.correctAnswer : ''
-            } ${wordId === wrongChoise ? s.wrongAnswer : ''}`}
-            disabled={disable}
-          >
-            {answer.word}
-          </button>
-        );
-      })}
+          return (
+            <button
+              type="button"
+              key={answer.word}
+              id={wordId}
+              onClick={(e): void => chooseAnswer(e)}
+              name={answer.wordIndex.toString()}
+              className={`${s.audiocallAnswers_answer} ${
+                wordId === correctChoise ? s.correctAnswer : ''
+              } ${wordId === wrongChoise ? s.wrongAnswer : ''}`}
+              disabled={disable}
+            >
+              {answer.word}
+            </button>
+          );
+        })}
+      </div>
       {!disable && (
-        <button type="button" onClick={(e): void => chooseAnswer(e)}>
+        <button type="button" onClick={(e): void => chooseAnswer(e)} className={s.dontKnowButton}>
           Don't know
         </button>
       )}
