@@ -95,7 +95,7 @@ const Textbook: FC = () => {
             className={s.viewSection_button}
             onClick={handleClickVocabulary}
           >
-            Словарь
+            Сложные слова
           </Button>
         )}
       </section>
