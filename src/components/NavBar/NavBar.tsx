@@ -11,8 +11,6 @@ interface NavBarProps {
 }
 
 const gamesOptions: DropdownOption[] = [
-  { name: 'Саванна', link: 'games/savanna' },
-  { name: 'Оазис', link: 'games/oasis' },
   { name: 'Спринт', link: 'games/sprint' },
   { name: 'Аудиовызов', link: 'games/audiocall' },
 ];
