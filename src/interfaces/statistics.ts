@@ -5,12 +5,23 @@ export interface GameStatistics {
   longestWinStreak: number;
 }
 
-export interface UserStatistics {
+export interface UserStatisticsData {
   learnedWords: number;
   optional: {
-    games: {
-      sprint: GameStatistics;
-      audiocall: GameStatistics;
+    games?: {
+      sprint?: GameStatistics;
+      audiocall?: GameStatistics;
+    };
+  };
+}
+
+export interface UserStatisticsResponse {
+  id: string;
+  learnedWords: number;
+  optional: {
+    games?: {
+      sprint?: GameStatistics;
+      audiocall?: GameStatistics;
     };
   };
 }
