@@ -6,14 +6,16 @@ import Button from '../Button';
 import Dropdown, { DropdownOption } from './Dropdown';
 import s from './NavBar.module.scss';
 
+interface NavBarProps {
+  isLoggedIn: boolean;
+}
+
 const gamesOptions: DropdownOption[] = [
-  { name: 'Саванна', link: 'games/savanna' },
-  { name: 'Оазис', link: 'games/oasis' },
   { name: 'Спринт', link: 'games/sprint' },
   { name: 'Аудиовызов', link: 'games/audiocall' },
 ];
 
-const NavBar: FC = () => {
+const NavBar: FC<NavBarProps> = ({ isLoggedIn }) => {
   const dispatch = useAppDispatch();
   const currentUsername = useAppSelector(selectCurrentUsername);
 
@@ -32,11 +34,13 @@ const NavBar: FC = () => {
         <li className={`${s.item} ${s.dropdown}`}>
           <Dropdown options={gamesOptions} />
         </li>
-        <li className={s.item}>
-          <Link to="/statistic" className={s.link}>
-            Статистика
-          </Link>
-        </li>
+        {isLoggedIn && (
+          <li className={s.item}>
+            <Link to="/statistic" className={s.link}>
+              Статистика
+            </Link>
+          </li>
+        )}
         <li className={s.item}>
           {currentUsername && (
             <>
