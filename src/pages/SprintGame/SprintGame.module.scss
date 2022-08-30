@@ -1,0 +1,21 @@
+.gameStart, .gameContent {
+    width: 100%;
+    // height: 100vh;
+}
+
+.gameStart {
+    display: flex;
+    flex-direction: column;
+}
+
+.gameContent {
+    // display: none;
+    flex-direction: column;
+}
+
+.wordContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 25px 0 20px;
+}
