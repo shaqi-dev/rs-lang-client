@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Textbook from './pages/Textbook';
+import Statistic from './pages/Statistic';
 import Audiocall from './pages/Audiocall';
 
 const App: FC = () => {
@@ -28,6 +29,7 @@ const App: FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/authorization" element={<Auth />} />
           <Route path="/textbook" element={<Textbook />} />
+          <Route path="/statistic" element={<Statistic />} />
           <Route path="/games/audiocall" element={<Audiocall />} />
         </Routes>
       </main>
