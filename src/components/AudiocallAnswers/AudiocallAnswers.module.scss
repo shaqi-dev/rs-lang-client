@@ -1,29 +1,49 @@
-.audiocallAnswers {
+.audiocallAnswersContainer {
   display: flex;
-  justify-content: center;
-  row-gap: 2rem;
-  flex-wrap: wrap;
-  column-gap: 2rem;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 4rem;
 
-  &_answer {
+  .audiocallAnswers {
+    display: flex;
+    justify-content: center;
+    row-gap: 2rem;
+    flex-wrap: wrap;
+    column-gap: 2rem;
+  
+    &_answer {
+      border: none;
+      background-color: rgb(0, 217, 255);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: rgb(0, 181, 212);
+      }
+  
+      &:disabled {
+        cursor: default;
+        color: black;
+      }
+  
+      &[disabled]:hover {
+        background: rgb(0, 217, 255);
+      }
+    }
+  }
+
+  .dontKnowButton {
     border: none;
-    background-color: rgb(0, 217, 255);
-    padding: 10px 20px;
+    background-color: rgb(245, 248, 46);
+    padding: 10px 30px;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
 
     &:hover {
-      background-color: rgb(0, 181, 212);
-    }
-
-    &:disabled {
-      cursor: default;
-      color: black;
-    }
-
-    &[disabled]:hover {
-      background: rgb(0, 217, 255);
+      background-color: rgb(183, 185, 34);
     }
   }
 }

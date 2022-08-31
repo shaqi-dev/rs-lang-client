@@ -130,7 +130,13 @@ const Textbook: FC = () => {
           <Button
             type="button"
             buttonStyle="primary"
-            onClick={(): void => navigate('../games/audiocall')}
+            onClick={(): void =>
+              navigate('../games/audiocall', {
+                state: {
+                  fromTextbook: true,
+                },
+              })
+            }
             disabled={wordsResponse.isLearned}
           >
             Аудиовызов
