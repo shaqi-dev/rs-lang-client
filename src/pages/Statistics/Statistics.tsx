@@ -48,7 +48,7 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
     const incorrectSprint = optional.games?.sprint?.incorrectAnswers || 0;
     const incorrectAudiocall = optional.games?.audiocall?.incorrectAnswers || 0;
     const winStreakSprint = optional.games?.sprint?.longestWinStreak || 0;
-    const winStreakAudiocall = optional.games?.sprint?.longestWinStreak || 0;
+    const winStreakAudiocall = optional.games?.audiocall?.longestWinStreak || 0;
 
     const winPercentGame = (game: 'sprint' | 'audiocall'): number => {
       const correct = game === 'sprint' ? correctSprint : correctAudiocall;
