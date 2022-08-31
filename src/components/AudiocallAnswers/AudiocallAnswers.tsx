@@ -62,6 +62,10 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
       <div className={s.audiocallAnswers}>
         {answers.map((answer) => {
           const wordId = answer.word.replaceAll(' ', '-');
+          let wordClass = `${s.audiocallAnswers_answer}`;
+
+          if (wordId === correctChoise) wordClass = `${s.correctAnswer}`;
+          if (wordId === wrongChoise) wordClass = `${s.wrongAnswer}`;
 
           return (
             <button
@@ -70,9 +74,7 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
               id={wordId}
               onClick={(e): void => chooseAnswer(e)}
               name={answer.wordIndex.toString()}
-              className={`${s.audiocallAnswers_answer} ${
-                wordId === correctChoise ? s.correctAnswer : ''
-              } ${wordId === wrongChoise ? s.wrongAnswer : ''}`}
+              className={`${wordClass}`}
               disabled={disable}
             >
               {answer.word}
