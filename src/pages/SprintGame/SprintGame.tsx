@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
 import { Word } from '../../interfaces/words';
 import ContentWrapper from '../../layouts/ContentWrapper';
-// import { getWords } from '../../services/words';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import {
   selectSprintCorrectAnswers,
