@@ -1,0 +1,38 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.sectionTitle {
+  padding-bottom: 20px;
+  font-weight: 500;
+  font-size: 2.4rem;
+  text-align: center;
+}
+
+.wordsStats {
+  padding: 20px 25px;
+  display: flex;
+  gap: 20px;
+  background: #ffe079;
+  border-radius: 8px;
+}
+
+.gamesStats {
+  display: flex;
+  gap: 40px;
+}
+
+.gamesStatsItem {
+  padding: 20px 25px;
+  background: #d9ff86;
+  border-radius: 8px;
+}
+
+.gameTitle {
+  padding-bottom: 15px;
+  font-weight: 500;
+  font-size: 2rem;
+  text-align: center;
+}
