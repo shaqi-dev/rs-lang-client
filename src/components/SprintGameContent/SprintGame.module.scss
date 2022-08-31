@@ -1,0 +1,46 @@
+.wordContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 25px 0 20px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-evenly;
+
+    &_timer {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 20px;
+        text-align: center;
+    }
+
+    &_counter {
+        margin-left: 50px;
+        font-size: 18px;
+        padding: 20px;
+        text-align: center;
+    }
+}
+
+.falseButton, .trueButton {
+    margin: 0 30px;
+    width: 150px;
+}
+
+.button {
+    &_true, &_false {
+        width: 125px;
+        height: 45px;
+        margin: 0 10px;
+    }
+
+    &_true {
+        background-color: rgba(58, 156, 44, 0.69);
+    }
+
+    &_false {
+        background-color: rgba(156, 58, 44, 0.69);
+    }
+}

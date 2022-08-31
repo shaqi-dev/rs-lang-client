@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Textbook from './pages/Textbook';
 import Audiocall from './pages/Audiocall';
+import SprintGame from './pages/SprintGame';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +30,7 @@ const App: FC = () => {
           <Route path="/authorization" element={<Auth />} />
           <Route path="/textbook" element={<Textbook />} />
           <Route path="/games/audiocall" element={<Audiocall />} />
+          <Route path="/games/sprint" element={<SprintGame />} />
         </Routes>
       </main>
       <Footer />
