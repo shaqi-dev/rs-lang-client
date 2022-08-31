@@ -79,9 +79,10 @@ const Audiocall: FC = () => {
         </div>
       ) : (
         <AudiocallGame
-          selectedGroup={audiocallGroup}
-          pageNumber={audiocallPage}
+          group={audiocallGroup}
+          page={audiocallPage}
           tryAgain={tryAgain}
+          fromTextbook={fromTextbook}
         />
       )}
     </ContentWrapper>

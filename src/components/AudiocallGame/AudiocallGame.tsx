@@ -18,15 +18,18 @@ import {
 } from '../../store/audiocall/audiocallSlice';
 import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
 
 const AudiocallGame: FC<AudiocallGameProps> = (props) => {
-  const { selectedGroup, pageNumber, tryAgain } = props;
-  const { data, error, isLoading } = useGetGameWords(selectedGroup, pageNumber);
-  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
+  const { group, page, tryAgain, fromTextbook } = props;
 
   const dispatch = useAppDispatch();
   const currentWord = useAppSelector(selectAudiocallCurrentWord);
   const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
+  const userId = useAppSelector(selectCurrentUserId);
+
+  const { data, error, isLoading } = useGetGameWords({ fromTextbook, group, page, userId });
+  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   if (isLoading) return <p>Loading...</p>;
 

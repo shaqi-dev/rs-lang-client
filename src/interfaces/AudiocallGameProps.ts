@@ -1,7 +1,8 @@
 interface AudiocallGameProps {
-  selectedGroup: number;
-  pageNumber: number;
+  group: number;
+  page: number;
   tryAgain: () => void;
+  fromTextbook: boolean;
 }
 
 export default AudiocallGameProps;
