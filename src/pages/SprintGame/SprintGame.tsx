@@ -34,6 +34,8 @@ const SprintGame: FC = () => {
   const correctAnswer = useAppSelector(selectSprintCorrectAnswers);
   const wrongAnswer = useAppSelector(selectSprintWrongAnswers);
   const { data, error, isLoading } = useGetAudiocallWords(sprintGroup, sprintPage);
+  const subPage = Math.floor(Math.random() * 30);
+  const subCollection = useGetAudiocallWords(sprintGroup, subPage);
 
   async function updateCollection(): Promise<void> {
     if (error) throw new Error('Update collection is faled!');
@@ -48,6 +50,11 @@ const SprintGame: FC = () => {
   function nextWord(): void {
     setIterator(iterator + 1);
     setWord(collection[iterator]);
+
+    if (collection.length - 1 === iterator && subCollection.data) {
+      setCollection([...collection, ...subCollection.data]);
+    }
+    if (collection.length === iterator) console.log(collection);
 
     if (Math.round(Math.random())) {
       setWordTranslate(collection[Math.floor(Math.random() * collection.length)].wordTranslate);
