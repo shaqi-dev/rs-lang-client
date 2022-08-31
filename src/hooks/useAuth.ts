@@ -5,7 +5,7 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials } from '../store/auth/authSlice';
+import { setCredentials, logout } from '../store/auth/authSlice';
 import { API_BASE } from '../services/endpoints';
 import type { RootState } from '../store';
 import type { SignInResponse } from '../interfaces/signIn';
@@ -56,18 +56,17 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
       api.dispatch(setCredentials({ username, userId, accessToken, refreshToken }));
 
       result = await baseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(logout());
     }
   }
-  // else {
-  //   api.dispatch(logout());
-  // }
 
   return result;
 };
 
 const useAuth = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['UserWords', 'Auth'],
+  tagTypes: ['Auth', 'UserWords', 'UserStatistics'],
   endpoints: () => ({}),
 });
 

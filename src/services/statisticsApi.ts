@@ -5,8 +5,9 @@ export const statisticsApi = useAuth.injectEndpoints({
   endpoints: (builder) => ({
     getStatistics: builder.query<UserStatisticsResponse, string>({
       query: (userId) => `users/${userId}/statistics`,
+      providesTags: [{ type: 'UserStatistics', id: 'UPDATE_USER_STATISTICS' }],
     }),
-    updateStatistics: builder.query<
+    updateStatistics: builder.mutation<
       UserStatisticsResponse,
       { userId: string; body: UserStatisticsData }
     >({
@@ -15,13 +16,10 @@ export const statisticsApi = useAuth.injectEndpoints({
         method: 'PUT',
         body,
       }),
+      invalidatesTags: [{ type: 'UserStatistics', id: 'UPDATE_USER_STATISTICS' }],
     }),
   }),
 });
 
-export const {
-  useGetStatisticsQuery,
-  useLazyGetStatisticsQuery,
-  useUpdateStatisticsQuery,
-  useLazyUpdateStatisticsQuery,
-} = statisticsApi;
+export const { useGetStatisticsQuery, useLazyGetStatisticsQuery, useUpdateStatisticsMutation } =
+  statisticsApi;
