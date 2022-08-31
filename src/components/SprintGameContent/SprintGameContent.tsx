@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import Button from '../Button';
 import s from './SprintGame.module.scss';
@@ -22,7 +22,21 @@ const SprintGameContent: FC<SprintGameProps> = ({
   checkWord,
   isLoading,
 }) => {
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') checkWord(true);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') checkWord(false);
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [word]);
+
   if (isLoading) return <p>Loading....</p>;
+
   return (
     <ContentWrapper>
       <section>
