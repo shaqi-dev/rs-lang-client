@@ -50,6 +50,8 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
       const wordId = word._id;
       const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
+      console.log(userWord);
+
       if (isSuccess && userWord) {
         const { difficulty: prevDifficulty, optional } = userWord;
         const audiocall = optional?.games?.audiocall || undefined;

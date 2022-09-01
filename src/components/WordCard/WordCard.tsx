@@ -16,6 +16,7 @@ import s from './WordCard.module.scss';
 import TextbookView from '../../shared/enums/TextbookView';
 import { useLazyGetUserAggregatedWordByIdQuery } from '../../services/userAggregatedWordsApi';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
+import { GameStatistics } from '../../interfaces/userWords';
 
 export interface WordCardProps {
   word: Word | AggregatedWord;
@@ -24,6 +25,8 @@ export interface WordCardProps {
 }
 
 const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
+  const dispatch = useAppDispatch();
+
   const {
     word: wordOriginal,
     wordTranslate,
@@ -35,11 +38,26 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
     image,
   } = word;
 
+  console.log(word);
+
   const imageSource = `${API_BASE}/${image}`;
+
+  const audiocall = ('userWord' in word && word.userWord?.optional?.games?.audiocall) || undefined;
+  const sprint = ('userWord' in word && word.userWord?.optional?.games?.sprint) || undefined;
+
+  const getGameWinRate = (game: GameStatistics | undefined): number => {
+    if (!game) return 0;
+
+    const correct = game.correctAnswers;
+    const incorrect = game.incorrectAnswers;
+
+    if (correct && !incorrect) return 100;
+    if (!correct && incorrect) return 0;
+    return +((correct / incorrect - 1) * 100).toFixed(0);
+  };
 
   const [play] = useAudio(word);
 
-  const dispatch = useAppDispatch();
   const [createUserWord] = useCreateUserWordMutation();
   const [updateUserWord] = useUpdateUserWordMutation();
   const [getUserWordById] = useLazyGetUserWordByIdQuery();
@@ -183,6 +201,26 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
           />
           <p className={s.textBlock_translate}>- {textExampleTranslate}</p>
         </div>
+        {userId && (
+          <div className={s.statsBlock}>
+            <div className={s.gameStats}>
+              <p>Спринт</p>
+              <div className={s.statsCounters}>
+                <span className={s.counter__correct}>{sprint?.correctAnswers || 0}</span>/
+                <span className={s.counter__incorrect}>{sprint?.incorrectAnswers || 0}</span>
+                <span className={s.counter__winrate}>({getGameWinRate(sprint)}%)</span>
+              </div>
+            </div>
+            <div className={s.gameStats}>
+              <p>Аудиовызов</p>
+              <div className={s.statsCounters}>
+                <span className={s.counter__correct}>{audiocall?.correctAnswers || 0}</span>/
+                <span className={s.counter__incorrect}>{audiocall?.incorrectAnswers || 0}</span>
+                <span className={s.counter__winrate}>({getGameWinRate(audiocall)}%)</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
