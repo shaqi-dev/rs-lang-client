@@ -6,16 +6,11 @@ import AudiocallGame from '../../components/AudiocallGame';
 import AudiocallGroupList from '../../components/AudiocallGroupList';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallGroup,
-  setAudiocallPage,
-  setAudiocallCurrentWord,
   setAudiocallShouldContinue,
   setAudiocallAnswers,
   setAudiocallDisableAnswers,
   setAudiocallCorrectAnswers,
   setAudiocallWrongAnswers,
-  selectAudiocallGroup,
-  selectAudiocallPage,
   setAudiocallResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
@@ -23,12 +18,13 @@ import wordsGroupNames from '../../shared/wordsGroupNames';
 
 const Audiocall: FC = () => {
   const dispatch = useAppDispatch();
-  const audiocallGroup = useAppSelector(selectAudiocallGroup);
-  const audiocallPage = useAppSelector(selectAudiocallPage);
+
   const textbookGroup = useAppSelector(selectCurrentGroup);
   const textbookPage = useAppSelector(selectCurrentPage);
 
   const [gameStarted, setGameStart] = useState(false);
+  const [audiocallGroup, setAudiocallGroup] = useState(0);
+  const [audiocallPage, setAudiocallPage] = useState(0);
 
   let fromTextbook = false;
   const prevLocation = useLocation();
@@ -42,8 +38,8 @@ const Audiocall: FC = () => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
 
     if (audiocallGroup !== selectedGroup) {
-      dispatch(setAudiocallGroup(selectedGroup));
-      dispatch(setAudiocallPage(Math.floor(Math.random() * 30)));
+      setAudiocallGroup(selectedGroup);
+      setAudiocallPage(Math.floor(Math.random() * 30));
     }
   };
 
@@ -52,7 +48,6 @@ const Audiocall: FC = () => {
   };
 
   const startGame = (): void => {
-    dispatch(setAudiocallCurrentWord(0));
     dispatch(setAudiocallShouldContinue(false));
     dispatch(setAudiocallAnswers([]));
     dispatch(setAudiocallCorrectAnswers([]));
@@ -68,7 +63,12 @@ const Audiocall: FC = () => {
       {!gameStarted ? (
         <div className={s.audiocallWrapper_groupsAndButton}>
           <h1>Audiocall Game</h1>
-          {!fromTextbook && <AudiocallGroupList onClickItem={handleClickWordsGroupItem} />}
+          {!fromTextbook && (
+            <AudiocallGroupList
+              onClickItem={handleClickWordsGroupItem}
+              activeGroup={audiocallGroup}
+            />
+          )}
           <button className={s.startAudiocallButton} type="button" onClick={startGame}>
             Start Game
           </button>

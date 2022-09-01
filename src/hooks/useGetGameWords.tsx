@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
-import { GetGameWordsData, GetGameWordsResponse } from '../interfaces/useGetGameWords';
+import { GetGameWordsResponse } from '../interfaces/useGetGameWords';
 import { useLazyGetUserAggregatedWordsQuery } from '../services/userAggregatedWordsApi';
 import { useLazyGetWordsQuery } from '../services/wordsApi';
 import UserWordsFilters from '../shared/UserWordsFilters';
 
-const useGetGameWords = ({
-  fromTextbook,
-  group,
-  page,
-  userId,
-  gameType,
-  wordsPerPage = 10,
-}: GetGameWordsData): GetGameWordsResponse => {
+const useGetGameWords = (
+  group: number,
+  page: number,
+  fromTextbook?: boolean,
+  userId?: string | null,
+  gameType?: string,
+  wordsPerPage: number = 10,
+): GetGameWordsResponse => {
   const [fetchGuestWords, guestWordsResponse] = useLazyGetWordsQuery();
   const [fetchMainWords, mainWordsResponse] = useLazyGetUserAggregatedWordsQuery();
   const [fetchHardWords, hardWordsResponse] = useLazyGetUserAggregatedWordsQuery();

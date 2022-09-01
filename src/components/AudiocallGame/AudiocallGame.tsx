@@ -8,13 +8,9 @@ import AudiocallMeaning from '../AudiocallMeaning';
 import AudiocallResult from '../AudiocallResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallCurrentWord,
   setAudiocallShouldContinue,
   setAudiocallDisableAnswers,
-  selectAudiocallCurrentWord,
   selectAudiocallShouldContinue,
-  setAudiocallCorrectChoise,
-  setAudiocallWrongChoise,
 } from '../../store/audiocall/audiocallSlice';
 import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
@@ -23,18 +19,20 @@ import { selectCurrentUserId } from '../../store/auth/authSlice';
 const AudiocallGame: FC<AudiocallGameProps> = (props) => {
   const { group, page, tryAgain, fromTextbook } = props;
 
+  const [currentWord, setCurrentWord] = useState(0);
+
   const dispatch = useAppDispatch();
-  const currentWord = useAppSelector(selectAudiocallCurrentWord);
+
   const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
   const userId = useAppSelector(selectCurrentUserId);
 
-  const { data, error, isLoading } = useGetGameWords({
-    fromTextbook,
+  const { data, error, isLoading } = useGetGameWords(
     group,
     page,
+    fromTextbook,
     userId,
-    gameType: 'audiocall',
-  });
+    'audiocall',
+  );
   const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   if (isLoading) return <p>Loading...</p>;
@@ -87,11 +85,9 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
 
     const continueGame = (): void => {
       dispatch(setAudiocallDisableAnswers(false));
-      dispatch(setAudiocallCurrentWord(currentWord + 1));
       dispatch(setAudiocallShouldContinue(false));
-      dispatch(setAudiocallCorrectChoise(''));
-      dispatch(setAudiocallWrongChoise(''));
 
+      setCurrentWord(currentWord + 1);
       setAnswers([]);
     };
 
@@ -106,7 +102,7 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
             currentWord={`${data[currentWord].word}`}
             playAudio={playAudio}
           />
-          <AudiocallAnswers answers={answers} data={data} />
+          <AudiocallAnswers data={data} answers={answers} currentWord={currentWord} />
           {shouldContinue ? (
             <button type="button" onClick={continueGame} className={s.audiocallGame_continueButton}>
               Continue

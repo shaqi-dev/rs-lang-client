@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import s from './AudiocallAnswers.module.scss';
 import { Word } from '../../interfaces/words';
 import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
@@ -8,14 +8,9 @@ import {
   setAudiocallDisableAnswers,
   setAudiocallWrongAnswers,
   setAudiocallCorrectAnswers,
-  setAudiocallCorrectChoise,
-  setAudiocallWrongChoise,
   selectAudiocallDisableAnswers,
   selectAudiocallCorrectAnswers,
   selectAudiocallWrongAnswers,
-  selectAudiocallCorrectChoise,
-  selectAudiocallWrongChoise,
-  selectAudiocallCurrentWord,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectCurrentAccessToken, selectCurrentUserId } from '../../store/auth/authSlice';
@@ -23,16 +18,27 @@ import getUserWordById from '../../services/getUserWordById';
 import updateUserWord from '../../services/updateUserWord';
 import createUserWord from '../../services/createUserWord';
 
-const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (props) => {
-  const { answers, data } = props;
+const AudiocallAnswers: FC<{
+  data: Word[];
+  answers: AudiocallAnswerInfo[];
+  currentWord: number;
+}> = (props) => {
+  const { data, answers, currentWord } = props;
+
+  const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
+  const [wrongChoise, setWrongChoise] = useState('');
+
+  useEffect(() => {
+    if (correctChoise === undefined || data[currentWord].word !== correctChoise.word) {
+      setCorrectChoise(undefined);
+      setWrongChoise('');
+    }
+  }, [correctChoise, data, currentWord]);
 
   const dispatch = useAppDispatch();
-  const currentWord = useAppSelector(selectAudiocallCurrentWord);
   const disable = useAppSelector(selectAudiocallDisableAnswers);
   const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
   const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
-  const correctChoise = useAppSelector(selectAudiocallCorrectChoise);
-  const wrongChoise = useAppSelector(selectAudiocallWrongChoise);
   const userId = useAppSelector(selectCurrentUserId);
   const token = useAppSelector(selectCurrentAccessToken);
 
@@ -44,7 +50,6 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
           optional: { audiocall: number; sprint: number } | undefined;
           error: Error | undefined;
         }) => {
-          console.log(res);
           if (res.difficulty && res.optional) {
             let audiocallWordCount: number = res.optional.audiocall ?? 0;
             if (isCorrect && res.optional.audiocall < 3) audiocallWordCount += 1;
@@ -77,27 +82,23 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
 
   const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
-    const wordDataId = data[currentWord].wordTranslate.replaceAll(' ', '-');
-    const rightAnswer: HTMLButtonElement = document.querySelector(
-      `#${wordDataId}`,
-    ) as HTMLButtonElement;
 
     const wordId: string = data[Number(chosenAnswer.name)]._id;
 
+    setCorrectChoise(data[currentWord]);
+
     if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
-      dispatch(setAudiocallCorrectChoise(chosenAnswer.id));
-      dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[Number(chosenAnswer.name)]]));
+      dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[currentWord]]));
 
       evaluateAnswer(wordId, true);
     } else if (chosenAnswer.textContent === 'Don"t know') {
-      dispatch(setAudiocallCorrectChoise(rightAnswer.id));
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
+      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     } else {
-      dispatch(setAudiocallCorrectChoise(rightAnswer.id));
-      dispatch(setAudiocallWrongChoise(chosenAnswer.id));
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[Number(rightAnswer.name)]]));
+      setWrongChoise(chosenAnswer.id);
+
+      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     }
@@ -113,7 +114,8 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
           const wordDataId = answer.word.replaceAll(' ', '-');
           let wordClass = `${s.audiocallAnswers_answer}`;
 
-          if (wordDataId === correctChoise) wordClass = `${s.correctAnswer}`;
+          if (wordDataId === correctChoise?.wordTranslate.replaceAll(' ', '-'))
+            wordClass = `${s.correctAnswer}`;
           if (wordDataId === wrongChoise) wordClass = `${s.wrongAnswer}`;
 
           return (
