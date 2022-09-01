@@ -3,7 +3,7 @@ import SprintGameBegin from '../../components/SprintGameBegin';
 import SprintGameContent from '../../components/SprintGameContent';
 import SprintGameResult from '../../components/SprintGameResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import useGetAudiocallWords from '../../hooks/useGetAudiocallWords';
+import useGetGameWords from '../../hooks/useGetGameWords';
 import { Word } from '../../interfaces/words';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import wordsGroupNames from '../../shared/wordsGroupNames';
@@ -33,9 +33,9 @@ const SprintGame: FC = () => {
   const sprintPage = useAppSelector(selectSprintPage);
   const correctAnswer = useAppSelector(selectSprintCorrectAnswers);
   const wrongAnswer = useAppSelector(selectSprintWrongAnswers);
-  const { data, error, isLoading } = useGetAudiocallWords(sprintGroup, sprintPage);
+  const { data, error, isLoading } = useGetGameWords(sprintGroup, sprintPage);
   const subPage = Math.floor(Math.random() * 30);
-  const subCollection = useGetAudiocallWords(sprintGroup, subPage);
+  const subCollection = useGetGameWords(sprintGroup, subPage);
 
   async function updateCollection(): Promise<void> {
     if (error) throw new Error('Update collection is faled!');
