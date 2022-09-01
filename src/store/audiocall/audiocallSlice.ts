@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
-import AudiocallState from '../../interfaces/AudiocallState';
+import { AudiocallState, AudiocallResultPage } from '../../interfaces/AudiocallState';
 import { Word } from '../../interfaces/words';
 
 export interface AudiocallAnswerInfo {
@@ -14,7 +14,7 @@ const initialState: AudiocallState = {
   disableAnswers: false,
   wrongAnswers: [],
   correctAnswers: [],
-  resultPage: '',
+  resultPage: AudiocallResultPage.PIE_CHART,
 };
 
 const audiocallSlice = createSlice({
@@ -36,7 +36,7 @@ const audiocallSlice = createSlice({
     setCorrectAnswers: (state, action: PayloadAction<Word[]>) => {
       state.correctAnswers = action.payload;
     },
-    setResultPage: (state, action: PayloadAction<string>) => {
+    setResultPage: (state, action: PayloadAction<AudiocallResultPage>) => {
       state.resultPage = action.payload;
     },
   },
@@ -56,6 +56,7 @@ export const selectShouldContinue = (state: RootState): boolean => state.audioca
 export const selectDisableAnswers = (state: RootState): boolean => state.audiocall.disableAnswers;
 export const selectWrongAnswers = (state: RootState): Word[] => state.audiocall.wrongAnswers;
 export const selectCorrectAnswers = (state: RootState): Word[] => state.audiocall.correctAnswers;
-export const selectResultPage = (state: RootState): string => state.audiocall.resultPage;
+export const selectResultPage = (state: RootState): AudiocallResultPage =>
+  state.audiocall.resultPage;
 
 export default audiocallSlice.reducer;

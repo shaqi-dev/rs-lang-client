@@ -15,6 +15,7 @@ import {
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
+import { AudiocallResultPage } from '../../interfaces/AudiocallState';
 
 const Audiocall: FC = () => {
   const dispatch = useAppDispatch();
@@ -53,7 +54,7 @@ const Audiocall: FC = () => {
     dispatch(setCorrectAnswers([]));
     dispatch(setWrongAnswers([]));
     dispatch(setDisableAnswers(false));
-    dispatch(setResultPage('pieChart'));
+    dispatch(setResultPage(AudiocallResultPage.PIE_CHART));
 
     setGameStart(!gameStarted);
   };

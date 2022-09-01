@@ -82,7 +82,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
   };
 
   const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
+    const chosenAnswer = e.target as HTMLButtonElement;
 
     const wordId: string = data[Number(chosenAnswer.name)]._id;
 

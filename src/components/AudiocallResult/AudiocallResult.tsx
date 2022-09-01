@@ -9,6 +9,7 @@ import {
   setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { Word } from '../../interfaces/words';
+import { AudiocallResultPage } from '../../interfaces/AudiocallState';
 
 const AudiocallResult: FC = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +30,7 @@ const AudiocallResult: FC = () => {
     audio.play();
   };
 
-  const handleSetResultPage = (pageName: string): void => {
+  const handleSetResultPage = (pageName: AudiocallResultPage): void => {
     dispatch(setResultPage(pageName));
   };
 
@@ -39,20 +40,20 @@ const AudiocallResult: FC = () => {
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => handleSetResultPage('pieChart')}
+          onClick={(): void => handleSetResultPage(AudiocallResultPage.PIE_CHART)}
         >
           Pie Chart
         </button>
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => handleSetResultPage('words')}
+          onClick={(): void => handleSetResultPage(AudiocallResultPage.WORDS)}
         >
           Words
         </button>
       </div>
       <div className={s.resultsBody}>
-        {resultPage === 'pieChart' ? (
+        {resultPage === AudiocallResultPage.PIE_CHART ? (
           <div className={s.pieChartContainer}>
             <p>Goog Job!</p>
             <div className={s.pieChart} style={pieChartStyle}>{`${correctAnswersPers}%`}</div>
