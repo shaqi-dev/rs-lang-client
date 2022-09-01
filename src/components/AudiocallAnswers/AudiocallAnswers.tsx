@@ -21,9 +21,6 @@ import {
 } from '../../services/userWordsApi';
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
-// import getUserWordById from '../../services/getUserWordById';
-// import updateUserWord from '../../services/updateUserWord';
-// import createUserWord from '../../services/createUserWord';
 
 export interface AudiocallAnswersProps {
   data: Word[];
@@ -38,7 +35,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
   const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
   const userId = useAppSelector(selectCurrentUserId);
-  // const token = useAppSelector(selectCurrentAccessToken);
 
   const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
   const [wrongChoise, setWrongChoise] = useState('');
@@ -59,7 +55,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
       const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
       if (isSuccess) {
-        console.log(userWord);
         const { difficulty: prevDifficulty, optional } = userWord;
         const audiocall = optional?.games?.audiocall || undefined;
         const sprint = optional?.games?.audiocall || undefined;
@@ -81,7 +76,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
           optional: {
             learned,
             games: {
-              ...sprint,
+              sprint,
               audiocall: {
                 correctAnswers,
                 incorrectAnswers,
@@ -91,6 +86,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
           },
         };
 
+        console.log(body);
         updateUserWord({ userId, wordId, body });
       } else {
         const body: MutateUserWordBody = {
@@ -107,31 +103,27 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
           },
         };
 
+        console.log(body);
         createUserWord({ userId, wordId, body });
       }
     }
   };
 
-  const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  const handleChooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     const chosenAnswer = e.target as HTMLButtonElement;
-
     const wordId: string = data[Number(chosenAnswer.name)]._id;
 
     setCorrectChoise(data[currentWord]);
 
     if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
       dispatch(setCorrectAnswers([...currentCorrectAnswers, data[currentWord]]));
-
       evaluateAnswer(wordId, true);
     } else if (chosenAnswer.textContent === 'Don"t know') {
       dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
-
       evaluateAnswer(data[currentWord]._id, false);
     } else {
       setWrongChoise(chosenAnswer.id);
-
       dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
-
       evaluateAnswer(data[currentWord]._id, false);
     }
 
@@ -143,6 +135,8 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
     <div className={s.audiocallAnswersContainer}>
       <div className={s.audiocallAnswers}>
         {answers.map((answer) => {
+          console.log(answer);
+
           const wordDataId = answer.word.replaceAll(' ', '-');
           let wordClass = `${s.audiocallAnswers_answer}`;
 
@@ -155,7 +149,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
               type="button"
               key={answer.word}
               id={wordDataId}
-              onClick={(e): void => chooseAnswer(e)}
+              onClick={(e): void => handleChooseAnswer(e)}
               name={answer.wordIndex.toString()}
               className={`${wordClass}`}
               disabled={disable}
@@ -166,7 +160,11 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
         })}
       </div>
       {!disable && (
-        <button type="button" onClick={(e): void => chooseAnswer(e)} className={s.dontKnowButton}>
+        <button
+          type="button"
+          onClick={(e): void => handleChooseAnswer(e)}
+          className={s.dontKnowButton}
+        >
           Don't know
         </button>
       )}
