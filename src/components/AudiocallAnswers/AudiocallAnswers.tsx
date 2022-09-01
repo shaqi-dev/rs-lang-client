@@ -57,7 +57,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
       if (isSuccess) {
         const { difficulty: prevDifficulty, optional } = userWord;
         const audiocall = optional?.games?.audiocall || undefined;
-        const sprint = optional?.games?.audiocall || undefined;
+        const sprint = optional?.games?.sprint || undefined;
 
         const prevCorrectAnswers: number = audiocall?.correctAnswers || 0;
         const prevIncorrectAnswers: number = audiocall?.incorrectAnswers || 0;
