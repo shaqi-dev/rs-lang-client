@@ -2,8 +2,8 @@
 import { FC, useEffect, useState } from 'react';
 import s from './AudiocallAnswers.module.scss';
 import { Word } from '../../interfaces/words';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 import {
+  AudiocallAnswerInfo,
   setAudiocallShouldContinue,
   setAudiocallDisableAnswers,
   setAudiocallWrongAnswers,
@@ -18,11 +18,13 @@ import getUserWordById from '../../services/getUserWordById';
 import updateUserWord from '../../services/updateUserWord';
 import createUserWord from '../../services/createUserWord';
 
-const AudiocallAnswers: FC<{
+export interface AudiocallAnswersProps {
   data: Word[];
   answers: AudiocallAnswerInfo[];
   currentWord: number;
-}> = (props) => {
+}
+
+const AudiocallAnswers: FC<AudiocallAnswersProps> = (props) => {
   const { data, answers, currentWord } = props;
 
   const [correctChoise, setCorrectChoise] = useState<Word | undefined>();

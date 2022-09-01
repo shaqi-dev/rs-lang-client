@@ -8,13 +8,19 @@ import AudiocallMeaning from '../AudiocallMeaning';
 import AudiocallResult from '../AudiocallResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
+  AudiocallAnswerInfo,
   setAudiocallShouldContinue,
   setAudiocallDisableAnswers,
   selectAudiocallShouldContinue,
 } from '../../store/audiocall/audiocallSlice';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
-import AudiocallGameProps from '../../interfaces/AudiocallGameProps';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
+
+export interface AudiocallGameProps {
+  group: number;
+  page: number;
+  tryAgain: () => void;
+  fromTextbook: boolean;
+}
 
 const AudiocallGame: FC<AudiocallGameProps> = (props) => {
   const { group, page, tryAgain, fromTextbook } = props;

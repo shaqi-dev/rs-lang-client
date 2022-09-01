@@ -1,8 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 import AudiocallState from '../../interfaces/audiocallState';
 import { Word } from '../../interfaces/words';
+
+export interface AudiocallAnswerInfo {
+  word: string;
+  wordIndex: number;
+}
 
 const initialState: AudiocallState = {
   audiocallAnswers: [],
