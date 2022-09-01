@@ -36,7 +36,7 @@ const NavBar: FC<NavBarProps> = ({ isLoggedIn }) => {
         </li>
         {isLoggedIn && (
           <li className={s.item}>
-            <Link to="/statistic" className={s.link}>
+            <Link to="/statistics" className={s.link}>
               Статистика
             </Link>
           </li>
