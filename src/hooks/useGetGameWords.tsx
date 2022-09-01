@@ -9,6 +9,7 @@ const useGetGameWords = ({
   group,
   page,
   userId,
+  gameType,
   wordsPerPage = 10,
 }: GetGameWordsData): GetGameWordsResponse => {
   const [fetchGuestWords, guestWordsResponse] = useLazyGetWordsQuery();
@@ -31,7 +32,16 @@ const useGetGameWords = ({
     if (isFromTextbook) {
       if (group === 6)
         fetchHardWords({ userId, group, page, wordsPerPage, filter: UserWordsFilters.HARD });
-      fetchMainWords({ userId, group, page, wordsPerPage });
+      if (gameType === 'audiocall')
+        fetchMainWords({
+          userId,
+          group,
+          page,
+          wordsPerPage,
+          filter: UserWordsFilters.AUDIOCALL_WEAK,
+        });
+      if (gameType === 'sprint')
+        fetchMainWords({ userId, group, page, wordsPerPage, filter: UserWordsFilters.SPRINT_WEAK });
     }
   }, [
     fetchGuestWords,
@@ -44,6 +54,7 @@ const useGetGameWords = ({
     isGuestView,
     userId,
     wordsPerPage,
+    gameType,
   ]);
 
   const getAggregatedWordsResult = (response: typeof mainWordsResponse): GetGameWordsResponse => {
@@ -62,7 +73,8 @@ const useGetGameWords = ({
   }
 
   if (isFromTextbook) {
-    return getAggregatedWordsResult(hardWordsResponse);
+    if (group === 6) return getAggregatedWordsResult(hardWordsResponse);
+    return getAggregatedWordsResult(mainWordsResponse);
   }
 
   return {

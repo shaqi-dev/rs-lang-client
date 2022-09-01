@@ -44,6 +44,7 @@ const AudiocallAnswers: FC<{ answers: AudiocallAnswerInfo[]; data: Word[] }> = (
           optional: { audiocall: number; sprint: number } | undefined;
           error: Error | undefined;
         }) => {
+          console.log(res);
           if (res.difficulty && res.optional) {
             let audiocallWordCount: number = res.optional.audiocall ?? 0;
             if (isCorrect && res.optional.audiocall < 3) audiocallWordCount += 1;

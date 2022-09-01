@@ -28,7 +28,13 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
   const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
   const userId = useAppSelector(selectCurrentUserId);
 
-  const { data, error, isLoading } = useGetGameWords({ fromTextbook, group, page, userId });
+  const { data, error, isLoading } = useGetGameWords({
+    fromTextbook,
+    group,
+    page,
+    userId,
+    gameType: 'audiocall',
+  });
   const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   if (isLoading) return <p>Loading...</p>;

@@ -59,10 +59,6 @@ const Audiocall: FC = () => {
     dispatch(setAudiocallWrongAnswers([]));
     dispatch(setAudiocallDisableAnswers(false));
     dispatch(setAudiocallResultPage('pieChart'));
-    if (fromTextbook) {
-      dispatch(setAudiocallGroup(textbookGroup));
-      dispatch(setAudiocallPage(textbookPage));
-    }
 
     setGameStart(!gameStarted);
   };
@@ -79,8 +75,8 @@ const Audiocall: FC = () => {
         </div>
       ) : (
         <AudiocallGame
-          group={audiocallGroup}
-          page={audiocallPage}
+          group={fromTextbook ? textbookGroup : audiocallGroup}
+          page={fromTextbook ? textbookPage : audiocallPage}
           tryAgain={tryAgain}
           fromTextbook={fromTextbook}
         />

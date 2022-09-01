@@ -9,6 +9,7 @@ export interface GetGameWordsData {
   page: number;
   userId: string | null;
   wordsPerPage?: number;
+  gameType?: string;
 }
 
 export interface GetGameWordsResponse {
