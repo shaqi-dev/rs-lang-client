@@ -8,15 +8,14 @@ import { setWord } from '../../store/textbook/textbookSlice';
 import {
   useCreateUserWordMutation,
   useUpdateUserWordMutation,
-  useDeleteUserWordMutation,
   useLazyGetUserWordByIdQuery,
 } from '../../services/userWordsApi';
 import type { Word } from '../../interfaces/words';
 import type { AggregatedWord } from '../../interfaces/userAggregatedWords';
-import WordDifficulty from '../../shared/enums/WordDifficulty';
 import s from './WordCard.module.scss';
 import TextbookView from '../../shared/enums/TextbookView';
 import { useLazyGetUserAggregatedWordByIdQuery } from '../../services/userAggregatedWordsApi';
+import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 
 export interface WordCardProps {
   word: Word | AggregatedWord;
@@ -43,13 +42,12 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
   const dispatch = useAppDispatch();
   const [createUserWord] = useCreateUserWordMutation();
   const [updateUserWord] = useUpdateUserWordMutation();
-  const [deleteUserWord] = useDeleteUserWordMutation();
-  const [getUserWord] = useLazyGetUserWordByIdQuery();
+  const [getUserWordById] = useLazyGetUserWordByIdQuery();
   const [getUserAggregatedWord] = useLazyGetUserAggregatedWordByIdQuery();
 
-  const wordDifficulty = ('userWord' in word && word.userWord?.difficulty) || undefined;
-  const isHardWord = wordDifficulty === WordDifficulty.HARD;
-  const isLearnedWord = wordDifficulty === WordDifficulty.WEAK;
+  const isHardWord =
+    ('userWord' in word && word.userWord?.difficulty === UserWordDifficulty.HARD) || false;
+  const isLearnedWord = ('userWord' in word && word.userWord?.optional?.learned) || false;
   const isMainView = view === TextbookView.MAIN;
   const isUserView = view === TextbookView.USER;
 
@@ -63,42 +61,81 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
     }
   };
 
-  const handleChangeWordDifficulty = async (difficulty: WordDifficulty): Promise<void> => {
+  type HandleUpdateWordProps =
+    | { type: 'difficulty'; payload: UserWordDifficulty }
+    | { type: 'learned'; payload: boolean };
+
+  const handleUpdateWord = async ({ type, payload }: HandleUpdateWordProps): Promise<void> => {
     if (userId && '_id' in word && word._id) {
       const wordId = word._id;
-      const requestData = {
-        userId,
-        wordId,
-        body: {
-          difficulty,
-          optional: {},
-        },
-      };
 
-      const { isSuccess } = await getUserWord({ userId, wordId });
+      const { data, isSuccess } = await getUserWordById({ userId, wordId });
 
       if (isSuccess) {
-        await updateUserWord(requestData).unwrap();
+        if (type === 'difficulty') {
+          const { optional } = data;
+
+          const body = {
+            difficulty: payload,
+            optional: {
+              ...optional,
+              learned: payload === UserWordDifficulty.HARD ? false : optional?.learned,
+            },
+          };
+
+          await updateUserWord({ userId, wordId, body });
+        }
+
+        if (type === 'learned') {
+          const { difficulty, optional } = data;
+
+          const body = {
+            difficulty: payload ? UserWordDifficulty.DEFAULT : difficulty,
+            optional: {
+              ...optional,
+              learned: payload,
+            },
+          };
+
+          await updateUserWord({ userId, wordId, body });
+        }
       } else {
-        await createUserWord(requestData).unwrap();
+        if (type === 'difficulty') {
+          const body = {
+            difficulty: payload,
+            optional: {
+              learned: false,
+            },
+          };
+
+          await createUserWord({ userId, wordId, body }).unwrap();
+        }
+
+        if (type === 'learned') {
+          const body = {
+            difficulty: UserWordDifficulty.DEFAULT,
+            optional: {
+              learned: payload,
+            },
+          };
+
+          await createUserWord({ userId, wordId, body });
+        }
       }
 
       updateCurrentWord({ wordId });
     }
   };
 
-  const handleAddHardWord = (): Promise<void> => handleChangeWordDifficulty(WordDifficulty.HARD);
-  const handleAddWeakWord = (): Promise<void> => handleChangeWordDifficulty(WordDifficulty.WEAK);
+  const handleAddHardWord = (): Promise<void> =>
+    handleUpdateWord({ type: 'difficulty', payload: UserWordDifficulty.HARD });
+  const handleRemoveHardWord = (): Promise<void> =>
+    handleUpdateWord({ type: 'difficulty', payload: UserWordDifficulty.DEFAULT });
 
-  const handleRemoveWord = async (): Promise<void> => {
-    if (userId && '_id' in word && word._id) {
-      const wordId = word._id;
-
-      deleteUserWord({ userId, wordId });
-
-      updateCurrentWord({ wordId });
-    }
-  };
+  const handleAddLearnedWord = (): Promise<void> =>
+    handleUpdateWord({ type: 'learned', payload: true });
+  const handleRemoveLearnedWord = (): Promise<void> =>
+    handleUpdateWord({ type: 'learned', payload: false });
 
   return (
     <div className={s.root}>
@@ -116,12 +153,15 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
           <div className={s.userActions}>
             <Button
               type="button"
-              onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveWord}
+              onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveHardWord}
             >
               {isMainView && (isHardWord ? 'Удалить из сложных' : 'Добавить в сложные')}
               {isUserView && 'Удалить из сложных'}
             </Button>
-            <Button type="button" onClick={isLearnedWord ? handleRemoveWord : handleAddWeakWord}>
+            <Button
+              type="button"
+              onClick={!isLearnedWord ? handleAddLearnedWord : handleRemoveLearnedWord}
+            >
               {isLearnedWord ? 'Удалить из изученных' : 'Добавить в изученные'}
             </Button>
           </div>

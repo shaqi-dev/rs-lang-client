@@ -1,9 +1,23 @@
-import WordDifficulty from '../shared/enums/WordDifficulty';
+import WordDifficulty from '../shared/enums/UserWordDifficulty';
+
+export interface GameStatistics {
+  correctAnswers: number;
+  incorrectAnswers: number;
+  winStreak: number;
+}
+
+export interface UserWordOptional {
+  learned?: boolean;
+  games?: {
+    audiocall?: GameStatistics;
+    sprint?: GameStatistics;
+  };
+}
 
 export interface UserWord {
   id: string;
   difficulty: WordDifficulty;
-  optional: {};
+  optional?: UserWordOptional;
   wordId: string;
 }
 
@@ -14,7 +28,7 @@ export interface GetUserWordByIdData {
 
 export interface MutateUserWordBody {
   difficulty: WordDifficulty;
-  optional: {};
+  optional: UserWordOptional;
 }
 
 export interface MutateUserWordData {

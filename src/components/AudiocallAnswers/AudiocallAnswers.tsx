@@ -13,10 +13,17 @@ import {
   selectWrongAnswers,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { selectCurrentAccessToken, selectCurrentUserId } from '../../store/auth/authSlice';
-import getUserWordById from '../../services/getUserWordById';
-import updateUserWord from '../../services/updateUserWord';
-import createUserWord from '../../services/createUserWord';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
+import {
+  useLazyGetUserWordByIdQuery,
+  useUpdateUserWordMutation,
+  useCreateUserWordMutation,
+} from '../../services/userWordsApi';
+import { MutateUserWordBody } from '../../interfaces/userWords';
+import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
+// import getUserWordById from '../../services/getUserWordById';
+// import updateUserWord from '../../services/updateUserWord';
+// import createUserWord from '../../services/createUserWord';
 
 export interface AudiocallAnswersProps {
   data: Word[];
@@ -28,13 +35,17 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
   const dispatch = useAppDispatch();
 
   const disable = useAppSelector(selectDisableAnswers);
-  const correctAnswers = useAppSelector(selectCorrectAnswers);
-  const wrongAnswers = useAppSelector(selectWrongAnswers);
+  const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
+  const currentWrongAnswers = useAppSelector(selectWrongAnswers);
   const userId = useAppSelector(selectCurrentUserId);
-  const token = useAppSelector(selectCurrentAccessToken);
+  // const token = useAppSelector(selectCurrentAccessToken);
 
   const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
   const [wrongChoise, setWrongChoise] = useState('');
+
+  const [getUserWordById] = useLazyGetUserWordByIdQuery();
+  const [updateUserWord] = useUpdateUserWordMutation();
+  const [createUserWord] = useCreateUserWordMutation();
 
   useEffect(() => {
     if (correctChoise === undefined || data[currentWord].word !== correctChoise.word) {
@@ -43,41 +54,61 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
     }
   }, [correctChoise, data, currentWord]);
 
-  const evaluateAnswer = (wordId: string, isCorrect: boolean): void => {
-    if (userId && token) {
-      getUserWordById({ userId, wordId, token }).then(
-        (res: {
-          difficulty: string | undefined;
-          optional: { audiocall: number; sprint: number } | undefined;
-          error: Error | undefined;
-        }) => {
-          if (res.difficulty && res.optional) {
-            let wordCount: number = res.optional.audiocall ?? 0;
-            if (isCorrect && res.optional.audiocall < 3) wordCount += 1;
-            else if (!isCorrect) wordCount = 0;
+  const evaluateAnswer = async (wordId: string, isCorrect: boolean): Promise<void> => {
+    if (userId) {
+      const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
-            const userData = {
-              difficulty: res.difficulty,
-              optional: {
-                audiocall: wordCount,
-                sprint: res.optional.sprint ?? 0,
+      if (isSuccess) {
+        console.log(userWord);
+        const { difficulty: prevDifficulty, optional } = userWord;
+        const audiocall = optional?.games?.audiocall || undefined;
+        const sprint = optional?.games?.audiocall || undefined;
+
+        const prevCorrectAnswers: number = audiocall?.correctAnswers || 0;
+        const prevIncorrectAnswers: number = audiocall?.incorrectAnswers || 0;
+        const prevWinStreak: number = audiocall?.winStreak || 0;
+
+        const correctAnswers = isCorrect ? prevCorrectAnswers + 1 : prevCorrectAnswers;
+        const incorrectAnswers = !isCorrect ? prevIncorrectAnswers + 1 : prevIncorrectAnswers;
+        const winStreak = isCorrect ? prevWinStreak + 1 : 0;
+        const learned =
+          (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
+          (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
+          false;
+
+        const body: MutateUserWordBody = {
+          difficulty: learned ? UserWordDifficulty.DEFAULT : prevDifficulty,
+          optional: {
+            learned,
+            games: {
+              ...sprint,
+              audiocall: {
+                correctAnswers,
+                incorrectAnswers,
+                winStreak,
               },
-            };
+            },
+          },
+        };
 
-            updateUserWord({ userId, wordId, userData, token });
-          } else {
-            const userData = {
-              difficulty: 'weak',
-              optional: {
-                audiocall: isCorrect ? 1 : 0,
-                sprint: 0,
+        updateUserWord({ userId, wordId, body });
+      } else {
+        const body: MutateUserWordBody = {
+          difficulty: UserWordDifficulty.DEFAULT,
+          optional: {
+            learned: false,
+            games: {
+              audiocall: {
+                correctAnswers: isCorrect ? 1 : 0,
+                incorrectAnswers: !isCorrect ? 1 : 0,
+                winStreak: isCorrect ? 1 : 0,
               },
-            };
+            },
+          },
+        };
 
-            createUserWord({ userId, wordId, userData, token });
-          }
-        },
-      );
+        createUserWord({ userId, wordId, body });
+      }
     }
   };
 
@@ -89,17 +120,17 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
     setCorrectChoise(data[currentWord]);
 
     if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
-      dispatch(setCorrectAnswers([...correctAnswers, data[currentWord]]));
+      dispatch(setCorrectAnswers([...currentCorrectAnswers, data[currentWord]]));
 
       evaluateAnswer(wordId, true);
     } else if (chosenAnswer.textContent === 'Don"t know') {
-      dispatch(setWrongAnswers([...wrongAnswers, data[currentWord]]));
+      dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     } else {
       setWrongChoise(chosenAnswer.id);
 
-      dispatch(setWrongAnswers([...wrongAnswers, data[currentWord]]));
+      dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     }
