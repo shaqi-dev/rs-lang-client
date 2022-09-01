@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
-import { FC, useEffect, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import s from './AudiocallAnswers.module.scss';
 import { Word } from '../../interfaces/words';
 import {
-  AudiocallAnswerInfo,
   setShouldContinue,
   setDisableAnswers,
   setWrongAnswers,
@@ -21,40 +20,37 @@ import {
 } from '../../services/userWordsApi';
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 
 export interface AudiocallAnswersProps {
-  data: Word[];
-  answers: AudiocallAnswerInfo[];
-  currentWord: number;
+  currentAnswers: Word[] | AggregatedWord[];
+  currentCorrectAnswer: Word | AggregatedWord;
 }
 
-const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWord }) => {
+const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCorrectAnswer }) => {
   const dispatch = useAppDispatch();
 
+  const userId = useAppSelector(selectCurrentUserId);
   const disable = useAppSelector(selectDisableAnswers);
   const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
-  const userId = useAppSelector(selectCurrentUserId);
 
-  const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
-  const [wrongChoise, setWrongChoise] = useState('');
+  const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
 
   const [getUserWordById] = useLazyGetUserWordByIdQuery();
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
 
   useEffect(() => {
-    if (correctChoise === undefined || data[currentWord].word !== correctChoise.word) {
-      setCorrectChoise(undefined);
-      setWrongChoise('');
-    }
-  }, [correctChoise, data, currentWord]);
+    setCurrentChoise(null);
+  }, [currentCorrectAnswer]);
 
-  const evaluateAnswer = async (wordId: string, isCorrect: boolean): Promise<void> => {
+  const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
     if (userId) {
+      const wordId = word._id;
       const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
-      if (isSuccess) {
+      if (isSuccess && userWord) {
         const { difficulty: prevDifficulty, optional } = userWord;
         const audiocall = optional?.games?.audiocall || undefined;
         const sprint = optional?.games?.sprint || undefined;
@@ -86,7 +82,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
           },
         };
 
-        console.log(body);
         updateUserWord({ userId, wordId, body });
       } else {
         const body: MutateUserWordBody = {
@@ -103,28 +98,28 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
           },
         };
 
-        console.log(body);
         createUserWord({ userId, wordId, body });
       }
     }
   };
 
-  const handleChooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    const chosenAnswer = e.target as HTMLButtonElement;
-    const wordId: string = data[Number(chosenAnswer.name)]._id;
+  const handleChooseAnswer = (word: Word | AggregatedWord | null): void => {
+    if (word) {
+      const wordId: string = userId ? word._id : word.id;
 
-    setCorrectChoise(data[currentWord]);
+      if (currentCorrectAnswer.id === wordId || currentCorrectAnswer._id === wordId) {
+        dispatch(setCorrectAnswers([...currentCorrectAnswers, currentCorrectAnswer]));
+        evaluateAnswer(currentCorrectAnswer, true);
+      } else {
+        dispatch(setWrongAnswers([...currentWrongAnswers, currentCorrectAnswer]));
+        evaluateAnswer(currentCorrectAnswer, false);
+      }
 
-    if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
-      dispatch(setCorrectAnswers([...currentCorrectAnswers, data[currentWord]]));
-      evaluateAnswer(wordId, true);
-    } else if (chosenAnswer.textContent === 'Don"t know') {
-      dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
-      evaluateAnswer(data[currentWord]._id, false);
+      setCurrentChoise(word);
     } else {
-      setWrongChoise(chosenAnswer.id);
-      dispatch(setWrongAnswers([...currentWrongAnswers, data[currentWord]]));
-      evaluateAnswer(data[currentWord]._id, false);
+      dispatch(setWrongAnswers([...currentWrongAnswers, currentCorrectAnswer]));
+      evaluateAnswer(currentCorrectAnswer, false);
+      setCurrentChoise(null);
     }
 
     dispatch(setDisableAnswers(true));
@@ -134,27 +129,28 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
   return (
     <div className={s.audiocallAnswersContainer}>
       <div className={s.audiocallAnswers}>
-        {answers.map((answer) => {
-          console.log(answer);
-
-          const wordDataId = answer.word.replaceAll(' ', '-');
+        {currentAnswers.map((word) => {
+          const wordId: string = userId ? word._id : word.id;
+          const chosenWordId = currentChoise && (userId ? currentChoise._id : currentChoise.id);
+          const correctAnswerId = userId ? currentCorrectAnswer._id : currentCorrectAnswer.id;
           let wordClass = `${s.audiocallAnswers_answer}`;
 
-          if (wordDataId === correctChoise?.wordTranslate.replaceAll(' ', '-'))
+          if (disable && wordId === correctAnswerId) {
             wordClass = `${s.correctAnswer}`;
-          if (wordDataId === wrongChoise) wordClass = `${s.wrongAnswer}`;
+          }
+          if (disable && wordId !== correctAnswerId && wordId === chosenWordId) {
+            wordClass = `${s.wrongAnswer}`;
+          }
 
           return (
             <button
               type="button"
-              key={answer.word}
-              id={wordDataId}
-              onClick={(e): void => handleChooseAnswer(e)}
-              name={answer.wordIndex.toString()}
+              key={word.wordTranslate}
+              onClick={(): void => handleChooseAnswer(word)}
               className={`${wordClass}`}
               disabled={disable}
             >
-              {answer.word}
+              {word.wordTranslate}
             </button>
           );
         })}
@@ -162,7 +158,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWor
       {!disable && (
         <button
           type="button"
-          onClick={(e): void => handleChooseAnswer(e)}
+          onClick={(): void => handleChooseAnswer(null)}
           className={s.dontKnowButton}
         >
           Don't know

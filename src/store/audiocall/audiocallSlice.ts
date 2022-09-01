@@ -1,12 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
 import { AudiocallState, AudiocallResultPage } from '../../interfaces/AudiocallState';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
-
-export interface AudiocallAnswerInfo {
-  word: string;
-  wordIndex: number;
-}
 
 const initialState: AudiocallState = {
   answers: [],
@@ -21,7 +17,7 @@ const audiocallSlice = createSlice({
   name: 'audiocall',
   initialState,
   reducers: {
-    setAnswers: (state, action: PayloadAction<AudiocallAnswerInfo[]>) => {
+    setAnswers: (state, action: PayloadAction<Word[] | AggregatedWord[]>) => {
       state.answers = action.payload;
     },
     setShouldContinue: (state, action: PayloadAction<boolean>) => {
@@ -30,10 +26,10 @@ const audiocallSlice = createSlice({
     setDisableAnswers: (state, action: PayloadAction<boolean>) => {
       state.disableAnswers = action.payload;
     },
-    setWrongAnswers: (state, action: PayloadAction<Word[]>) => {
+    setWrongAnswers: (state, action: PayloadAction<Word[] | AggregatedWord[]>) => {
       state.wrongAnswers = action.payload;
     },
-    setCorrectAnswers: (state, action: PayloadAction<Word[]>) => {
+    setCorrectAnswers: (state, action: PayloadAction<Word[] | AggregatedWord[]>) => {
       state.correctAnswers = action.payload;
     },
     setResultPage: (state, action: PayloadAction<AudiocallResultPage>) => {
@@ -51,11 +47,14 @@ export const {
   setResultPage,
 } = audiocallSlice.actions;
 
-export const selectAnswers = (state: RootState): AudiocallAnswerInfo[] => state.audiocall.answers;
+export const selectAnswers = (state: RootState): Word[] | AggregatedWord[] =>
+  state.audiocall.answers;
 export const selectShouldContinue = (state: RootState): boolean => state.audiocall.shouldContinue;
 export const selectDisableAnswers = (state: RootState): boolean => state.audiocall.disableAnswers;
-export const selectWrongAnswers = (state: RootState): Word[] => state.audiocall.wrongAnswers;
-export const selectCorrectAnswers = (state: RootState): Word[] => state.audiocall.correctAnswers;
+export const selectWrongAnswers = (state: RootState): Word[] | AggregatedWord[] =>
+  state.audiocall.wrongAnswers;
+export const selectCorrectAnswers = (state: RootState): Word[] | AggregatedWord[] =>
+  state.audiocall.correctAnswers;
 export const selectResultPage = (state: RootState): AudiocallResultPage =>
   state.audiocall.resultPage;
 

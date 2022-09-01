@@ -1,12 +1,15 @@
+import { AggregatedWord } from './userAggregatedWords';
 import { Word } from './words';
 
-interface AudiocallState {
-  answers: { word: string; wordIndex: number }[];
+export enum AudiocallResultPage {
+  PIE_CHART,
+  WORDS,
+}
+export interface AudiocallState {
+  answers: Word[] | AggregatedWord[];
   shouldContinue: boolean;
   disableAnswers: boolean;
-  resultPage: string;
-  wrongAnswers: Word[];
-  correctAnswers: Word[];
+  resultPage: AudiocallResultPage;
+  wrongAnswers: Word[] | AggregatedWord[];
+  correctAnswers: Word[] | AggregatedWord[];
 }
-
-export default AudiocallState;

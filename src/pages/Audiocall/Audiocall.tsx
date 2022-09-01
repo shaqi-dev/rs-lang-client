@@ -61,7 +61,7 @@ const Audiocall: FC = () => {
 
   return (
     <ContentWrapper className={s.audiocallWrapper}>
-      {!gameStarted ? (
+      {!gameStarted && (
         <div className={s.audiocallWrapper_groupsAndButton}>
           <h1>Audiocall Game</h1>
           {!fromTextbook && (
@@ -74,7 +74,8 @@ const Audiocall: FC = () => {
             Start Game
           </button>
         </div>
-      ) : (
+      )}
+      {gameStarted && (
         <AudiocallGame
           group={fromTextbook ? textbookGroup : audiocallGroup}
           page={fromTextbook ? textbookPage : audiocallPage}

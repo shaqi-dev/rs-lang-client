@@ -61,7 +61,6 @@ const useGetTextbookWords = ({
   ]);
 
   const isLearnedWord = (word: AggregatedWord): boolean => {
-    console.log(word);
     return word.userWord?.optional?.learned ?? false;
   };
 
