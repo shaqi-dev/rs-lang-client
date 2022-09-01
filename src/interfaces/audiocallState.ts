@@ -1,12 +1,12 @@
 import { Word } from './words';
 
 interface AudiocallState {
-  audiocallAnswers: { word: string; wordIndex: number }[];
-  audiocallShouldContinue: boolean;
-  audiocallDisableAnswers: boolean;
-  audiocallResultPage: string;
-  audiocallWrongAnswers: Word[];
-  audiocallCorrectAnswers: Word[];
+  answers: { word: string; wordIndex: number }[];
+  shouldContinue: boolean;
+  disableAnswers: boolean;
+  resultPage: string;
+  wrongAnswers: Word[];
+  correctAnswers: Word[];
 }
 
 export default AudiocallState;

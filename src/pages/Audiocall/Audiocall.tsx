@@ -6,12 +6,12 @@ import AudiocallGame from '../../components/AudiocallGame';
 import AudiocallGroupList from '../../components/AudiocallGroupList';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallShouldContinue,
-  setAudiocallAnswers,
-  setAudiocallDisableAnswers,
-  setAudiocallCorrectAnswers,
-  setAudiocallWrongAnswers,
-  setAudiocallResultPage,
+  setShouldContinue,
+  setAnswers,
+  setDisableAnswers,
+  setCorrectAnswers,
+  setWrongAnswers,
+  setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
@@ -48,12 +48,12 @@ const Audiocall: FC = () => {
   };
 
   const startGame = (): void => {
-    dispatch(setAudiocallShouldContinue(false));
-    dispatch(setAudiocallAnswers([]));
-    dispatch(setAudiocallCorrectAnswers([]));
-    dispatch(setAudiocallWrongAnswers([]));
-    dispatch(setAudiocallDisableAnswers(false));
-    dispatch(setAudiocallResultPage('pieChart'));
+    dispatch(setShouldContinue(false));
+    dispatch(setAnswers([]));
+    dispatch(setCorrectAnswers([]));
+    dispatch(setWrongAnswers([]));
+    dispatch(setDisableAnswers(false));
+    dispatch(setResultPage('pieChart'));
 
     setGameStart(!gameStarted);
   };

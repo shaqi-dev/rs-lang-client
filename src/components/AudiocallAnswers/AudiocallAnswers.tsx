@@ -4,13 +4,13 @@ import s from './AudiocallAnswers.module.scss';
 import { Word } from '../../interfaces/words';
 import {
   AudiocallAnswerInfo,
-  setAudiocallShouldContinue,
-  setAudiocallDisableAnswers,
-  setAudiocallWrongAnswers,
-  setAudiocallCorrectAnswers,
-  selectAudiocallDisableAnswers,
-  selectAudiocallCorrectAnswers,
-  selectAudiocallWrongAnswers,
+  setShouldContinue,
+  setDisableAnswers,
+  setWrongAnswers,
+  setCorrectAnswers,
+  selectDisableAnswers,
+  selectCorrectAnswers,
+  selectWrongAnswers,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectCurrentAccessToken, selectCurrentUserId } from '../../store/auth/authSlice';
@@ -24,8 +24,14 @@ export interface AudiocallAnswersProps {
   currentWord: number;
 }
 
-const AudiocallAnswers: FC<AudiocallAnswersProps> = (props) => {
-  const { data, answers, currentWord } = props;
+const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ data, answers, currentWord }) => {
+  const dispatch = useAppDispatch();
+
+  const disable = useAppSelector(selectDisableAnswers);
+  const correctAnswers = useAppSelector(selectCorrectAnswers);
+  const wrongAnswers = useAppSelector(selectWrongAnswers);
+  const userId = useAppSelector(selectCurrentUserId);
+  const token = useAppSelector(selectCurrentAccessToken);
 
   const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
   const [wrongChoise, setWrongChoise] = useState('');
@@ -37,13 +43,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = (props) => {
     }
   }, [correctChoise, data, currentWord]);
 
-  const dispatch = useAppDispatch();
-  const disable = useAppSelector(selectAudiocallDisableAnswers);
-  const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
-  const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
-  const userId = useAppSelector(selectCurrentUserId);
-  const token = useAppSelector(selectCurrentAccessToken);
-
   const evaluateAnswer = (wordId: string, isCorrect: boolean): void => {
     if (userId && token) {
       getUserWordById({ userId, wordId, token }).then(
@@ -53,14 +52,14 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = (props) => {
           error: Error | undefined;
         }) => {
           if (res.difficulty && res.optional) {
-            let audiocallWordCount: number = res.optional.audiocall ?? 0;
-            if (isCorrect && res.optional.audiocall < 3) audiocallWordCount += 1;
-            else if (!isCorrect) audiocallWordCount = 0;
+            let wordCount: number = res.optional.audiocall ?? 0;
+            if (isCorrect && res.optional.audiocall < 3) wordCount += 1;
+            else if (!isCorrect) wordCount = 0;
 
             const userData = {
               difficulty: res.difficulty,
               optional: {
-                audiocall: audiocallWordCount,
+                audiocall: wordCount,
                 sprint: res.optional.sprint ?? 0,
               },
             };
@@ -90,23 +89,23 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = (props) => {
     setCorrectChoise(data[currentWord]);
 
     if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
-      dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[currentWord]]));
+      dispatch(setCorrectAnswers([...correctAnswers, data[currentWord]]));
 
       evaluateAnswer(wordId, true);
     } else if (chosenAnswer.textContent === 'Don"t know') {
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
+      dispatch(setWrongAnswers([...wrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     } else {
       setWrongChoise(chosenAnswer.id);
 
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
+      dispatch(setWrongAnswers([...wrongAnswers, data[currentWord]]));
 
       evaluateAnswer(data[currentWord]._id, false);
     }
 
-    dispatch(setAudiocallDisableAnswers(true));
-    dispatch(setAudiocallShouldContinue(true));
+    dispatch(setDisableAnswers(true));
+    dispatch(setShouldContinue(true));
   };
 
   return (

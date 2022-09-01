@@ -3,20 +3,20 @@ import s from './AudiocallResult.module.scss';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { API_BASE } from '../../services/endpoints';
 import {
-  selectAudiocallWrongAnswers,
-  selectAudiocallCorrectAnswers,
-  selectAudiocallResultPage,
-  setAudiocallResultPage,
+  selectWrongAnswers,
+  selectCorrectAnswers,
+  selectResultPage,
+  setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { Word } from '../../interfaces/words';
 
 const AudiocallResult: FC = () => {
   const dispatch = useAppDispatch();
-  const audiocallWrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
-  const audiocallCorrectAnswers = useAppSelector(selectAudiocallCorrectAnswers);
-  const resultPage = useAppSelector(selectAudiocallResultPage);
+  const wrongAnswers = useAppSelector(selectWrongAnswers);
+  const correctAnswers = useAppSelector(selectCorrectAnswers);
+  const resultPage = useAppSelector(selectResultPage);
 
-  const correctAnswersPers = audiocallCorrectAnswers.length * 10;
+  const correctAnswersPers = correctAnswers.length * 10;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
     '--border-thickness': '10px',
@@ -29,8 +29,8 @@ const AudiocallResult: FC = () => {
     audio.play();
   };
 
-  const setResultPage = (pageName: string): void => {
-    dispatch(setAudiocallResultPage(pageName));
+  const handleSetResultPage = (pageName: string): void => {
+    dispatch(setResultPage(pageName));
   };
 
   return (
@@ -39,14 +39,14 @@ const AudiocallResult: FC = () => {
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => setResultPage('pieChart')}
+          onClick={(): void => handleSetResultPage('pieChart')}
         >
           Pie Chart
         </button>
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => setResultPage('words')}
+          onClick={(): void => handleSetResultPage('words')}
         >
           Words
         </button>
@@ -59,11 +59,9 @@ const AudiocallResult: FC = () => {
           </div>
         ) : (
           <div className={s.audiocallResultWords}>
-            <p
-              className={s.correctWrongText}
-            >{`Correct answers (${audiocallCorrectAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Correct answers (${correctAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
-              {audiocallCorrectAnswers.map((answer: Word) => {
+              {correctAnswers.map((answer: Word) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
                     <button
@@ -80,11 +78,9 @@ const AudiocallResult: FC = () => {
                 );
               })}
             </ul>
-            <p
-              className={s.correctWrongText}
-            >{`Wrong answers (${audiocallWrongAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Wrong answers (${wrongAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
-              {audiocallWrongAnswers.map((answer) => {
+              {wrongAnswers.map((answer) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
                     <button

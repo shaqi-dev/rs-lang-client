@@ -9,9 +9,9 @@ import AudiocallResult from '../AudiocallResult';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   AudiocallAnswerInfo,
-  setAudiocallShouldContinue,
-  setAudiocallDisableAnswers,
-  selectAudiocallShouldContinue,
+  setShouldContinue,
+  setDisableAnswers,
+  selectShouldContinue,
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 
@@ -22,15 +22,14 @@ export interface AudiocallGameProps {
   fromTextbook: boolean;
 }
 
-const AudiocallGame: FC<AudiocallGameProps> = (props) => {
-  const { group, page, tryAgain, fromTextbook } = props;
-
-  const [currentWord, setCurrentWord] = useState(0);
-
+const AudiocallGame: FC<AudiocallGameProps> = ({ group, page, tryAgain, fromTextbook }) => {
   const dispatch = useAppDispatch();
 
-  const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
+  const shouldContinue = useAppSelector(selectShouldContinue);
   const userId = useAppSelector(selectCurrentUserId);
+
+  const [currentWord, setCurrentWord] = useState(0);
+  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   const { data, error, isLoading } = useGetGameWords(
     group,
@@ -39,17 +38,14 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
     userId,
     'audiocall',
   );
-  const [answers, setAnswers] = useState<AudiocallAnswerInfo[]>([]);
 
   if (isLoading) return <p>Loading...</p>;
 
   if (error) {
     if ('status' in error) {
       const errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
-
       return <ErrorBanner>An error has occurred: {errorMessage}</ErrorBanner>;
     }
-
     return <ErrorBanner>{error.message}</ErrorBanner>;
   }
 
@@ -90,14 +86,16 @@ const AudiocallGame: FC<AudiocallGameProps> = (props) => {
     };
 
     const continueGame = (): void => {
-      dispatch(setAudiocallDisableAnswers(false));
-      dispatch(setAudiocallShouldContinue(false));
+      dispatch(setDisableAnswers(false));
+      dispatch(setShouldContinue(false));
 
       setCurrentWord(currentWord + 1);
       setAnswers([]);
     };
 
-    if (answers.length === 0 && currentWord < 10) generateAnswers();
+    if (answers.length === 0 && currentWord < 10) {
+      generateAnswers();
+    }
 
     if (data && currentWord < 10) {
       return (
