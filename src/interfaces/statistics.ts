@@ -6,8 +6,8 @@ export interface GameStatsShort extends GameStatistics {
 }
 
 export interface UserStatisticsData {
-  learnedWords: number;
   optional?: {
+    learnedWords?: number;
     games?: {
       sprint?: GameStatsShort;
       audiocall?: GameStatsShort;
@@ -17,8 +17,8 @@ export interface UserStatisticsData {
 
 export interface UserStatisticsResponse {
   id: string;
-  learnedWords: number;
   optional?: {
+    learnedWords?: number;
     games?: {
       sprint?: GameStatsShort;
       audiocall?: GameStatsShort;

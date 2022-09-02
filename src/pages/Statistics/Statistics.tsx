@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import ContentWrapper from '../../layouts/ContentWrapper';
-import { useGetStatisticsQuery, useUpdateStatisticsMutation } from '../../services/statisticsApi';
+import { useGetStatisticsQuery } from '../../services/statisticsApi';
 import getGameWinrate from '../../shared/getGameWinrate';
 import s from './Statistics.module.scss';
 
@@ -8,38 +8,10 @@ interface StatisticsProps {
   userId: string;
 }
 
-const mockData = {
-  learnedWords: 15,
-  optional: {
-    games: {
-      sprint: {
-        newWordsCount: 5,
-        correctAnswers: 15,
-        incorrectAnswers: 8,
-        longestWinStreak: 10,
-      },
-      audiocall: {
-        newWordsCount: 7,
-        correctAnswers: 18,
-        incorrectAnswers: 11,
-        longestWinStreak: 8,
-      },
-    },
-  },
-};
-
 const Statistics: FC<StatisticsProps> = ({ userId }) => {
   const { data } = useGetStatisticsQuery(userId);
-  const [updateStatistics] = useUpdateStatisticsMutation();
 
-  const handleUpdate = async (): Promise<void> => {
-    await updateStatistics({
-      userId,
-      body: mockData,
-    }).unwrap();
-  };
-
-  const learnedWords = data?.learnedWords;
+  const learnedWords = data?.optional?.learnedWords || 0;
   const sprint = data?.optional?.games?.sprint;
   const audiocall = data?.optional?.games?.audiocall;
   const newWordsSrint = sprint?.newWordsCount || 0;
@@ -48,7 +20,12 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
   const winStreakSprint = sprint?.longestWinStreak || 0;
   const winStreakAudiocall = audiocall?.longestWinStreak || 0;
 
-  const winPercentTotal = (): number => (getGameWinrate(sprint) + getGameWinrate(audiocall)) / 2;
+  const winPercentTotal = (): number => {
+    if (sprint && audiocall) return (getGameWinrate(sprint) + getGameWinrate(audiocall)) / 2;
+    if (sprint) return getGameWinrate(sprint);
+    if (audiocall) return getGameWinrate(audiocall);
+    return 0;
+  };
 
   return (
     <ContentWrapper className={s.wrapper}>
@@ -77,9 +54,6 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
           </div>
         </div>
       </section>
-      <button type="button" onClick={handleUpdate}>
-        Post
-      </button>
     </ContentWrapper>
   );
 };

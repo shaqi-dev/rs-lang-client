@@ -17,6 +17,11 @@ import { useUpdateUserWordMutation, useCreateUserWordMutation } from '../../serv
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import {
+  useLazyGetStatisticsQuery,
+  useUpdateStatisticsMutation,
+} from '../../services/statisticsApi';
+import { UserStatisticsData } from '../../interfaces/statistics';
 
 export interface AudiocallAnswersProps {
   currentAnswers: Word[] | AggregatedWord[];
@@ -32,15 +37,34 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
+  const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
+  const [maxWinStreak, setMaxWinStreak] = useState<number>(0);
 
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
+  const [getStatistics] = useLazyGetStatisticsQuery();
+  const [updateStatistics] = useUpdateStatisticsMutation();
 
   useEffect(() => {
     setCurrentChoise(null);
   }, [currentCorrectAnswer]);
 
+  useEffect(() => {
+    if (currentWinStreak > maxWinStreak) {
+      setMaxWinStreak(currentWinStreak);
+    }
+
+    console.log('current:', currentWinStreak);
+    console.log('max:', maxWinStreak);
+  }, [currentWinStreak, maxWinStreak]);
+
   const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
+    if (isCorrect) {
+      setCurrentWinStreak(currentWinStreak + 1);
+    } else {
+      setCurrentWinStreak(0);
+    }
+
     if (userId) {
       const wordId = word._id;
 
@@ -77,6 +101,60 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         };
 
         await updateUserWord({ userId, wordId, body });
+
+        // Short-term stats
+        const prevStats = await getStatistics(userId).unwrap();
+
+        if (prevStats) {
+          const learnedWords = learned
+            ? prevStats.optional?.learnedWords
+            : (prevStats.optional?.learnedWords || 0) + 1;
+
+          const audiocallStats = prevStats.optional?.games?.audiocall || undefined;
+          const sprintStats = prevStats.optional?.games?.sprint || undefined;
+
+          const prevCorrectAnswersStats: number = audiocallStats?.correctAnswers || 0;
+          const prevIncorrectAnswersStats: number = audiocallStats?.incorrectAnswers || 0;
+          const prevWinStreakStats: number = audiocallStats?.longestWinStreak || 0;
+
+          const newWordsCount: number = audiocallStats?.newWordsCount || 0;
+          const longestWinStreak =
+            maxWinStreak > prevWinStreakStats ? maxWinStreak : prevWinStreakStats;
+
+          const statsBody: UserStatisticsData = {
+            optional: {
+              learnedWords,
+              games: {
+                sprint: sprintStats,
+                audiocall: {
+                  longestWinStreak,
+                  newWordsCount,
+                  correctAnswers: isCorrect ? prevCorrectAnswersStats + 1 : prevCorrectAnswersStats,
+                  incorrectAnswers: !isCorrect
+                    ? prevIncorrectAnswersStats + 1
+                    : prevIncorrectAnswersStats,
+                },
+              },
+            },
+          };
+
+          await updateStatistics({ userId, body: statsBody });
+        } else {
+          const statsBody: UserStatisticsData = {
+            optional: {
+              games: {
+                audiocall: {
+                  correctAnswers: isCorrect ? 1 : 0,
+                  incorrectAnswers: !isCorrect ? 1 : 0,
+                  longestWinStreak: maxWinStreak,
+                  newWordsCount: 0,
+                },
+              },
+            },
+          };
+
+          await updateStatistics({ userId, body: statsBody });
+        }
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -93,7 +171,63 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         };
 
         await createUserWord({ userId, wordId, body });
+
+        // Short-term stats
+        const prevStats = await getStatistics(userId).unwrap();
+
+        if (prevStats) {
+          const { optional } = prevStats;
+
+          const audiocallStats = optional?.games?.audiocall || undefined;
+          const sprintStats = optional?.games?.sprint || undefined;
+
+          const prevCorrectAnswersStats: number = audiocallStats?.correctAnswers || 0;
+          const prevIncorrectAnswersStats: number = audiocallStats?.incorrectAnswers || 0;
+          const prevWinStreakStats: number = audiocallStats?.longestWinStreak || 0;
+          const prevNewWordsCount: number = audiocallStats?.newWordsCount || 0;
+
+          const learnedWords = optional?.learnedWords || 0;
+          const longestWinStreak =
+            maxWinStreak > prevWinStreakStats ? maxWinStreak : prevWinStreakStats;
+
+          const statsBody: UserStatisticsData = {
+            optional: {
+              learnedWords,
+              games: {
+                sprint: sprintStats,
+                audiocall: {
+                  longestWinStreak,
+                  newWordsCount: prevNewWordsCount + 1,
+                  correctAnswers: isCorrect ? prevCorrectAnswersStats + 1 : prevCorrectAnswersStats,
+                  incorrectAnswers: !isCorrect
+                    ? prevIncorrectAnswersStats + 1
+                    : prevIncorrectAnswersStats,
+                },
+              },
+            },
+          };
+
+          await updateStatistics({ userId, body: statsBody });
+        } else {
+          const statsBody: UserStatisticsData = {
+            optional: {
+              games: {
+                audiocall: {
+                  correctAnswers: isCorrect ? 1 : 0,
+                  incorrectAnswers: !isCorrect ? 1 : 0,
+                  longestWinStreak: maxWinStreak,
+                  newWordsCount: 1,
+                },
+              },
+            },
+          };
+
+          await updateStatistics({ userId, body: statsBody });
+        }
       }
+
+      const nextStats = await getStatistics(userId).unwrap();
+      console.log(nextStats);
     }
   };
 
