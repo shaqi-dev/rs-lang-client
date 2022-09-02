@@ -38,8 +38,6 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
     image,
   } = word;
 
-  console.log(word);
-
   const imageSource = `${API_BASE}/${image}`;
 
   const audiocall = ('userWord' in word && word.userWord?.optional?.games?.audiocall) || undefined;
@@ -53,7 +51,7 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
 
     if (correct && !incorrect) return 100;
     if (!correct && incorrect) return 0;
-    return +((correct / incorrect - 1) * 100).toFixed(0);
+    return +((correct / (correct + incorrect)) * 100).toFixed(0);
   };
 
   const [play] = useAudio(word);

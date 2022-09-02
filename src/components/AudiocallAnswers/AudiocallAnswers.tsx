@@ -13,11 +13,7 @@ import {
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
-import {
-  useLazyGetUserWordByIdQuery,
-  useUpdateUserWordMutation,
-  useCreateUserWordMutation,
-} from '../../services/userWordsApi';
+import { useUpdateUserWordMutation, useCreateUserWordMutation } from '../../services/userWordsApi';
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
@@ -37,7 +33,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
 
-  const [getUserWordById] = useLazyGetUserWordByIdQuery();
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
 
@@ -48,12 +43,9 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
     if (userId) {
       const wordId = word._id;
-      const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
-      console.log(userWord);
-
-      if (isSuccess && userWord) {
-        const { difficulty: prevDifficulty, optional } = userWord;
+      if ('userWord' in word && word.userWord) {
+        const { difficulty: prevDifficulty, optional } = word.userWord;
         const audiocall = optional?.games?.audiocall || undefined;
         const sprint = optional?.games?.sprint || undefined;
 
@@ -84,7 +76,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
-        updateUserWord({ userId, wordId, body });
+        await updateUserWord({ userId, wordId, body });
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -100,7 +92,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
-        createUserWord({ userId, wordId, body });
+        await createUserWord({ userId, wordId, body });
       }
     }
   };
