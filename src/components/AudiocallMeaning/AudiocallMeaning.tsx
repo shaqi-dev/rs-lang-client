@@ -1,12 +1,18 @@
 import { FC } from 'react';
 import s from './AudiocallMeaning.module.scss';
-import AudiocallMeaningData from '../../interfaces/audiocallMeaningData';
 import { useAppSelector } from '../../hooks/redux';
-import { selectAudiocallShouldContinue } from '../../store/audiocall/audiocallSlice';
+import { selectShouldContinue } from '../../store/audiocall/audiocallSlice';
 
-const AudiocallMeaning: FC<AudiocallMeaningData> = (props) => {
+interface AudiocallMeaningProps {
+  imageLink: string;
+  imageAlt: string;
+  currentWord: string;
+  playAudio: () => void;
+}
+
+const AudiocallMeaning: FC<AudiocallMeaningProps> = (props) => {
   const { imageLink, imageAlt, currentWord, playAudio } = props;
-  const shouldContinue = useAppSelector(selectAudiocallShouldContinue);
+  const shouldContinue = useAppSelector(selectShouldContinue);
 
   return (
     <div className={s.audiocallMeaning}>

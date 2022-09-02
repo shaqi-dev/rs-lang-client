@@ -2,7 +2,11 @@ import { FC } from 'react';
 import s from './AudiocallGroupList.module.scss';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import AudiocallGroupItem from '../AudiocallGroupItem';
-import AudiocallGroupListProps from '../../interfaces/audiocallGroupListProps';
+
+export interface AudiocallGroupListProps {
+  onClickItem: (groupName: string) => void;
+  activeGroup: number;
+}
 
 const AudiocallGroupList: FC<AudiocallGroupListProps> = ({ onClickItem, activeGroup }) => {
   const activeGroupName: string = wordsGroupNames[activeGroup];

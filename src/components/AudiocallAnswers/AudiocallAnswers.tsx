@@ -1,140 +1,166 @@
 /* eslint-disable no-underscore-dangle */
-import { FC, useEffect, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import s from './AudiocallAnswers.module.scss';
 import { Word } from '../../interfaces/words';
-import AudiocallAnswerInfo from '../../interfaces/audiocallAnswerInfo';
 import {
-  setAudiocallShouldContinue,
-  setAudiocallDisableAnswers,
-  setAudiocallWrongAnswers,
-  setAudiocallCorrectAnswers,
-  selectAudiocallDisableAnswers,
-  selectAudiocallCorrectAnswers,
-  selectAudiocallWrongAnswers,
+  setShouldContinue,
+  setDisableAnswers,
+  setWrongAnswers,
+  setCorrectAnswers,
+  selectDisableAnswers,
+  selectCorrectAnswers,
+  selectWrongAnswers,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { selectCurrentAccessToken, selectCurrentUserId } from '../../store/auth/authSlice';
-import getUserWordById from '../../services/getUserWordById';
-import updateUserWord from '../../services/updateUserWord';
-import createUserWord from '../../services/createUserWord';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
+import {
+  useLazyGetUserWordByIdQuery,
+  useUpdateUserWordMutation,
+  useCreateUserWordMutation,
+} from '../../services/userWordsApi';
+import { MutateUserWordBody } from '../../interfaces/userWords';
+import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
+import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 
-const AudiocallAnswers: FC<{
-  data: Word[];
-  answers: AudiocallAnswerInfo[];
-  currentWord: number;
-}> = (props) => {
-  const { data, answers, currentWord } = props;
+export interface AudiocallAnswersProps {
+  currentAnswers: Word[] | AggregatedWord[];
+  currentCorrectAnswer: Word | AggregatedWord;
+}
 
-  const [correctChoise, setCorrectChoise] = useState<Word | undefined>();
-  const [wrongChoise, setWrongChoise] = useState('');
+const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCorrectAnswer }) => {
+  const dispatch = useAppDispatch();
+
+  const userId = useAppSelector(selectCurrentUserId);
+  const disable = useAppSelector(selectDisableAnswers);
+  const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
+  const currentWrongAnswers = useAppSelector(selectWrongAnswers);
+
+  const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
+
+  const [getUserWordById] = useLazyGetUserWordByIdQuery();
+  const [updateUserWord] = useUpdateUserWordMutation();
+  const [createUserWord] = useCreateUserWordMutation();
 
   useEffect(() => {
-    if (correctChoise === undefined || data[currentWord].word !== correctChoise.word) {
-      setCorrectChoise(undefined);
-      setWrongChoise('');
-    }
-  }, [correctChoise, data, currentWord]);
+    setCurrentChoise(null);
+  }, [currentCorrectAnswer]);
 
-  const dispatch = useAppDispatch();
-  const disable = useAppSelector(selectAudiocallDisableAnswers);
-  const correctAnswers = useAppSelector(selectAudiocallCorrectAnswers);
-  const wrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
-  const userId = useAppSelector(selectCurrentUserId);
-  const token = useAppSelector(selectCurrentAccessToken);
+  const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
+    if (userId) {
+      const wordId = word._id;
+      const { data: userWord, isSuccess } = await getUserWordById({ userId, wordId });
 
-  const evaluateAnswer = (wordId: string, isCorrect: boolean): void => {
-    if (userId && token) {
-      getUserWordById({ userId, wordId, token }).then(
-        (res: {
-          difficulty: string | undefined;
-          optional: { audiocall: number; sprint: number } | undefined;
-          error: Error | undefined;
-        }) => {
-          if (res.difficulty && res.optional) {
-            let audiocallWordCount: number = res.optional.audiocall ?? 0;
-            if (isCorrect && res.optional.audiocall < 3) audiocallWordCount += 1;
-            else if (!isCorrect) audiocallWordCount = 0;
+      if (isSuccess && userWord) {
+        const { difficulty: prevDifficulty, optional } = userWord;
+        const audiocall = optional?.games?.audiocall || undefined;
+        const sprint = optional?.games?.sprint || undefined;
 
-            const userData = {
-              difficulty: res.difficulty,
-              optional: {
-                audiocall: audiocallWordCount,
-                sprint: res.optional.sprint ?? 0,
+        const prevCorrectAnswers: number = audiocall?.correctAnswers || 0;
+        const prevIncorrectAnswers: number = audiocall?.incorrectAnswers || 0;
+        const prevWinStreak: number = audiocall?.winStreak || 0;
+
+        const correctAnswers = isCorrect ? prevCorrectAnswers + 1 : prevCorrectAnswers;
+        const incorrectAnswers = !isCorrect ? prevIncorrectAnswers + 1 : prevIncorrectAnswers;
+        const winStreak = isCorrect ? prevWinStreak + 1 : 0;
+        const learned =
+          (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
+          (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
+          false;
+
+        const body: MutateUserWordBody = {
+          difficulty: learned ? UserWordDifficulty.DEFAULT : prevDifficulty,
+          optional: {
+            learned,
+            games: {
+              sprint,
+              audiocall: {
+                correctAnswers,
+                incorrectAnswers,
+                winStreak,
               },
-            };
+            },
+          },
+        };
 
-            updateUserWord({ userId, wordId, userData, token });
-          } else {
-            const userData = {
-              difficulty: 'weak',
-              optional: {
-                audiocall: isCorrect ? 1 : 0,
-                sprint: 0,
+        updateUserWord({ userId, wordId, body });
+      } else {
+        const body: MutateUserWordBody = {
+          difficulty: UserWordDifficulty.DEFAULT,
+          optional: {
+            learned: false,
+            games: {
+              audiocall: {
+                correctAnswers: isCorrect ? 1 : 0,
+                incorrectAnswers: !isCorrect ? 1 : 0,
+                winStreak: isCorrect ? 1 : 0,
               },
-            };
+            },
+          },
+        };
 
-            createUserWord({ userId, wordId, userData, token });
-          }
-        },
-      );
+        createUserWord({ userId, wordId, body });
+      }
     }
   };
 
-  const chooseAnswer = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    const chosenAnswer: HTMLButtonElement = e.target as HTMLButtonElement;
+  const handleChooseAnswer = (word: Word | AggregatedWord | null): void => {
+    if (word) {
+      const wordId: string = userId ? word._id : word.id;
 
-    const wordId: string = data[Number(chosenAnswer.name)]._id;
+      if (currentCorrectAnswer.id === wordId || currentCorrectAnswer._id === wordId) {
+        dispatch(setCorrectAnswers([...currentCorrectAnswers, currentCorrectAnswer]));
+        evaluateAnswer(currentCorrectAnswer, true);
+      } else {
+        dispatch(setWrongAnswers([...currentWrongAnswers, currentCorrectAnswer]));
+        evaluateAnswer(currentCorrectAnswer, false);
+      }
 
-    setCorrectChoise(data[currentWord]);
-
-    if (chosenAnswer.textContent === data[currentWord].wordTranslate) {
-      dispatch(setAudiocallCorrectAnswers([...correctAnswers, data[currentWord]]));
-
-      evaluateAnswer(wordId, true);
-    } else if (chosenAnswer.textContent === 'Don"t know') {
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
-
-      evaluateAnswer(data[currentWord]._id, false);
+      setCurrentChoise(word);
     } else {
-      setWrongChoise(chosenAnswer.id);
-
-      dispatch(setAudiocallWrongAnswers([...wrongAnswers, data[currentWord]]));
-
-      evaluateAnswer(data[currentWord]._id, false);
+      dispatch(setWrongAnswers([...currentWrongAnswers, currentCorrectAnswer]));
+      evaluateAnswer(currentCorrectAnswer, false);
+      setCurrentChoise(null);
     }
 
-    dispatch(setAudiocallDisableAnswers(true));
-    dispatch(setAudiocallShouldContinue(true));
+    dispatch(setDisableAnswers(true));
+    dispatch(setShouldContinue(true));
   };
 
   return (
     <div className={s.audiocallAnswersContainer}>
       <div className={s.audiocallAnswers}>
-        {answers.map((answer) => {
-          const wordDataId = answer.word.replaceAll(' ', '-');
+        {currentAnswers.map((word) => {
+          const wordId: string = userId ? word._id : word.id;
+          const chosenWordId = currentChoise && (userId ? currentChoise._id : currentChoise.id);
+          const correctAnswerId = userId ? currentCorrectAnswer._id : currentCorrectAnswer.id;
           let wordClass = `${s.audiocallAnswers_answer}`;
 
-          if (wordDataId === correctChoise?.wordTranslate.replaceAll(' ', '-'))
+          if (disable && wordId === correctAnswerId) {
             wordClass = `${s.correctAnswer}`;
-          if (wordDataId === wrongChoise) wordClass = `${s.wrongAnswer}`;
+          }
+          if (disable && wordId !== correctAnswerId && wordId === chosenWordId) {
+            wordClass = `${s.wrongAnswer}`;
+          }
 
           return (
             <button
               type="button"
-              key={answer.word}
-              id={wordDataId}
-              onClick={(e): void => chooseAnswer(e)}
-              name={answer.wordIndex.toString()}
+              key={word.wordTranslate}
+              onClick={(): void => handleChooseAnswer(word)}
               className={`${wordClass}`}
               disabled={disable}
             >
-              {answer.word}
+              {word.wordTranslate}
             </button>
           );
         })}
       </div>
       {!disable && (
-        <button type="button" onClick={(e): void => chooseAnswer(e)} className={s.dontKnowButton}>
+        <button
+          type="button"
+          onClick={(): void => handleChooseAnswer(null)}
+          className={s.dontKnowButton}
+        >
           Don't know
         </button>
       )}

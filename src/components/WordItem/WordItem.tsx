@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
-import UserWordDifficulty from '../../shared/enums/WordDifficulty';
+import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import s from './WordItem.module.scss';
 
 export interface WordItemProps {
@@ -12,8 +12,9 @@ export interface WordItemProps {
 }
 
 const WordItem: FC<WordItemProps> = ({ word, active, className, onClick }) => {
-  const isHardWord = 'userWord' in word && word.userWord?.difficulty === UserWordDifficulty.HARD;
-  const isLearnedWord = 'userWord' in word && word.userWord?.difficulty === UserWordDifficulty.WEAK;
+  const isHardWord =
+    ('userWord' in word && word.userWord?.difficulty === UserWordDifficulty.HARD) || false;
+  const isLearnedWord = ('userWord' in word && word.userWord?.optional?.learned) || false;
 
   const handleClick = (): void => onClick(word);
 

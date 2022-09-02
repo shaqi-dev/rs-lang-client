@@ -1,6 +1,11 @@
-import { FC, PropsWithChildren } from 'react';
-import AudiocallGroupItemProps from '../../interfaces/audiocallGroupItemProps';
+import { FC, PropsWithChildren, MouseEvent } from 'react';
 import s from './AudiocallGroupItem.module.scss';
+
+export interface AudiocallGroupItemProps {
+  active?: boolean;
+  className?: string | string[];
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+}
 
 const AudiocallGroupItem: FC<PropsWithChildren<AudiocallGroupItemProps>> = ({
   active,

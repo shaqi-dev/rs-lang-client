@@ -3,20 +3,21 @@ import s from './AudiocallResult.module.scss';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { API_BASE } from '../../services/endpoints';
 import {
-  selectAudiocallWrongAnswers,
-  selectAudiocallCorrectAnswers,
-  selectAudiocallResultPage,
-  setAudiocallResultPage,
+  selectWrongAnswers,
+  selectCorrectAnswers,
+  selectResultPage,
+  setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { Word } from '../../interfaces/words';
+import { AudiocallResultPage } from '../../interfaces/AudiocallState';
 
 const AudiocallResult: FC = () => {
   const dispatch = useAppDispatch();
-  const audiocallWrongAnswers = useAppSelector(selectAudiocallWrongAnswers);
-  const audiocallCorrectAnswers = useAppSelector(selectAudiocallCorrectAnswers);
-  const resultPage = useAppSelector(selectAudiocallResultPage);
+  const wrongAnswers = useAppSelector(selectWrongAnswers);
+  const correctAnswers = useAppSelector(selectCorrectAnswers);
+  const resultPage = useAppSelector(selectResultPage);
 
-  const correctAnswersPers = audiocallCorrectAnswers.length * 10;
+  const correctAnswersPers = correctAnswers.length * 10;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
     '--border-thickness': '10px',
@@ -29,8 +30,8 @@ const AudiocallResult: FC = () => {
     audio.play();
   };
 
-  const setResultPage = (pageName: string): void => {
-    dispatch(setAudiocallResultPage(pageName));
+  const handleSetResultPage = (pageName: AudiocallResultPage): void => {
+    dispatch(setResultPage(pageName));
   };
 
   return (
@@ -39,31 +40,29 @@ const AudiocallResult: FC = () => {
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => setResultPage('pieChart')}
+          onClick={(): void => handleSetResultPage(AudiocallResultPage.PIE_CHART)}
         >
           Pie Chart
         </button>
         <button
           type="button"
           className={s.resultsNav_button}
-          onClick={(): void => setResultPage('words')}
+          onClick={(): void => handleSetResultPage(AudiocallResultPage.WORDS)}
         >
           Words
         </button>
       </div>
       <div className={s.resultsBody}>
-        {resultPage === 'pieChart' ? (
+        {resultPage === AudiocallResultPage.PIE_CHART ? (
           <div className={s.pieChartContainer}>
             <p>Goog Job!</p>
             <div className={s.pieChart} style={pieChartStyle}>{`${correctAnswersPers}%`}</div>
           </div>
         ) : (
           <div className={s.audiocallResultWords}>
-            <p
-              className={s.correctWrongText}
-            >{`Correct answers (${audiocallCorrectAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Correct answers (${correctAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
-              {audiocallCorrectAnswers.map((answer: Word) => {
+              {correctAnswers.map((answer: Word) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
                     <button
@@ -80,11 +79,9 @@ const AudiocallResult: FC = () => {
                 );
               })}
             </ul>
-            <p
-              className={s.correctWrongText}
-            >{`Wrong answers (${audiocallWrongAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Wrong answers (${wrongAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
-              {audiocallWrongAnswers.map((answer) => {
+              {wrongAnswers.map((answer) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
                     <button

@@ -6,15 +6,16 @@ import AudiocallGame from '../../components/AudiocallGame';
 import AudiocallGroupList from '../../components/AudiocallGroupList';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
-  setAudiocallShouldContinue,
-  setAudiocallAnswers,
-  setAudiocallDisableAnswers,
-  setAudiocallCorrectAnswers,
-  setAudiocallWrongAnswers,
-  setAudiocallResultPage,
+  setShouldContinue,
+  setAnswers,
+  setDisableAnswers,
+  setCorrectAnswers,
+  setWrongAnswers,
+  setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
+import { AudiocallResultPage } from '../../interfaces/AudiocallState';
 
 const Audiocall: FC = () => {
   const dispatch = useAppDispatch();
@@ -48,19 +49,19 @@ const Audiocall: FC = () => {
   };
 
   const startGame = (): void => {
-    dispatch(setAudiocallShouldContinue(false));
-    dispatch(setAudiocallAnswers([]));
-    dispatch(setAudiocallCorrectAnswers([]));
-    dispatch(setAudiocallWrongAnswers([]));
-    dispatch(setAudiocallDisableAnswers(false));
-    dispatch(setAudiocallResultPage('pieChart'));
+    dispatch(setShouldContinue(false));
+    dispatch(setAnswers([]));
+    dispatch(setCorrectAnswers([]));
+    dispatch(setWrongAnswers([]));
+    dispatch(setDisableAnswers(false));
+    dispatch(setResultPage(AudiocallResultPage.PIE_CHART));
 
     setGameStart(!gameStarted);
   };
 
   return (
     <ContentWrapper className={s.audiocallWrapper}>
-      {!gameStarted ? (
+      {!gameStarted && (
         <div className={s.audiocallWrapper_groupsAndButton}>
           <h1>Audiocall Game</h1>
           {!fromTextbook && (
@@ -73,7 +74,8 @@ const Audiocall: FC = () => {
             Start Game
           </button>
         </div>
-      ) : (
+      )}
+      {gameStarted && (
         <AudiocallGame
           group={fromTextbook ? textbookGroup : audiocallGroup}
           page={fromTextbook ? textbookPage : audiocallPage}

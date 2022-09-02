@@ -10,7 +10,7 @@ const useGetGameWords = (
   fromTextbook?: boolean,
   userId?: string | null,
   gameType?: string,
-  wordsPerPage: number = 10,
+  wordsPerPage: number = 20,
 ): GetGameWordsResponse => {
   const [fetchGuestWords, guestWordsResponse] = useLazyGetWordsQuery();
   const [fetchMainWords, mainWordsResponse] = useLazyGetUserAggregatedWordsQuery();

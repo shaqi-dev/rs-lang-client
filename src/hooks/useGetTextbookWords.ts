@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { AggregatedWord } from '../interfaces/userAggregatedWords';
 import { useLazyGetUserAggregatedWordsQuery } from '../services/userAggregatedWordsApi';
 import { useLazyGetWordsQuery } from '../services/wordsApi';
-import UserWordDifficulty from '../shared/enums/WordDifficulty';
 import TextbookView from '../shared/enums/TextbookView';
 import UserWordsFilters from '../shared/UserWordsFilters';
 import type {
@@ -61,8 +60,9 @@ const useGetTextbookWords = ({
     wordsPerPage,
   ]);
 
-  const isLearnedWord = (word: AggregatedWord): boolean =>
-    word.userWord?.difficulty === UserWordDifficulty.WEAK;
+  const isLearnedWord = (word: AggregatedWord): boolean => {
+    return word.userWord?.optional?.learned ?? false;
+  };
 
   const getAggregatedWordsResult = (
     response: typeof mainWordsResponse,
