@@ -16,7 +16,7 @@ import s from './WordCard.module.scss';
 import TextbookView from '../../shared/enums/TextbookView';
 import { useLazyGetUserAggregatedWordByIdQuery } from '../../services/userAggregatedWordsApi';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
-import { GameStatistics } from '../../interfaces/userWords';
+import getGameWinrate from '../../shared/getGameWinrate';
 
 export interface WordCardProps {
   word: Word | AggregatedWord;
@@ -42,17 +42,6 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
 
   const audiocall = ('userWord' in word && word.userWord?.optional?.games?.audiocall) || undefined;
   const sprint = ('userWord' in word && word.userWord?.optional?.games?.sprint) || undefined;
-
-  const getGameWinRate = (game: GameStatistics | undefined): number => {
-    if (!game) return 0;
-
-    const correct = game.correctAnswers;
-    const incorrect = game.incorrectAnswers;
-
-    if (correct && !incorrect) return 100;
-    if (!correct && incorrect) return 0;
-    return +((correct / (correct + incorrect)) * 100).toFixed(0);
-  };
 
   const [play] = useAudio(word);
 
@@ -206,7 +195,7 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
               <div className={s.statsCounters}>
                 <span className={s.counter__correct}>{sprint?.correctAnswers || 0}</span>/
                 <span className={s.counter__incorrect}>{sprint?.incorrectAnswers || 0}</span>
-                <span className={s.counter__winrate}>({getGameWinRate(sprint)}%)</span>
+                <span className={s.counter__winrate}>({getGameWinrate(sprint)}%)</span>
               </div>
             </div>
             <div className={s.gameStats}>
@@ -214,7 +203,7 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
               <div className={s.statsCounters}>
                 <span className={s.counter__correct}>{audiocall?.correctAnswers || 0}</span>/
                 <span className={s.counter__incorrect}>{audiocall?.incorrectAnswers || 0}</span>
-                <span className={s.counter__winrate}>({getGameWinRate(audiocall)}%)</span>
+                <span className={s.counter__winrate}>({getGameWinrate(audiocall)}%)</span>
               </div>
             </div>
           </div>

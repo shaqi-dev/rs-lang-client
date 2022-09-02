@@ -1,16 +1,16 @@
-export interface GameStatistics {
+import { GameStatistics } from './userWords';
+
+export interface GameStatsShort extends GameStatistics {
   newWordsCount: number;
-  correctAnswers: number;
-  incorrectAnswers: number;
   longestWinStreak: number;
 }
 
 export interface UserStatisticsData {
   learnedWords: number;
-  optional: {
+  optional?: {
     games?: {
-      sprint?: GameStatistics;
-      audiocall?: GameStatistics;
+      sprint?: GameStatsShort;
+      audiocall?: GameStatsShort;
     };
   };
 }
@@ -18,10 +18,10 @@ export interface UserStatisticsData {
 export interface UserStatisticsResponse {
   id: string;
   learnedWords: number;
-  optional: {
+  optional?: {
     games?: {
-      sprint?: GameStatistics;
-      audiocall?: GameStatistics;
+      sprint?: GameStatsShort;
+      audiocall?: GameStatsShort;
     };
   };
 }

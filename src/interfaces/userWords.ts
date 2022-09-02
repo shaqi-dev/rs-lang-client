@@ -3,14 +3,17 @@ import WordDifficulty from '../shared/enums/UserWordDifficulty';
 export interface GameStatistics {
   correctAnswers: number;
   incorrectAnswers: number;
+}
+
+export interface GameStatsWord extends GameStatistics {
   winStreak: number;
 }
 
 export interface UserWordOptional {
   learned?: boolean;
   games?: {
-    audiocall?: GameStatistics;
-    sprint?: GameStatistics;
+    audiocall?: GameStatsWord;
+    sprint?: GameStatsWord;
   };
 }
 
