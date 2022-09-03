@@ -28,7 +28,7 @@ const Audiocall: FC = () => {
 
   const [gameStarted, setGameStart] = useState(false);
   const [audiocallGroup, setAudiocallGroup] = useState(0);
-  const [audiocallPage, setAudiocallPage] = useState(0);
+  const [audiocallPage, setAudiocallPage] = useState(Math.floor(Math.random() * 30));
 
   let fromTextbook = false;
   const prevLocation = useLocation();
@@ -45,10 +45,8 @@ const Audiocall: FC = () => {
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
 
-    if (audiocallGroup !== selectedGroup) {
-      setAudiocallGroup(selectedGroup);
-      setAudiocallPage(Math.floor(Math.random() * 30));
-    }
+    setAudiocallGroup(selectedGroup);
+    setAudiocallPage(Math.floor(Math.random() * 30));
   };
 
   const tryAgain = (): void => {
