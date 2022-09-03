@@ -56,7 +56,7 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
 
       if (correct && !incorrect) return 100;
       if (!correct && incorrect) return 0;
-      return +((correct / incorrect - 1) * 100).toFixed(0);
+      return +((correct / (correct + incorrect)) * 100).toFixed(0);
     };
 
     const winPercentTotal = (): number => {
@@ -68,9 +68,11 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
         return 0;
       }
 
-      const winRate = (correctSprint + correctAudiocall) / (incorrectSprint + incorrectAudiocall);
+      const winRate =
+        (correctSprint + correctAudiocall) /
+        (correctSprint + incorrectSprint + correctAudiocall + incorrectAudiocall);
 
-      return +((winRate - 1) * 100).toFixed(0);
+      return +(winRate * 100).toFixed(0);
     };
 
     return (

@@ -76,3 +76,35 @@
     opacity: 0.5;
   }
 }
+
+.statsBlock {
+  display: flex;
+  justify-content: space-around;
+}
+
+.gameStats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.statsCounters {
+  display: flex;
+  gap: 10px;
+
+  .counter {
+    &__correct {
+      color: #009600;
+    }
+
+    &__incorrect {
+      color: #960000;
+    }
+
+    &__winrate {
+      color: #003c96
+    }
+  }
+}
+

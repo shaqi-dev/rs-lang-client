@@ -35,13 +35,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ group, page, tryAgain, fromText
   const [currentAnswers, setCurrentAnswers] = useState<Word[] | AggregatedWord[]>([]);
   const [usedWordsIds, setUsedWordsIds] = useState<string[]>([]);
 
-  const { data, error, isLoading } = useGetGameWords(
-    group,
-    page,
-    fromTextbook,
-    userId,
-    'audiocall',
-  );
+  const { data, error, isLoading } = useGetGameWords({ group, page, userId, fromTextbook });
 
   const playAudio = useCallback((): void => {
     if (currentCorrectAnswer) {
@@ -55,8 +49,6 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ group, page, tryAgain, fromText
     if (data) {
       let nextWord = data[Math.floor(Math.random() * data.length)];
       let wordId = userId ? nextWord._id : nextWord.id;
-
-      console.log(usedWordsIds);
 
       while (usedWordsIds.includes(wordId)) {
         nextWord = data[Math.floor(Math.random() * data.length)];

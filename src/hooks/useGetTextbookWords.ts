@@ -67,7 +67,7 @@ const useGetTextbookWords = ({
   const getAggregatedWordsResult = (
     response: typeof mainWordsResponse,
   ): GetTextbookWordsResponse => {
-    const data = response?.data?.[0];
+    const data = response?.currentData?.[0];
     const words = data?.paginatedResults;
     const wordsCount = data?.totalCount[0]?.count || 0;
     const isLearned = (words && words.length && words.every(isLearnedWord)) || false;

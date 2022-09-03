@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
-import { GetGameWordsResponse } from '../interfaces/useGetGameWords';
+import { GetGameWordsResponse, GetGameWordsData } from '../interfaces/useGetGameWords';
 import { useLazyGetUserAggregatedWordsQuery } from '../services/userAggregatedWordsApi';
 import { useLazyGetWordsQuery } from '../services/wordsApi';
+import TextbookView from '../shared/enums/TextbookView';
 import UserWordsFilters from '../shared/UserWordsFilters';
 
-const useGetGameWords = (
-  group: number,
-  page: number,
-  fromTextbook?: boolean,
-  userId?: string | null,
-  gameType?: string,
-  wordsPerPage: number = 20,
-): GetGameWordsResponse => {
+const useGetGameWords = ({
+  group,
+  page,
+  userId,
+  fromTextbook,
+  textbookView,
+  wordsPerPage = 20,
+}: GetGameWordsData): GetGameWordsResponse => {
   const [fetchGuestWords, guestWordsResponse] = useLazyGetWordsQuery();
   const [fetchMainWords, mainWordsResponse] = useLazyGetUserAggregatedWordsQuery();
   const [fetchHardWords, hardWordsResponse] = useLazyGetUserAggregatedWordsQuery();
@@ -30,18 +31,16 @@ const useGetGameWords = (
     }
 
     if (isFromTextbook) {
-      if (group === 6)
+      if (textbookView === TextbookView.USER) {
         fetchHardWords({ userId, group, page, wordsPerPage, filter: UserWordsFilters.HARD });
-      if (gameType === 'audiocall')
+      } else {
         fetchMainWords({
           userId,
           group,
           page,
           wordsPerPage,
-          filter: UserWordsFilters.AUDIOCALL_WEAK,
         });
-      if (gameType === 'sprint')
-        fetchMainWords({ userId, group, page, wordsPerPage, filter: UserWordsFilters.SPRINT_WEAK });
+      }
     }
   }, [
     fetchGuestWords,
@@ -54,7 +53,7 @@ const useGetGameWords = (
     isGuestView,
     userId,
     wordsPerPage,
-    gameType,
+    textbookView,
   ]);
 
   const getAggregatedWordsResult = (response: typeof mainWordsResponse): GetGameWordsResponse => {
@@ -73,7 +72,10 @@ const useGetGameWords = (
   }
 
   if (isFromTextbook) {
-    if (group === 6) return getAggregatedWordsResult(hardWordsResponse);
+    if (group === 6) {
+      return getAggregatedWordsResult(hardWordsResponse);
+    }
+
     return getAggregatedWordsResult(mainWordsResponse);
   }
 

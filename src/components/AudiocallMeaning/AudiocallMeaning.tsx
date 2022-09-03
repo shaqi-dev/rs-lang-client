@@ -10,8 +10,12 @@ interface AudiocallMeaningProps {
   playAudio: () => void;
 }
 
-const AudiocallMeaning: FC<AudiocallMeaningProps> = (props) => {
-  const { imageLink, imageAlt, currentWord, playAudio } = props;
+const AudiocallMeaning: FC<AudiocallMeaningProps> = ({
+  imageLink,
+  imageAlt,
+  currentWord,
+  playAudio,
+}) => {
   const shouldContinue = useAppSelector(selectShouldContinue);
 
   return (

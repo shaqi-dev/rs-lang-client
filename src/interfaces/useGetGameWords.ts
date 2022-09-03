@@ -1,15 +1,16 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import TextbookView from '../shared/enums/TextbookView';
 import { AggregatedWord } from './userAggregatedWords';
 import { Word } from './words';
 
 export interface GetGameWordsData {
-  fromTextbook: boolean;
   group: number;
   page: number;
-  userId: string | null;
+  userId?: string | null;
+  fromTextbook?: boolean;
+  textbookView?: TextbookView;
   wordsPerPage?: number;
-  gameType?: string;
 }
 
 export interface GetGameWordsResponse {

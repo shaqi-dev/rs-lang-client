@@ -33,9 +33,9 @@ const SprintGame: FC = () => {
   const sprintPage = useAppSelector(selectSprintPage);
   const correctAnswer = useAppSelector(selectSprintCorrectAnswers);
   const wrongAnswer = useAppSelector(selectSprintWrongAnswers);
-  const { data, error, isLoading } = useGetGameWords(sprintGroup, sprintPage);
+  const { data, error, isLoading } = useGetGameWords({ group: sprintGroup, page: sprintPage });
   const subPage = Math.floor(Math.random() * 30);
-  const subCollection = useGetGameWords(sprintGroup, subPage);
+  const subCollection = useGetGameWords({ group: sprintGroup, page: subPage });
 
   async function updateCollection(): Promise<void> {
     if (error) throw new Error('Update collection is faled!');
