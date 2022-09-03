@@ -40,7 +40,7 @@ const Audiocall: FC = () => {
 
   const group = fromTextbook ? textbookGroup : audiocallGroup;
   const page = fromTextbook ? textbookPage : audiocallPage;
-  const { data } = useGetGameWords({ group, page, userId, fromTextbook });
+  const data = useGetGameWords({ group, page, userId, fromTextbook });
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -62,6 +62,8 @@ const Audiocall: FC = () => {
     dispatch(setResultPage(AudiocallResultPage.PIE_CHART));
 
     setGameStart(!gameStarted);
+
+    console.log(data);
   };
 
   return (

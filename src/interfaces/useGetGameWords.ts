@@ -1,5 +1,3 @@
-import { SerializedError } from '@reduxjs/toolkit';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import TextbookView from '../shared/enums/TextbookView';
 import { AggregatedWord } from './userAggregatedWords';
 import { Word } from './words';
@@ -13,8 +11,4 @@ export interface GetGameWordsData {
   wordsPerPage?: number;
 }
 
-export interface GetGameWordsResponse {
-  data: Word[] | AggregatedWord[] | undefined;
-  error: FetchBaseQueryError | SerializedError | undefined;
-  isLoading: boolean;
-}
+export type GetGameWordsResponse = Word[] | AggregatedWord[] | undefined;
