@@ -11,12 +11,12 @@ interface StatisticsProps {
 const Statistics: FC<StatisticsProps> = ({ userId }) => {
   const { data } = useGetStatisticsQuery(userId);
 
-  const learnedWords = data?.optional?.learnedWords || 0;
   const sprint = data?.optional?.games?.sprint;
   const audiocall = data?.optional?.games?.audiocall;
-  const newWordsSrint = sprint?.newWordsCount || 0;
-  const newWordsAudiocall = audiocall?.newWordsCount || 0;
+  const newWordsSrint = sprint?.newWords || 0;
+  const newWordsAudiocall = audiocall?.newWords || 0;
   const newWordsTotal = newWordsSrint + newWordsAudiocall;
+  const learnedWordsTotal = (sprint?.learnedWords || 0) + (audiocall?.learnedWords || 0);
   const winStreakSprint = sprint?.longestWinStreak || 0;
   const winStreakAudiocall = audiocall?.longestWinStreak || 0;
 
@@ -33,7 +33,7 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
         <p className={s.sectionTitle}>Статистика по словам</p>
         <div className={s.wordsStats}>
           <p>Новые слова: {newWordsTotal}</p>
-          <p>Изученные слова: {learnedWords}</p>
+          <p>Изученные слова: {learnedWordsTotal}</p>
           <p>Процент правильных ответов: {winPercentTotal()}%</p>
         </div>
       </section>

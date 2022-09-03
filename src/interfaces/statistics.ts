@@ -1,13 +1,13 @@
 import { GameStatistics } from './userWords';
 
 export interface GameStatsShort extends GameStatistics {
-  newWordsCount: number;
+  newWords: number;
+  learnedWords: number;
   longestWinStreak: number;
 }
 
 export interface UserStatisticsData {
   optional?: {
-    learnedWords?: number;
     games?: {
       sprint?: GameStatsShort;
       audiocall?: GameStatsShort;
@@ -18,7 +18,6 @@ export interface UserStatisticsData {
 export interface UserStatisticsResponse {
   id: string;
   optional?: {
-    learnedWords?: number;
     games?: {
       sprint?: GameStatsShort;
       audiocall?: GameStatsShort;

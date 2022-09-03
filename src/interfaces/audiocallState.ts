@@ -1,3 +1,4 @@
+import { GameStatsShort } from './statistics';
 import { AggregatedWord } from './userAggregatedWords';
 import { Word } from './words';
 
@@ -12,4 +13,5 @@ export interface AudiocallState {
   resultPage: AudiocallResultPage;
   wrongAnswers: Word[] | AggregatedWord[];
   correctAnswers: Word[] | AggregatedWord[];
+  stats: GameStatsShort;
 }

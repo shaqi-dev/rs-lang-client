@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
 import { AudiocallState, AudiocallResultPage } from '../../interfaces/AudiocallState';
+import { GameStatsShort } from '../../interfaces/statistics';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
 
@@ -11,6 +12,13 @@ const initialState: AudiocallState = {
   wrongAnswers: [],
   correctAnswers: [],
   resultPage: AudiocallResultPage.PIE_CHART,
+  stats: {
+    newWords: 0,
+    learnedWords: 0,
+    longestWinStreak: 0,
+    correctAnswers: 0,
+    incorrectAnswers: 0,
+  },
 };
 
 const audiocallSlice = createSlice({
@@ -35,6 +43,9 @@ const audiocallSlice = createSlice({
     setResultPage: (state, action: PayloadAction<AudiocallResultPage>) => {
       state.resultPage = action.payload;
     },
+    setStats: (state, action: PayloadAction<GameStatsShort>) => {
+      state.stats = action.payload;
+    },
   },
 });
 
@@ -45,6 +56,7 @@ export const {
   setCorrectAnswers,
   setWrongAnswers,
   setResultPage,
+  setStats,
 } = audiocallSlice.actions;
 
 export const selectAnswers = (state: RootState): Word[] | AggregatedWord[] =>
@@ -57,5 +69,6 @@ export const selectCorrectAnswers = (state: RootState): Word[] | AggregatedWord[
   state.audiocall.correctAnswers;
 export const selectResultPage = (state: RootState): AudiocallResultPage =>
   state.audiocall.resultPage;
+export const selectStats = (state: RootState): GameStatsShort => state.audiocall.stats;
 
 export default audiocallSlice.reducer;

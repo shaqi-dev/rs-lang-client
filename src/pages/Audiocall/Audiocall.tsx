@@ -16,10 +16,13 @@ import {
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
 import { AudiocallResultPage } from '../../interfaces/AudiocallState';
+import useGetGameWords from '../../hooks/useGetGameWords';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
 
 const Audiocall: FC = () => {
   const dispatch = useAppDispatch();
 
+  const userId = useAppSelector(selectCurrentUserId);
   const textbookGroup = useAppSelector(selectCurrentGroup);
   const textbookPage = useAppSelector(selectCurrentPage);
 
@@ -34,6 +37,10 @@ const Audiocall: FC = () => {
   };
 
   if (prevLocationState && prevLocationState.fromTextbook) fromTextbook = true;
+
+  const group = fromTextbook ? textbookGroup : audiocallGroup;
+  const page = fromTextbook ? textbookPage : audiocallPage;
+  const { data } = useGetGameWords({ group, page, userId, fromTextbook });
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -75,14 +82,7 @@ const Audiocall: FC = () => {
           </button>
         </div>
       )}
-      {gameStarted && (
-        <AudiocallGame
-          group={fromTextbook ? textbookGroup : audiocallGroup}
-          page={fromTextbook ? textbookPage : audiocallPage}
-          tryAgain={tryAgain}
-          fromTextbook={fromTextbook}
-        />
-      )}
+      {gameStarted && data && <AudiocallGame data={data} tryAgain={tryAgain} />}
     </ContentWrapper>
   );
 };

@@ -7,9 +7,11 @@ import {
   setDisableAnswers,
   setWrongAnswers,
   setCorrectAnswers,
+  setStats,
   selectDisableAnswers,
   selectCorrectAnswers,
   selectWrongAnswers,
+  selectStats,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
@@ -17,11 +19,7 @@ import { useUpdateUserWordMutation, useCreateUserWordMutation } from '../../serv
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
-import {
-  useLazyGetStatisticsQuery,
-  useUpdateStatisticsMutation,
-} from '../../services/statisticsApi';
-import { UserStatisticsData } from '../../interfaces/statistics';
+import { GameStatsShort } from '../../interfaces/statistics';
 
 export interface AudiocallAnswersProps {
   currentAnswers: Word[] | AggregatedWord[];
@@ -35,6 +33,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   const disable = useAppSelector(selectDisableAnswers);
   const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
+  const prevStats = useAppSelector(selectStats);
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
   const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
@@ -42,8 +41,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
-  const [getStatistics] = useLazyGetStatisticsQuery();
-  const [updateStatistics] = useUpdateStatisticsMutation();
 
   useEffect(() => {
     setCurrentChoise(null);
@@ -53,9 +50,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
     if (currentWinStreak > maxWinStreak) {
       setMaxWinStreak(currentWinStreak);
     }
-
-    console.log('current:', currentWinStreak);
-    console.log('max:', maxWinStreak);
   }, [currentWinStreak, maxWinStreak]);
 
   const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
@@ -80,10 +74,16 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         const correctAnswers = isCorrect ? prevCorrectAnswers + 1 : prevCorrectAnswers;
         const incorrectAnswers = !isCorrect ? prevIncorrectAnswers + 1 : prevIncorrectAnswers;
         const winStreak = isCorrect ? prevWinStreak + 1 : 0;
-        const learned =
-          (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
-          (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
-          false;
+        let learned = optional?.learned || false;
+
+        if (learned && !isCorrect) {
+          learned = false;
+        } else if (!learned && isCorrect) {
+          learned =
+            (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
+            (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
+            false;
+        }
 
         const body: MutateUserWordBody = {
           difficulty: learned ? UserWordDifficulty.DEFAULT : prevDifficulty,
@@ -102,59 +102,22 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
         await updateUserWord({ userId, wordId, body });
 
-        // Short-term stats
-        const prevStats = await getStatistics(userId).unwrap();
+        const stats: GameStatsShort = {
+          ...prevStats,
+          learnedWords: learned ? prevStats.learnedWords + 1 : prevStats.learnedWords,
+          longestWinStreak:
+            isCorrect &&
+            currentWinStreak + 1 > maxWinStreak &&
+            currentWinStreak + 1 > prevStats.longestWinStreak
+              ? prevStats.longestWinStreak + 1
+              : prevStats.longestWinStreak,
+          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
+          incorrectAnswers: !isCorrect
+            ? prevStats.incorrectAnswers + 1
+            : prevStats.incorrectAnswers,
+        };
 
-        if (prevStats) {
-          const learnedWords = learned
-            ? prevStats.optional?.learnedWords
-            : (prevStats.optional?.learnedWords || 0) + 1;
-
-          const audiocallStats = prevStats.optional?.games?.audiocall || undefined;
-          const sprintStats = prevStats.optional?.games?.sprint || undefined;
-
-          const prevCorrectAnswersStats: number = audiocallStats?.correctAnswers || 0;
-          const prevIncorrectAnswersStats: number = audiocallStats?.incorrectAnswers || 0;
-          const prevWinStreakStats: number = audiocallStats?.longestWinStreak || 0;
-
-          const newWordsCount: number = audiocallStats?.newWordsCount || 0;
-          const longestWinStreak =
-            maxWinStreak > prevWinStreakStats ? maxWinStreak : prevWinStreakStats;
-
-          const statsBody: UserStatisticsData = {
-            optional: {
-              learnedWords,
-              games: {
-                sprint: sprintStats,
-                audiocall: {
-                  longestWinStreak,
-                  newWordsCount,
-                  correctAnswers: isCorrect ? prevCorrectAnswersStats + 1 : prevCorrectAnswersStats,
-                  incorrectAnswers: !isCorrect
-                    ? prevIncorrectAnswersStats + 1
-                    : prevIncorrectAnswersStats,
-                },
-              },
-            },
-          };
-
-          await updateStatistics({ userId, body: statsBody });
-        } else {
-          const statsBody: UserStatisticsData = {
-            optional: {
-              games: {
-                audiocall: {
-                  correctAnswers: isCorrect ? 1 : 0,
-                  incorrectAnswers: !isCorrect ? 1 : 0,
-                  longestWinStreak: maxWinStreak,
-                  newWordsCount: 0,
-                },
-              },
-            },
-          };
-
-          await updateStatistics({ userId, body: statsBody });
-        }
+        dispatch(setStats(stats));
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -172,62 +135,19 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
         await createUserWord({ userId, wordId, body });
 
-        // Short-term stats
-        const prevStats = await getStatistics(userId).unwrap();
+        const stats: GameStatsShort = {
+          ...prevStats,
+          newWords: prevStats.newWords + 1,
+          longestWinStreak:
+            maxWinStreak > prevStats.longestWinStreak ? maxWinStreak : prevStats.longestWinStreak,
+          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
+          incorrectAnswers: !isCorrect
+            ? prevStats.incorrectAnswers + 1
+            : prevStats.incorrectAnswers,
+        };
 
-        if (prevStats) {
-          const { optional } = prevStats;
-
-          const audiocallStats = optional?.games?.audiocall || undefined;
-          const sprintStats = optional?.games?.sprint || undefined;
-
-          const prevCorrectAnswersStats: number = audiocallStats?.correctAnswers || 0;
-          const prevIncorrectAnswersStats: number = audiocallStats?.incorrectAnswers || 0;
-          const prevWinStreakStats: number = audiocallStats?.longestWinStreak || 0;
-          const prevNewWordsCount: number = audiocallStats?.newWordsCount || 0;
-
-          const learnedWords = optional?.learnedWords || 0;
-          const longestWinStreak =
-            maxWinStreak > prevWinStreakStats ? maxWinStreak : prevWinStreakStats;
-
-          const statsBody: UserStatisticsData = {
-            optional: {
-              learnedWords,
-              games: {
-                sprint: sprintStats,
-                audiocall: {
-                  longestWinStreak,
-                  newWordsCount: prevNewWordsCount + 1,
-                  correctAnswers: isCorrect ? prevCorrectAnswersStats + 1 : prevCorrectAnswersStats,
-                  incorrectAnswers: !isCorrect
-                    ? prevIncorrectAnswersStats + 1
-                    : prevIncorrectAnswersStats,
-                },
-              },
-            },
-          };
-
-          await updateStatistics({ userId, body: statsBody });
-        } else {
-          const statsBody: UserStatisticsData = {
-            optional: {
-              games: {
-                audiocall: {
-                  correctAnswers: isCorrect ? 1 : 0,
-                  incorrectAnswers: !isCorrect ? 1 : 0,
-                  longestWinStreak: maxWinStreak,
-                  newWordsCount: 1,
-                },
-              },
-            },
-          };
-
-          await updateStatistics({ userId, body: statsBody });
-        }
+        dispatch(setStats(stats));
       }
-
-      const nextStats = await getStatistics(userId).unwrap();
-      console.log(nextStats);
     }
   };
 
