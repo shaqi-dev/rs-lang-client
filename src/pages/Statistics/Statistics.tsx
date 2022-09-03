@@ -12,8 +12,6 @@ interface StatisticsProps {
 const Statistics: FC<StatisticsProps> = ({ userId }) => {
   const { data } = useGetStatisticsQuery(userId);
 
-  console.log(data);
-
   const currendDate = getCurrentDate();
   const sprint = data?.optional?.games?.sprint?.filter((x) => x.date === currendDate)[0];
   const audiocall = data?.optional?.games?.audiocall?.filter((x) => x.date === currendDate)[0];
