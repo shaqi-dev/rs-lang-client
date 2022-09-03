@@ -62,8 +62,6 @@ const Audiocall: FC = () => {
     dispatch(setResultPage(AudiocallResultPage.PIE_CHART));
 
     setGameStart(!gameStarted);
-
-    console.log(data);
   };
 
   return (

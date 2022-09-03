@@ -52,8 +52,6 @@ const useGetGameWords = ({
               result = [...result, ...currentWordsWithoutLearned];
             }
 
-            console.log('loading page: ', currentPage, 'current result: ', result);
-
             if (result.length >= 20) {
               setMainWordsWithoutLearned(result.slice(0, 20));
             } else {
