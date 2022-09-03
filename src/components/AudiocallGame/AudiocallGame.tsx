@@ -11,7 +11,10 @@ import {
   selectShouldContinue,
   selectStats,
 } from '../../store/audiocall/audiocallSlice';
-import { useUpdateStatisticsMutation } from '../../services/statisticsApi';
+import {
+  useLazyGetStatisticsQuery,
+  useUpdateStatisticsMutation,
+} from '../../services/statisticsApi';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
@@ -40,6 +43,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
   const [currentAnswers, setCurrentAnswers] = useState<Word[] | AggregatedWord[]>([]);
   const [usedWordsIds, setUsedWordsIds] = useState<string[]>([]);
 
+  const [getStatistics] = useLazyGetStatisticsQuery();
   const [updateStatistics] = useUpdateStatisticsMutation();
 
   const generateNextAnswers = (): void => {
@@ -81,15 +85,25 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     }
 
     if (wordsCounter === 10 && userId) {
-      const body = {
-        optional: {
-          games: {
-            audiocall: stats,
+      const updateStats = async (): Promise<void> => {
+        const { data: presStatsData } = await getStatistics(userId);
+
+        const prevStats = presStatsData?.optional?.games?.audiocall || undefined;
+
+        const audiocall = prevStats ? [...prevStats, stats] : [stats];
+
+        const body = {
+          optional: {
+            games: {
+              audiocall,
+            },
           },
-        },
+        };
+
+        await updateStatistics({ userId, body });
       };
 
-      updateStatistics({ userId, body });
+      updateStats();
     }
   }, [wordsCounter]);
 

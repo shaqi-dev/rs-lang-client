@@ -1,10 +1,16 @@
-.wrapper {
+.shortStatsSection {
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
 
 .sectionTitle {
+  font-weight: 500;
+  font-size: 3.2rem;
+  text-align: center;
+}
+
+.shortStatsTitle {
   padding-bottom: 20px;
   font-weight: 500;
   font-size: 2.4rem;

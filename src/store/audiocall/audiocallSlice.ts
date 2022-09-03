@@ -4,6 +4,7 @@ import { AudiocallState, AudiocallResultPage } from '../../interfaces/AudiocallS
 import { GameStatsShort } from '../../interfaces/statistics';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
+import getCurrentDate from '../../shared/getCurrentDate';
 
 const initialState: AudiocallState = {
   answers: [],
@@ -13,6 +14,7 @@ const initialState: AudiocallState = {
   correctAnswers: [],
   resultPage: AudiocallResultPage.PIE_CHART,
   stats: {
+    date: getCurrentDate(),
     newWords: 0,
     learnedWords: 0,
     longestWinStreak: 0,
@@ -46,6 +48,9 @@ const audiocallSlice = createSlice({
     setStats: (state, action: PayloadAction<GameStatsShort>) => {
       state.stats = action.payload;
     },
+    clearStats: (state) => {
+      state.stats = initialState.stats;
+    },
   },
 });
 
@@ -57,6 +62,7 @@ export const {
   setWrongAnswers,
   setResultPage,
   setStats,
+  clearStats,
 } = audiocallSlice.actions;
 
 export const selectAnswers = (state: RootState): Word[] | AggregatedWord[] =>
