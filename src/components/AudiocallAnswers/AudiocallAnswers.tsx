@@ -8,7 +8,6 @@ import {
   setWrongAnswers,
   setCorrectAnswers,
   setStats,
-  clearStats,
   selectDisableAnswers,
   selectCorrectAnswers,
   selectWrongAnswers,
@@ -21,7 +20,6 @@ import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { GameStatsShort } from '../../interfaces/statistics';
-import getCurrentDate from '../../shared/getCurrentDate';
 
 export interface AudiocallAnswersProps {
   currentAnswers: Word[] | AggregatedWord[];
@@ -36,7 +34,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
   const prevStats = useAppSelector(selectStats);
-  const currentDate = getCurrentDate();
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
   const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
@@ -44,12 +41,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
-
-  useEffect(() => {
-    if (prevStats.date !== currentDate) {
-      dispatch(clearStats());
-    }
-  }, []);
 
   useEffect(() => {
     setCurrentChoise(null);

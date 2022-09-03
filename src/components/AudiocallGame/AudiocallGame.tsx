@@ -10,6 +10,8 @@ import {
   setDisableAnswers,
   selectShouldContinue,
   selectStats,
+  setStats,
+  clearStats,
 } from '../../store/audiocall/audiocallSlice';
 import {
   useLazyGetStatisticsQuery,
@@ -19,6 +21,7 @@ import { selectCurrentUserId } from '../../store/auth/authSlice';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
 import shuffleArray from '../../shared/shuffleArray';
+import getCurrentDate from '../../shared/getCurrentDate';
 
 export interface AudiocallGameProps {
   data: Word[] | AggregatedWord[];
@@ -37,6 +40,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
   const userId = useAppSelector(selectCurrentUserId);
   const shouldContinue = useAppSelector(selectShouldContinue);
   const stats = useAppSelector(selectStats);
+  const currentDate = getCurrentDate();
 
   const [wordsCounter, setWordsCounter] = useState(0);
   const [currentCorrectAnswer, setCurrentCorrectAnswer] = useState<Word | AggregatedWord>();
@@ -80,15 +84,37 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
   };
 
   useEffect(() => {
+    if (stats.date !== currentDate) {
+      dispatch(clearStats());
+    }
+
+    if (userId) {
+      const loadCurrentDateStats = async (): Promise<void> => {
+        const { data: currentStatsData } = await getStatistics(userId);
+
+        const currentDateStats =
+          currentStatsData?.optional?.games?.audiocall?.filter((x) => x.date === currentDate)[0] ||
+          undefined;
+
+        if (currentDateStats) {
+          dispatch(setStats(currentDateStats));
+        }
+      };
+
+      loadCurrentDateStats();
+    }
+  }, []);
+
+  useEffect(() => {
     if (wordsCounter < 10) {
       generateNextAnswers();
     }
 
     if (wordsCounter === 10 && userId) {
       const updateStats = async (): Promise<void> => {
-        const { data: presStatsData } = await getStatistics(userId);
+        const { data: prevStatsData } = await getStatistics(userId);
 
-        const prevStats = presStatsData?.optional?.games?.audiocall || undefined;
+        const prevStats = prevStatsData?.optional?.games?.audiocall || undefined;
 
         const audiocall = prevStats ? [...prevStats, stats] : [stats];
 

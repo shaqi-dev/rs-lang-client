@@ -22,7 +22,7 @@ const combinedReducer = combineReducers({
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
-  if (action.type === 'auth/logout') {
+  if (action.type === 'auth/logout' || action.type === 'auth/setCredentials') {
     state = {} as RootState;
   }
   return combinedReducer(state, action);
