@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { TextbookState } from '../../interfaces/textbook';
+import type { TextbookState } from '../../interfaces/TextbookState';
 import type { RootState } from '..';
 import type { Word } from '../../interfaces/words';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';

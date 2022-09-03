@@ -13,7 +13,7 @@ const Header: FC = () => {
     <header className={s.root}>
       <ContentWrapper className={s.wrapper}>
         <Logo />
-        <NavBar isLoggedIn={!!userId} />
+        <NavBar userId={userId} />
       </ContentWrapper>
     </header>
   );

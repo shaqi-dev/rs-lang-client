@@ -7,7 +7,7 @@ import Dropdown, { DropdownOption } from './Dropdown';
 import s from './NavBar.module.scss';
 
 interface NavBarProps {
-  isLoggedIn: boolean;
+  userId: string | null;
 }
 
 const gamesOptions: DropdownOption[] = [
@@ -15,11 +15,11 @@ const gamesOptions: DropdownOption[] = [
   { name: 'Аудиовызов', link: 'games/audiocall' },
 ];
 
-const NavBar: FC<NavBarProps> = ({ isLoggedIn }) => {
+const NavBar: FC<NavBarProps> = ({ userId }) => {
   const dispatch = useAppDispatch();
   const currentUsername = useAppSelector(selectCurrentUsername);
 
-  const handleLogout = (): void => {
+  const handleLogout = async (): Promise<void> => {
     dispatch(logout());
   };
 
@@ -34,7 +34,7 @@ const NavBar: FC<NavBarProps> = ({ isLoggedIn }) => {
         <li className={`${s.item} ${s.dropdown}`}>
           <Dropdown options={gamesOptions} />
         </li>
-        {isLoggedIn && (
+        {!!userId && (
           <li className={s.item}>
             <Link to="/statistics" className={s.link}>
               Статистика

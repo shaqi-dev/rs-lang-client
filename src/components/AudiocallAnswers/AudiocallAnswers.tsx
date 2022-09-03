@@ -7,9 +7,11 @@ import {
   setDisableAnswers,
   setWrongAnswers,
   setCorrectAnswers,
+  setStats,
   selectDisableAnswers,
   selectCorrectAnswers,
   selectWrongAnswers,
+  selectStats,
 } from '../../store/audiocall/audiocallSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
@@ -17,6 +19,7 @@ import { useUpdateUserWordMutation, useCreateUserWordMutation } from '../../serv
 import { MutateUserWordBody } from '../../interfaces/userWords';
 import UserWordDifficulty from '../../shared/enums/UserWordDifficulty';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
+import { GameStatsShort } from '../../interfaces/statistics';
 
 export interface AudiocallAnswersProps {
   currentAnswers: Word[] | AggregatedWord[];
@@ -30,8 +33,10 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   const disable = useAppSelector(selectDisableAnswers);
   const currentCorrectAnswers = useAppSelector(selectCorrectAnswers);
   const currentWrongAnswers = useAppSelector(selectWrongAnswers);
+  const prevStats = useAppSelector(selectStats);
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
+  const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
 
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
@@ -41,6 +46,12 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   }, [currentCorrectAnswer]);
 
   const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
+    if (isCorrect) {
+      setCurrentWinStreak(currentWinStreak + 1);
+    } else {
+      setCurrentWinStreak(0);
+    }
+
     if (userId) {
       const wordId = word._id;
 
@@ -56,10 +67,16 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         const correctAnswers = isCorrect ? prevCorrectAnswers + 1 : prevCorrectAnswers;
         const incorrectAnswers = !isCorrect ? prevIncorrectAnswers + 1 : prevIncorrectAnswers;
         const winStreak = isCorrect ? prevWinStreak + 1 : 0;
-        const learned =
-          (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
-          (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
-          false;
+        let learned = optional?.learned || false;
+
+        if (learned && !isCorrect) {
+          learned = false;
+        } else if (!learned && isCorrect) {
+          learned =
+            (prevDifficulty === UserWordDifficulty.HARD && winStreak >= 5) ||
+            (prevDifficulty === UserWordDifficulty.DEFAULT && winStreak >= 3) ||
+            false;
+        }
 
         const body: MutateUserWordBody = {
           difficulty: learned ? UserWordDifficulty.DEFAULT : prevDifficulty,
@@ -76,7 +93,26 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
+        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
+
         await updateUserWord({ userId, wordId, body });
+
+        const stats: GameStatsShort = {
+          ...prevStats,
+          learnedWords: learned ? prevStats.learnedWords + 1 : prevStats.learnedWords,
+          longestWinStreak:
+            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
+              ? prevStats.longestWinStreak + 1
+              : prevStats.longestWinStreak,
+          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
+          incorrectAnswers: !isCorrect
+            ? prevStats.incorrectAnswers + 1
+            : prevStats.incorrectAnswers,
+        };
+
+        console.log(stats);
+
+        dispatch(setStats(stats));
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -93,6 +129,23 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         };
 
         await createUserWord({ userId, wordId, body });
+
+        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
+
+        const stats: GameStatsShort = {
+          ...prevStats,
+          newWords: prevStats.newWords + 1,
+          longestWinStreak:
+            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
+              ? prevStats.longestWinStreak + 1
+              : prevStats.longestWinStreak,
+          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
+          incorrectAnswers: !isCorrect
+            ? prevStats.incorrectAnswers + 1
+            : prevStats.incorrectAnswers,
+        };
+
+        dispatch(setStats(stats));
       }
     }
   };
