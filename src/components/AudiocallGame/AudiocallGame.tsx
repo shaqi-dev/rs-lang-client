@@ -22,6 +22,7 @@ import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
 import shuffleArray from '../../shared/shuffleArray';
 import getCurrentDate from '../../shared/getCurrentDate';
+import { GameStatsShort } from '../../interfaces/statistics';
 
 export interface AudiocallGameProps {
   data: Word[] | AggregatedWord[];
@@ -115,8 +116,19 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
         const { data: prevStatsData } = await getStatistics(userId);
 
         const prevStats = prevStatsData?.optional?.games?.audiocall || undefined;
+        const currentDateStats = prevStats?.filter((x) => x.date === currentDate)[0] || undefined;
 
-        const audiocall = prevStats ? [...prevStats, stats] : [stats];
+        let audiocall: GameStatsShort[];
+
+        if (prevStats) {
+          if (currentDateStats) {
+            audiocall = [...prevStats.filter((x) => x.date !== currentDate), stats];
+          } else {
+            audiocall = [...prevStats, stats];
+          }
+        } else {
+          audiocall = [stats];
+        }
 
         const body = {
           optional: {

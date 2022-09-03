@@ -37,7 +37,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
   const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
   const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
-  const [maxWinStreak, setMaxWinStreak] = useState<number>(0);
 
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
@@ -45,12 +44,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
   useEffect(() => {
     setCurrentChoise(null);
   }, [currentCorrectAnswer]);
-
-  useEffect(() => {
-    if (currentWinStreak > maxWinStreak) {
-      setMaxWinStreak(currentWinStreak);
-    }
-  }, [currentWinStreak, maxWinStreak]);
 
   const evaluateAnswer = async (word: Word | AggregatedWord, isCorrect: boolean): Promise<void> => {
     if (isCorrect) {
@@ -100,15 +93,15 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
+        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
+
         await updateUserWord({ userId, wordId, body });
 
         const stats: GameStatsShort = {
           ...prevStats,
           learnedWords: learned ? prevStats.learnedWords + 1 : prevStats.learnedWords,
           longestWinStreak:
-            isCorrect &&
-            currentWinStreak + 1 > maxWinStreak &&
-            currentWinStreak + 1 > prevStats.longestWinStreak
+            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
               ? prevStats.longestWinStreak + 1
               : prevStats.longestWinStreak,
           correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
@@ -116,6 +109,8 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
             ? prevStats.incorrectAnswers + 1
             : prevStats.incorrectAnswers,
         };
+
+        console.log(stats);
 
         dispatch(setStats(stats));
       } else {
@@ -135,11 +130,15 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
 
         await createUserWord({ userId, wordId, body });
 
+        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
+
         const stats: GameStatsShort = {
           ...prevStats,
           newWords: prevStats.newWords + 1,
           longestWinStreak:
-            maxWinStreak > prevStats.longestWinStreak ? maxWinStreak : prevStats.longestWinStreak,
+            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
+              ? prevStats.longestWinStreak + 1
+              : prevStats.longestWinStreak,
           correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
           incorrectAnswers: !isCorrect
             ? prevStats.incorrectAnswers + 1
