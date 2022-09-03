@@ -10,3 +10,7 @@ export const saveState = (state: RootState): void => {
   const serialState = JSON.stringify(state);
   localStorage.setItem('reduxState', serialState);
 };
+
+export const clearState = (): void => {
+  localStorage.removeItem('reduxState');
+};
