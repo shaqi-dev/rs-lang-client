@@ -116,6 +116,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
         const { data: prevStatsData } = await getStatistics(userId);
 
         const prevStats = prevStatsData?.optional?.games?.audiocall || undefined;
+        const sprintStats = prevStatsData?.optional?.games?.sprint || undefined;
         const currentDateStats = prevStats?.filter((x) => x.date === currentDate)[0] || undefined;
 
         let audiocall: GameStatsShort[];
@@ -134,6 +135,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
           optional: {
             games: {
               audiocall,
+              sprint: sprintStats,
             },
           },
         };
