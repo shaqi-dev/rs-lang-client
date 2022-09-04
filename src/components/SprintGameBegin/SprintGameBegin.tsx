@@ -9,9 +9,17 @@ export interface SprintGameBeginProps {
   disabledBtn: boolean;
   startPlay: () => void;
   selectLevel: (level: string) => void;
+  fromTextbook: boolean;
+  load: boolean;
 }
 
-const SprintGameBegin: FC<SprintGameBeginProps> = ({ disabledBtn, startPlay, selectLevel }) => {
+const SprintGameBegin: FC<SprintGameBeginProps> = ({
+  disabledBtn,
+  startPlay,
+  selectLevel,
+  fromTextbook,
+  load,
+}) => {
   return (
     <ContentWrapper>
       <section className={s.rules}>
@@ -22,16 +30,18 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({ disabledBtn, startPlay, sel
         </p>
       </section>
       <section className={s.selectLevel}>
-        <h3 className={s.selectLevel_title}>Cложность:</h3>
-        <SprintGroupList onClickItem={selectLevel} />
-        <Button
-          className={s.selectLevel_btn}
-          disabled={!disabledBtn}
-          type="button"
-          onClick={startPlay}
-        >
-          Начать!
-        </Button>
+        {!fromTextbook && <h3 className={s.selectLevel_title}>Cложность:</h3>}
+        {!fromTextbook && <SprintGroupList onClickItem={selectLevel} />}
+        {load && (
+          <Button
+            className={s.selectLevel_btn}
+            disabled={!disabledBtn}
+            type="button"
+            onClick={startPlay}
+          >
+            Начать!
+          </Button>
+        )}
       </section>
     </ContentWrapper>
   );

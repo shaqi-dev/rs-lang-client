@@ -126,7 +126,13 @@ const Textbook: FC = () => {
           <Button
             type="button"
             buttonStyle="primary"
-            onClick={(): void => navigate('../games/sprint')}
+            onClick={(): void =>
+              navigate('../games/sprint', {
+                state: {
+                  fromTextbook: true,
+                },
+              })
+            }
             disabled={wordsResponse.isLearned}
           >
             Спринт

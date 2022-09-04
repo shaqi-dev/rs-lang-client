@@ -19,7 +19,7 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
       <h3 className={s.list_title}>Не знаю {wrongCollection.length}</h3>
       <ul className={(s.list_correct, s.list)}>
         {wrongCollection.map((wordItem) => (
-          <li key={wordItem.id + Math.random()}>
+          <li key={Math.random() ** 2}>
             {wordItem.word} - {wordItem.wordTranslate}
           </li>
         ))}
@@ -28,7 +28,7 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
       <h3 className={s.list_title}>Знаю {correctCollection.length}</h3>
       <ul className={(s.list_correct, s.list)}>
         {correctCollection.map((wordItem) => (
-          <li key={wordItem.id + Math.random()}>
+          <li key={Math.random() ** 3}>
             {wordItem.word} - {wordItem.wordTranslate}
           </li>
         ))}

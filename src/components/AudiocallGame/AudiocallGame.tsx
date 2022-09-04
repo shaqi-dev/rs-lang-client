@@ -92,7 +92,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     if (userId) {
       const loadCurrentDateStats = async (): Promise<void> => {
         const { data: currentStatsData } = await getStatistics(userId);
-
+        console.log('currentStats', data);
         const currentDateStats =
           currentStatsData?.optional?.games?.audiocall?.filter((x) => x.date === currentDate)[0] ||
           undefined;
@@ -137,7 +137,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
             },
           },
         };
-
+        console.log('update stats', body);
         await updateStatistics({ userId, body });
       };
 
