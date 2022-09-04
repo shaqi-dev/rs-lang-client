@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GetGameWordsResponse, GetGameWordsData } from '../interfaces/useGetGameWords';
+import { AggregatedWord } from '../interfaces/userAggregatedWords';
 import { useLazyGetUserAggregatedWordsQuery } from '../services/userAggregatedWordsApi';
 import { useLazyGetWordsQuery } from '../services/wordsApi';
-import TextbookView from '../shared/enums/TextbookView';
-import UserWordsFilters from '../shared/UserWordsFilters';
 
 const useGetGameWords = ({
   group,
@@ -15,75 +14,84 @@ const useGetGameWords = ({
 }: GetGameWordsData): GetGameWordsResponse => {
   const [fetchGuestWords, guestWordsResponse] = useLazyGetWordsQuery();
   const [fetchMainWords, mainWordsResponse] = useLazyGetUserAggregatedWordsQuery();
-  const [fetchHardWords, hardWordsResponse] = useLazyGetUserAggregatedWordsQuery();
+  const [mainWordsWithoutLearned, setMainWordsWithoutLearned] = useState<AggregatedWord[]>([]);
 
-  const isGuestView = !userId;
-  const isFromNavbar = userId && !fromTextbook;
-  const isFromTextbook = userId && fromTextbook;
+  const isGuest = !userId;
+  const isUserFromNavbar = userId && !fromTextbook;
+  const isUserFromTextbook = userId && fromTextbook;
 
   useEffect(() => {
-    if (isGuestView) {
+    if (isGuest) {
       fetchGuestWords({ group, page });
     }
 
-    if (isFromNavbar) {
+    if (isUserFromNavbar) {
       fetchMainWords({ userId, group, page, wordsPerPage });
     }
 
-    if (isFromTextbook) {
-      if (textbookView === TextbookView.USER) {
-        fetchHardWords({ userId, group, page, wordsPerPage, filter: UserWordsFilters.HARD });
-      } else {
-        fetchMainWords({
-          userId,
-          group,
-          page,
-          wordsPerPage,
-        });
-      }
+    if (isUserFromTextbook) {
+      const fetchMainWordsWithoutLearned = async (): Promise<void> => {
+        let result: AggregatedWord[] = [];
+
+        return (async function fetchPage(currentPage = page): Promise<void> {
+          const currentWords = (
+            await fetchMainWords({
+              userId,
+              group,
+              page: currentPage,
+              wordsPerPage,
+            }).unwrap()
+          )[0].paginatedResults;
+
+          if (currentWords.length) {
+            const currentWordsWithoutLearned = currentWords.filter(
+              (x) => x.userWord?.optional?.learned !== true,
+            );
+
+            if (currentWordsWithoutLearned.length) {
+              result = [...result, ...currentWordsWithoutLearned];
+            }
+
+            if (result.length >= 20) {
+              setMainWordsWithoutLearned(result.slice(0, 20));
+            } else {
+              fetchPage(currentPage + 1);
+            }
+          } else {
+            fetchPage(currentPage + 1);
+          }
+        })();
+      };
+
+      fetchMainWordsWithoutLearned();
     }
   }, [
-    fetchGuestWords,
-    fetchMainWords,
-    fetchHardWords,
     group,
     page,
-    isFromNavbar,
-    isFromTextbook,
-    isGuestView,
     userId,
     wordsPerPage,
     textbookView,
+    isGuest,
+    isUserFromNavbar,
+    isUserFromTextbook,
   ]);
 
   const getAggregatedWordsResult = (response: typeof mainWordsResponse): GetGameWordsResponse => {
     const data = response?.data?.[0];
     const words = data?.paginatedResults;
 
-    return {
-      data: words,
-      error: mainWordsResponse.error,
-      isLoading: mainWordsResponse.isLoading,
-    };
+    return words;
   };
 
-  if (isFromNavbar) {
+  if (isUserFromNavbar) {
     return getAggregatedWordsResult(mainWordsResponse);
   }
 
-  if (isFromTextbook) {
-    if (group === 6) {
-      return getAggregatedWordsResult(hardWordsResponse);
-    }
-
-    return getAggregatedWordsResult(mainWordsResponse);
+  if (isUserFromTextbook) {
+    return mainWordsWithoutLearned;
   }
 
-  return {
-    data: guestWordsResponse.data,
-    error: guestWordsResponse.error,
-    isLoading: guestWordsResponse.isLoading,
-  };
+  return guestWordsResponse.data;
 };
 
 export default useGetGameWords;

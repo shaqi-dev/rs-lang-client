@@ -33,12 +33,11 @@ const SprintGame: FC = () => {
   const sprintPage = useAppSelector(selectSprintPage);
   const correctAnswer = useAppSelector(selectSprintCorrectAnswers);
   const wrongAnswer = useAppSelector(selectSprintWrongAnswers);
-  const { data, error, isLoading } = useGetGameWords({ group: sprintGroup, page: sprintPage });
+  const data = useGetGameWords({ group: sprintGroup, page: sprintPage });
   const subPage = Math.floor(Math.random() * 30);
   const subCollection = useGetGameWords({ group: sprintGroup, page: subPage });
 
   async function updateCollection(): Promise<void> {
-    if (error) throw new Error('Update collection is faled!');
     if (data) {
       setCollection([...collection, ...data]);
 
@@ -51,8 +50,8 @@ const SprintGame: FC = () => {
     setIterator(iterator + 1);
     setWord(collection[iterator]);
 
-    if (collection.length - 1 === iterator && subCollection.data) {
-      setCollection([...collection, ...subCollection.data]);
+    if (collection.length - 1 === iterator && subCollection) {
+      setCollection([...collection, ...subCollection]);
     }
     if (collection.length === iterator) console.log(collection);
 
@@ -146,7 +145,7 @@ const SprintGame: FC = () => {
           translate={wordTranslate}
           disabledBtn={disabledBtn}
           checkWord={checkWord}
-          isLoading={isLoading}
+          isLoading={!!data}
         />
       )}
       {gameState === 'gameResults' && (
