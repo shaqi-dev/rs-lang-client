@@ -92,7 +92,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     if (userId) {
       const loadCurrentDateStats = async (): Promise<void> => {
         const { data: currentStatsData } = await getStatistics(userId);
-        console.log('currentStats', data);
+
         const currentDateStats =
           currentStatsData?.optional?.games?.audiocall?.filter((x) => x.date === currentDate)[0] ||
           undefined;
@@ -116,6 +116,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
         const { data: prevStatsData } = await getStatistics(userId);
 
         const prevStats = prevStatsData?.optional?.games?.audiocall || undefined;
+        const sprintStats = prevStatsData?.optional?.games?.sprint || undefined;
         const currentDateStats = prevStats?.filter((x) => x.date === currentDate)[0] || undefined;
 
         let audiocall: GameStatsShort[];
@@ -134,10 +135,11 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
           optional: {
             games: {
               audiocall,
+              sprint: sprintStats,
             },
           },
         };
-        console.log('update stats', body);
+
         await updateStatistics({ userId, body });
       };
 
