@@ -20,8 +20,9 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
   const wrongAnswers = useAppSelector(selectWrongAnswers);
   const correctAnswers = useAppSelector(selectCorrectAnswers);
   const resultPage = useAppSelector(selectResultPage);
+  const pieChartDivider = correctWordsCount < 10 ? correctWordsCount : 10;
 
-  const correctAnswersPers = (correctAnswers.length / correctWordsCount) * 100;
+  const correctAnswersPers = (correctAnswers.length / pieChartDivider) * 100;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
     '--border-thickness': '10px',
