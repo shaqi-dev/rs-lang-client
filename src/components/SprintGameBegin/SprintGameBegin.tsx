@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import ContentWrapper from '../../layouts/ContentWrapper';
 // import wordsGroupNames from '../../shared/wordsGroupNames';
 import Button from '../Button';
 import SprintGroupList from '../SprintGroupList';
@@ -21,7 +20,7 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({
   load,
 }) => {
   return (
-    <ContentWrapper>
+    <>
       <section className={s.rules}>
         <h2 className={s.gameTitle}>Спринт</h2>
         <p className={s.gameRules}>
@@ -43,7 +42,7 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({
           </Button>
         )}
       </section>
-    </ContentWrapper>
+    </>
   );
 };
 
