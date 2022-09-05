@@ -38,7 +38,7 @@ const SprintGame: FC = () => {
   const dispatch = useAppDispatch();
 
   const [gameState, setGameState] = useState<string>('gameBegin');
-  const [disabledBtn, setDisabledBtn] = useState<boolean>(true);
+  // const [disabledBtn, setDisabledBtn] = useState<boolean>(true);
   let isStart = false;
 
   const [seconds, setSeconds] = useState<number>(30);
@@ -269,7 +269,7 @@ const SprintGame: FC = () => {
       if (dist <= 0) {
         clearInterval(timerId);
         setSeconds(0);
-        setDisabledBtn(true);
+        // setDisabledBtn(true);
         setGameState('gameResults');
       }
     }, 100);
@@ -312,7 +312,7 @@ const SprintGame: FC = () => {
     <ContentWrapper>
       {gameState === 'gameBegin' && (
         <SprintGameBegin
-          disabledBtn={disabledBtn}
+          disabledBtn={!data || !data.length}
           startPlay={startPlay}
           selectLevel={handleClickWordsGroupItem}
           fromTextbook={fromTextbook}
@@ -325,9 +325,7 @@ const SprintGame: FC = () => {
           answerCount={answerCount}
           word={word?.word}
           translate={wordTranslate}
-          // disabledBtn={disabledBtn}
           checkWord={checkWord}
-          // isLoading={!!data}
         />
       )}
       {gameState === 'gameResults' && (

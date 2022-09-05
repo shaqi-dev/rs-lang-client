@@ -1,5 +1,40 @@
 .root {
-  height: 80px;
+  height: 100px;
   display: flex;
   align-items: center;
+}
+
+.wrapper {
+  padding: 0;
+  flex-direction: row;
+  justify-content: center;
+  gap: 60px;
+}
+
+.year {
+  width: 40px;
+  font-weight: bold;
+}
+
+.rslogo {
+  height: 40px;
+}
+
+.developersList {
+  display: flex;
+  gap: 20px;
+}
+
+.developersTitle {
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
+.developersItem {
+  list-style: none;
+  font-size: 1.4rem;
+  
+  a {
+    color: #151515;
+  }
 }

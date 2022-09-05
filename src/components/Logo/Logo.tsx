@@ -4,7 +4,7 @@ import s from './Logo.module.scss';
 
 const Logo: FC = () => {
   return (
-    <Link to="/" className={s.logo}>
+    <Link to="/rs-lang-client" className={s.logo}>
       RS Lang
     </Link>
   );

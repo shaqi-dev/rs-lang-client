@@ -1,7 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { GameStatsShort } from '../../interfaces/statistics';
-import ContentWrapper from '../../layouts/ContentWrapper';
 import {
   useLazyGetStatisticsQuery,
   useUpdateStatisticsMutation,
@@ -99,7 +98,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
 
       updateStats();
     }
-  }, [word]);
+  }, [seconds]);
 
   // Action BTN
   useEffect(() => {
@@ -119,7 +118,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
 
   if (word) {
     return (
-      <ContentWrapper>
+      <>
         <section>
           <div className={s.content}>
             <span className={s.content_timer}>{seconds}</span>
@@ -151,7 +150,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
             </Button>
           </section>
         )}
-      </ContentWrapper>
+      </>
     );
   }
 
