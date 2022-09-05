@@ -98,7 +98,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
 
       updateStats();
     }
-  }, [word]);
+  }, [seconds]);
 
   // Action BTN
   useEffect(() => {
