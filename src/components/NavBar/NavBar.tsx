@@ -24,8 +24,8 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
   };
 
   return (
-    <nav className={s.root}>
-      <ul className={s.main}>
+    <nav className={s.navbar}>
+      <ul className={s.navbar_content}>
         <li className={s.item}>
           <Link to="/textbook" className={s.link}>
             Учебник
@@ -43,16 +43,21 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
         )}
         <li className={s.item}>
           {currentUsername && (
-            <>
-              <span>{currentUsername}, </span>
-              <Button type="button" buttonStyle="link" onClick={handleLogout}>
+            <div className={s.userContainer}>
+              <span className={s.userName}>{currentUsername}</span>
+              <Button
+                type="button"
+                buttonStyle="link"
+                onClick={handleLogout}
+                className={s.logOutButton}
+              >
                 Выйти
               </Button>
-            </>
+            </div>
           )}
           {!currentUsername && (
             <Link to="/authorization" className={s.link}>
-              Войти
+              <div className={s.logInButton}>Войти</div>
             </Link>
           )}
         </li>

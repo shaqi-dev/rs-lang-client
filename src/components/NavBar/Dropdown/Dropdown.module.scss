@@ -1,6 +1,9 @@
 @use '../../../styles/_variables.scss' as *;
 
 .root {
+  display: flex;
+  justify-content: center;
+
   .handler {
     position: relative;
   }
@@ -14,6 +17,7 @@
     border-radius: 8px;
     gap: 10px;
     list-style: none;
+    margin-top: 22px;
   }
 
   .link {
@@ -23,7 +27,7 @@
 
   &:hover {
     .handler {
-      color: $hover;
+      color: rgba(13, 148, 136, 1);
     }
 
     .list {
@@ -33,7 +37,7 @@
 
   .item:hover {
     .link {
-      color: $hover;
+      color: rgba(13, 148, 136, 1);
     }
   }
 }
