@@ -29,6 +29,7 @@ const Audiocall: FC = () => {
   const [gameStarted, setGameStart] = useState(false);
   const [audiocallGroup, setAudiocallGroup] = useState(0);
   const [audiocallPage, setAudiocallPage] = useState(Math.floor(Math.random() * 30));
+  const [fakePage] = useState(Math.floor(Math.random() * 30));
 
   let fromTextbook = false;
   const prevLocation = useLocation();
@@ -41,6 +42,7 @@ const Audiocall: FC = () => {
   const group = fromTextbook ? textbookGroup : audiocallGroup;
   const page = fromTextbook ? textbookPage : audiocallPage;
   const data = useGetGameWords({ group, page, userId, fromTextbook });
+  const fakeData = useGetGameWords({ group, page: fakePage, userId });
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -85,7 +87,9 @@ const Audiocall: FC = () => {
           </button>
         </div>
       )}
-      {gameStarted && data && <AudiocallGame data={data} tryAgain={tryAgain} />}
+      {gameStarted && data && fakeData && (
+        <AudiocallGame data={data} fakeData={fakeData} tryAgain={tryAgain} />
+      )}
     </ContentWrapper>
   );
 };
