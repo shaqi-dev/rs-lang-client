@@ -52,13 +52,13 @@ const useGetGameWords = ({
               result = [...result, ...currentWordsWithoutLearned];
             }
 
-            if (result.length >= 20) {
+            if (result.length >= 20 || currentPage === 0) {
               setMainWordsWithoutLearned(result.slice(0, 20));
-            } else {
-              fetchPage(currentPage + 1);
+            } else if (currentPage !== 0) {
+              fetchPage(currentPage - 1);
             }
-          } else {
-            fetchPage(currentPage + 1);
+          } else if (currentPage !== 0) {
+            fetchPage(currentPage - 1);
           }
         })();
       };
