@@ -64,6 +64,8 @@ const Audiocall: FC = () => {
     setGameStart(!gameStarted);
   };
 
+  console.log(data);
+
   return (
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted && (
@@ -75,7 +77,12 @@ const Audiocall: FC = () => {
               activeGroup={audiocallGroup}
             />
           )}
-          <button className={s.startAudiocallButton} type="button" onClick={startGame}>
+          <button
+            className={s.startAudiocallButton}
+            type="button"
+            onClick={startGame}
+            disabled={!data || !data.length}
+          >
             Start Game
           </button>
         </div>

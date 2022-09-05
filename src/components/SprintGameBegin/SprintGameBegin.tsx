@@ -34,7 +34,7 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({
         {load && (
           <Button
             className={s.selectLevel_btn}
-            disabled={!disabledBtn}
+            disabled={disabledBtn}
             type="button"
             onClick={startPlay}
           >
