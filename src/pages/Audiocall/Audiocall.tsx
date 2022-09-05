@@ -64,8 +64,6 @@ const Audiocall: FC = () => {
     setGameStart(!gameStarted);
   };
 
-  console.log(data);
-
   return (
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted && (

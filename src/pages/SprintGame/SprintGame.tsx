@@ -308,8 +308,6 @@ const SprintGame: FC = () => {
     isStart = !isStart;
   };
 
-  console.log(data);
-
   return (
     <ContentWrapper>
       {gameState === 'gameBegin' && (
