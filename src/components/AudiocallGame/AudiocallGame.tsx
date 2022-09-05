@@ -159,6 +159,21 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     setWordsCounter(0);
   };
 
+  // Action BTN
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (shouldContinue && (e.key === ' ' || e.keyCode === 32)) {
+        handleContinueGame();
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentCorrectAnswer, shouldContinue]);
+
   return (
     <div className={s.audiocallGame}>
       {currentCorrectAnswer && wordsCounter < 10 && (
