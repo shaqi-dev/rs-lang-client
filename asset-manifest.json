@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/rs-lang-client/static/css/main.eeabfd0b.css",
+    "main.js": "/rs-lang-client/static/js/main.75f895c1.js",
+    "index.html": "/rs-lang-client/index.html",
+    "static/media/play-sound-icon.svg": "/rs-lang-client/static/media/play-sound-icon.258714d4946e480150bc0fa8f3383cae.svg",
+    "main.eeabfd0b.css.map": "/rs-lang-client/static/css/main.eeabfd0b.css.map",
+    "main.75f895c1.js.map": "/rs-lang-client/static/js/main.75f895c1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.eeabfd0b.css",
+    "static/js/main.75f895c1.js"
+  ]
+}
