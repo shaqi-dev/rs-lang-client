@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
-import { AudiocallState, AudiocallResultPage } from '../../interfaces/AudiocallState';
+import { AudiocallState, AudiocallResultPage } from '../../interfaces/audiocallState';
 import { GameStatsShort } from '../../interfaces/statistics';
 import { AggregatedWord } from '../../interfaces/userAggregatedWords';
 import { Word } from '../../interfaces/words';
