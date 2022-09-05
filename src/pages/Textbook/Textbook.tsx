@@ -105,10 +105,7 @@ const Textbook: FC = () => {
       </section>
       <section className={s.wordsSection}>
         <p className={s.sectionTitle}>Слова</p>
-        {view === TextbookView.MAIN && !wordsResponse?.words?.length && <p>Loading...</p>}
-        {view === (TextbookView.USER || (TextbookView.USER && !!wordsResponse?.words?.length)) && (
-          <p>Loading...</p>
-        )}
+        {!wordsResponse?.words && <p>Loading...</p>}
         <div className={s.wordsBody}>
           <WordList wordsResponse={wordsResponse} activeWord={word} />
           {word && <WordCard word={word} view={view} userId={userId} />}
