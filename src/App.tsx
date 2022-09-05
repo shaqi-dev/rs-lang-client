@@ -19,12 +19,14 @@ const App: FC = () => {
       <Header />
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/authorization" element={<Auth />} />
-          <Route path="/textbook" element={<Textbook />} />
-          {userId && <Route path="/statistics" element={<Statistics userId={userId} />} />}
-          <Route path="/games/audiocall" element={<Audiocall />} />
-          <Route path="/games/sprint" element={<SprintGame />} />
+          <Route path="/rs-lang-client" element={<Home />} />
+          <Route path="/rs-lang-client/authorization" element={<Auth />} />
+          <Route path="/rs-lang-client/textbook" element={<Textbook />} />
+          {userId && (
+            <Route path="/rs-lang-client/statistics" element={<Statistics userId={userId} />} />
+          )}
+          <Route path="/rs-lang-client/games/audiocall" element={<Audiocall />} />
+          <Route path="/rs-lang-client/games/sprint" element={<SprintGame />} />
         </Routes>
       </main>
       <Footer />

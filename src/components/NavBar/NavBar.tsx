@@ -11,8 +11,8 @@ interface NavBarProps {
 }
 
 const gamesOptions: DropdownOption[] = [
-  { name: 'Спринт', link: 'games/sprint' },
-  { name: 'Аудиовызов', link: 'games/audiocall' },
+  { name: 'Спринт', link: 'rs-lang-client/games/sprint' },
+  { name: 'Аудиовызов', link: 'rs-lang-client/games/audiocall' },
 ];
 
 const NavBar: FC<NavBarProps> = ({ userId }) => {
@@ -27,7 +27,7 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
     <nav className={s.root}>
       <ul className={s.main}>
         <li className={s.item}>
-          <Link to="/textbook" className={s.link}>
+          <Link to="/rs-lang-client/textbook" className={s.link}>
             Учебник
           </Link>
         </li>
@@ -36,7 +36,7 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
         </li>
         {!!userId && (
           <li className={s.item}>
-            <Link to="/statistics" className={s.link}>
+            <Link to="/rs-lang-client/statistics" className={s.link}>
               Статистика
             </Link>
           </li>
@@ -51,7 +51,7 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
             </>
           )}
           {!currentUsername && (
-            <Link to="/authorization" className={s.link}>
+            <Link to="/rs-lang-client/authorization" className={s.link}>
               Войти
             </Link>
           )}

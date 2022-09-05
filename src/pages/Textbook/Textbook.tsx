@@ -124,7 +124,7 @@ const Textbook: FC = () => {
             type="button"
             buttonStyle="primary"
             onClick={(): void =>
-              navigate('../games/sprint', {
+              navigate('../rs-lang-client/games/sprint', {
                 state: {
                   fromTextbook: true,
                 },
@@ -138,7 +138,7 @@ const Textbook: FC = () => {
             type="button"
             buttonStyle="primary"
             onClick={(): void =>
-              navigate('../games/audiocall', {
+              navigate('../rs-lang-client/games/audiocall', {
                 state: {
                   fromTextbook: true,
                 },
