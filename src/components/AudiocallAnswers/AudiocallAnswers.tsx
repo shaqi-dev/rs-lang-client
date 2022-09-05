@@ -173,6 +173,38 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
     dispatch(setShouldContinue(true));
   };
 
+  // Action BTN
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (
+        !disable &&
+        (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5')
+      ) {
+        handleChooseAnswer(currentAnswers[+e.key - 1]);
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentChoise, currentAnswers]);
+
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (!disable && (e.key === ' ' || e.keyCode === 32)) {
+        handleChooseAnswer(null);
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentChoise, currentAnswers]);
+
   return (
     <div className={s.audiocallAnswersContainer}>
       <div className={s.audiocallAnswers}>
