@@ -13,6 +13,7 @@ import wordsGroupNames from '../../shared/wordsGroupNames';
 import shuffleArray from '../../shared/shuffleArray';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 import {
+  clearStats,
   // clearStats,
   selectSprintCorrectAnswers,
   selectSprintGroup,
@@ -31,6 +32,11 @@ import { MutateUserWordBody } from '../../interfaces/userWords';
 // import getCurrentDate from '../../shared/getCurrentDate';
 import { GameStatsShort } from '../../interfaces/statistics';
 import { useCreateUserWordMutation, useUpdateUserWordMutation } from '../../services/userWordsApi';
+import {
+  useLazyGetStatisticsQuery,
+  useUpdateStatisticsMutation,
+} from '../../services/statisticsApi';
+import getCurrentDate from '../../shared/getCurrentDate';
 
 // import s from './SprintGame.module.scss';
 
@@ -52,9 +58,12 @@ const SprintGame: FC = () => {
   const [word, setWord] = useState<Word | AggregatedWord | null>(null);
   const [wordTranslate, setWordTranslate] = useState<string>('');
 
+  const currentDate = getCurrentDate();
+
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
-  const prevStats = useAppSelector(selectStats);
+  const [getStatistics] = useLazyGetStatisticsQuery();
+  const [updateStatistics] = useUpdateStatisticsMutation();
 
   const sprintGroup = useAppSelector(selectSprintGroup);
   const sprintPage = useAppSelector(selectSprintPage);
@@ -64,6 +73,7 @@ const SprintGame: FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const textbookGroup = useAppSelector(selectCurrentGroup);
   const textbookPage = useAppSelector(selectCurrentPage);
+  const stats = useAppSelector(selectStats);
 
   // const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
   const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
@@ -97,6 +107,65 @@ const SprintGame: FC = () => {
   useEffect(() => {
     setSubPage(Math.floor(Math.random() * 30));
   }, [group, userId, fromTextbook]);
+
+  useEffect(() => {
+    if (stats.date !== currentDate) {
+      dispatch(clearStats());
+    }
+
+    if (userId) {
+      const loadCurrentDateStats = async (): Promise<void> => {
+        const { data: currentStatsData } = await getStatistics(userId);
+
+        const currentDateStats =
+          currentStatsData?.optional?.games?.sprint?.filter((x) => x.date === currentDate)[0] ||
+          undefined;
+
+        if (currentDateStats) {
+          dispatch(setStats(currentDateStats));
+        }
+      };
+
+      loadCurrentDateStats();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (seconds === 0 && userId) {
+      const updateStats = async (): Promise<void> => {
+        const { data: prevStatsData } = await getStatistics(userId);
+
+        const prevStats = prevStatsData?.optional?.games?.sprint || undefined;
+        const audioStats = prevStatsData?.optional?.games?.audiocall || undefined;
+        const currentDateStats = prevStats?.filter((x) => x.date === currentDate)[0] || undefined;
+
+        let sprint: GameStatsShort[];
+
+        if (prevStats) {
+          if (currentDateStats) {
+            sprint = [...prevStats.filter((x) => x.date !== currentDate), stats];
+          } else {
+            sprint = [...prevStats, stats];
+          }
+        } else {
+          sprint = [stats];
+        }
+
+        const body = {
+          optional: {
+            games: {
+              sprint,
+              audiocall: audioStats,
+            },
+          },
+        };
+
+        await updateStatistics({ userId, body });
+      };
+
+      updateStats();
+    }
+  }, [seconds, userId]);
 
   // FUNCTION FOR UPDATE COLLECTION OF WORDS
   async function updateCollection(): Promise<void> {
@@ -173,20 +242,18 @@ const SprintGame: FC = () => {
 
         await updateUserWord({ userId, wordId, body });
 
-        const stats: GameStatsShort = {
-          ...prevStats,
-          learnedWords: learned ? prevStats.learnedWords + 1 : prevStats.learnedWords,
+        const nextStats: GameStatsShort = {
+          ...stats,
+          learnedWords: learned ? stats.learnedWords + 1 : stats.learnedWords,
           longestWinStreak:
-            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
-              ? prevStats.longestWinStreak + 1
-              : prevStats.longestWinStreak,
-          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
-          incorrectAnswers: !isCorrect
-            ? prevStats.incorrectAnswers + 1
-            : prevStats.incorrectAnswers,
+            isCorrect && currentWinStreak + 1 > stats.longestWinStreak
+              ? stats.longestWinStreak + 1
+              : stats.longestWinStreak,
+          correctAnswers: isCorrect ? stats.correctAnswers + 1 : stats.correctAnswers,
+          incorrectAnswers: !isCorrect ? stats.incorrectAnswers + 1 : stats.incorrectAnswers,
         };
 
-        dispatch(setStats(stats));
+        dispatch(setStats(nextStats));
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -204,20 +271,18 @@ const SprintGame: FC = () => {
 
         await createUserWord({ userId, wordId, body });
 
-        const stats: GameStatsShort = {
-          ...prevStats,
-          newWords: prevStats.newWords + 1,
+        const nextStats: GameStatsShort = {
+          ...stats,
+          newWords: stats.newWords + 1,
           longestWinStreak:
-            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
-              ? prevStats.longestWinStreak + 1
-              : prevStats.longestWinStreak,
-          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
-          incorrectAnswers: !isCorrect
-            ? prevStats.incorrectAnswers + 1
-            : prevStats.incorrectAnswers,
+            isCorrect && currentWinStreak + 1 > stats.longestWinStreak
+              ? stats.longestWinStreak + 1
+              : stats.longestWinStreak,
+          correctAnswers: isCorrect ? stats.correctAnswers + 1 : stats.correctAnswers,
+          incorrectAnswers: !isCorrect ? stats.incorrectAnswers + 1 : stats.incorrectAnswers,
         };
 
-        dispatch(setStats(stats));
+        dispatch(setStats(nextStats));
       }
     }
   };
