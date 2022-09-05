@@ -75,7 +75,12 @@ const Audiocall: FC = () => {
               activeGroup={audiocallGroup}
             />
           )}
-          <button className={s.startAudiocallButton} type="button" onClick={startGame}>
+          <button
+            className={s.startAudiocallButton}
+            type="button"
+            onClick={startGame}
+            disabled={!data || !data.length}
+          >
             Start Game
           </button>
         </div>

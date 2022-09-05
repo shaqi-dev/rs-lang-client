@@ -1,6 +1,5 @@
 import { AnyAction, combineReducers, configureStore, Reducer } from '@reduxjs/toolkit';
 import { loadState, saveState } from '../shared/localStorage';
-import counter from './counter/counter.slice';
 import useAuth from '../hooks/useAuth';
 import auth from './auth/authSlice';
 import textbook from './textbook/textbookSlice';
@@ -14,7 +13,6 @@ const preloadedState = loadState();
 const combinedReducer = combineReducers({
   [useAuth.reducerPath]: useAuth.reducer,
   [wordsApi.reducerPath]: wordsApi.reducer,
-  counter,
   auth,
   textbook,
   audiocall,

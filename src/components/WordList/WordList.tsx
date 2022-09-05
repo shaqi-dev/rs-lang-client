@@ -15,13 +15,11 @@ interface WordListProps {
 
 const WordList: FC<WordListProps> = ({ wordsResponse, activeWord }) => {
   const dispatch = useAppDispatch();
-  const { words, error, isLearned, isLoading, maxPages } = wordsResponse;
+  const { words, error, isLearned, maxPages } = wordsResponse;
 
   useEffect(() => {
     dispatch(setMaxPages(maxPages));
   }, [dispatch, maxPages]);
-
-  if (isLoading) return <p>Loading...</p>;
 
   if (error) {
     if ('status' in error) {
