@@ -25,14 +25,21 @@ export const userWordsApi = useAuth.injectEndpoints({
 
         return result;
       },
-      providesTags: [
-        { type: 'UserWords', id: 'CREATE_WORD' },
-        { type: 'UserWords', id: 'DELETE_WORD' },
-        { type: 'UserWords', id: 'UPDATE_WORD' },
-      ],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result[0].paginatedResults.map((word) => ({
+                type: 'UserWords' as const,
+                id: word._id,
+              })),
+              'UserWords',
+            ]
+          : ['UserWords'],
     }),
     getUserAggregatedWordById: builder.query<AggregatedWord[], GetUserAggregatedWordByIdData>({
       query: ({ userId, wordId }) => `users/${userId}/aggregatedWords/${wordId}`,
+      providesTags: (result) =>
+        result ? [{ type: 'UserWords', id: result[0]._id }] : ['UserWords'],
     }),
   }),
 });

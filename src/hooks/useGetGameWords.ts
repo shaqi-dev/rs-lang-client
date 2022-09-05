@@ -65,16 +65,7 @@ const useGetGameWords = ({
 
       fetchMainWordsWithoutLearned();
     }
-  }, [
-    group,
-    page,
-    userId,
-    wordsPerPage,
-    textbookView,
-    isGuest,
-    isUserFromNavbar,
-    isUserFromTextbook,
-  ]);
+  }, [group, userId, wordsPerPage, textbookView, isGuest, isUserFromNavbar, isUserFromTextbook]);
 
   const getAggregatedWordsResult = (response: typeof mainWordsResponse): GetGameWordsResponse => {
     const data = response?.data?.[0];

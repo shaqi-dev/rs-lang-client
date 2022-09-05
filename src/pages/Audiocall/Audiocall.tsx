@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import s from './Audiocall.module.scss';
 import ContentWrapper from '../../layouts/ContentWrapper';
@@ -28,8 +28,8 @@ const Audiocall: FC = () => {
 
   const [gameStarted, setGameStart] = useState(false);
   const [audiocallGroup, setAudiocallGroup] = useState(0);
-  const [audiocallPage, setAudiocallPage] = useState(Math.floor(Math.random() * 30));
-  const [fakePage] = useState(Math.floor(Math.random() * 30));
+  const [audiocallPage, setAudiocallPage] = useState(0);
+  const [fakePage, setFakePage] = useState(0);
 
   let fromTextbook = false;
   const prevLocation = useLocation();
@@ -43,6 +43,11 @@ const Audiocall: FC = () => {
   const page = fromTextbook ? textbookPage : audiocallPage;
   const data = useGetGameWords({ group, page, userId, fromTextbook });
   const fakeData = useGetGameWords({ group, page: fakePage, userId });
+
+  useEffect(() => {
+    setAudiocallPage(Math.floor(Math.random() * 30));
+    setFakePage(Math.floor(Math.random() * 30));
+  }, [group, userId, fromTextbook]);
 
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
