@@ -2,7 +2,7 @@
   min-width: 400px;
   max-width: 400px;
   border-radius: 15px;
-  background-color: #d8d8ff;
+  background-color: #ffffff;
 }
 
 .content {
@@ -78,6 +78,7 @@
 }
 
 .statsBlock {
+  padding-top: 10px;
   display: flex;
   justify-content: space-around;
 }
@@ -95,15 +96,15 @@
 
   .counter {
     &__correct {
-      color: #009600;
+      color: #5be45b;
     }
 
     &__incorrect {
-      color: #960000;
+      color: #ff6b6b;
     }
 
     &__winrate {
-      color: #003c96
+      color: #000000
     }
   }
 }
