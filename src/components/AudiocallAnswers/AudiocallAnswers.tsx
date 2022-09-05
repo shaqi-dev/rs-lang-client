@@ -189,7 +189,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
     return () => {
       document.removeEventListener('keydown', onKeypress);
     };
-  }, [currentChoise, currentAnswers]);
+  }, [currentChoise, currentAnswers, disable]);
 
   useEffect(() => {
     const onKeypress = (e: KeyboardEvent): void => {
