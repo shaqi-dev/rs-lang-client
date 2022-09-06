@@ -1,7 +1,11 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { selectCurrentUserId } from './store/auth/authSlice';
 import { useAppSelector } from './hooks/redux';
+import {
+  useLazyGetUserSettingsQuery,
+  useUpdateUserSettingsMutation,
+} from './services/userSettingsApi';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -13,6 +17,22 @@ import SprintGame from './pages/SprintGame';
 
 const App: FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
+  const [getUserSettings] = useLazyGetUserSettingsQuery();
+  const [updateUserSettings] = useUpdateUserSettingsMutation();
+
+  // Check for current tokens expiration
+  useEffect(() => {
+    if (userId) {
+      updateUserSettings({
+        userId,
+        body: {
+          optional: {
+            lastVisit: Date.now(),
+          },
+        },
+      });
+    }
+  }, [userId, getUserSettings]);
 
   return (
     <>
