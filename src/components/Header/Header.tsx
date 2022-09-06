@@ -11,10 +11,8 @@ const Header: FC = () => {
 
   return (
     <header className={s.header}>
-      {/* <ContentWrapper className={s.wrapper}> */}
       <Logo />
       <NavBar userId={userId} />
-      {/* </ContentWrapper> */}
     </header>
   );
 };
