@@ -3,8 +3,8 @@
 .groupItem {
   cursor: pointer;
   box-sizing: border-box;
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   border: 4px solid;
   border-radius: 50%;
 }
@@ -13,7 +13,7 @@
   border-color: #07DD36;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #00AA30;
 
   &:hover {
@@ -31,7 +31,7 @@
   border-color: #6AB60A;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #5CA400;
 
   &:hover, &_active {
@@ -44,7 +44,7 @@
   border-color: #DDD407;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #9A940E;
 
   &:hover, &_active {
@@ -57,7 +57,7 @@
   border-color: #C59B07;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #A58000;
 
   &:hover, &_active {
@@ -70,7 +70,7 @@
   border-color: #C26C06;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #C96D00;
 
   &:hover, &_active {
@@ -83,7 +83,7 @@
   border-color: #C52300;
   background-color: transparent;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 20px;
   color: #CF2F0C;
 
   &:hover, &_active {
@@ -91,5 +91,3 @@
     color: #FFFFFF;
   }
 }
-
-// E94560 E9E245 E0E50F C00909 069325

@@ -19,10 +19,11 @@
       border: solid 2px #E94560;
       font-size: 16px;
       cursor: pointer;
-      color: #E9E245;
+      color: #b9a700;
 
       &:hover {
         background-color: #E94560;
+        color: #ffe81d;
       }
   
       &:disabled {
@@ -31,6 +32,7 @@
   
       &[disabled]:hover {
         background: transparent;
+        color: #b9a700;
       }
     }
   }
@@ -53,7 +55,7 @@
 }
 
 .correctAnswer {
-  background-color: rgb(79, 197, 0);
+  background-color: #069325;
   padding: 10px 20px;
   border-radius: 20px;
   border: none;
@@ -63,13 +65,13 @@
   font-weight: 600;
 
   &[disabled]:hover {
-    background: rgb(79, 197, 0);
+    background: #069325;
     cursor: auto;
   }
 }
 
 .wrongAnswer {
-  background-color: rgb(235, 0, 0);;
+  background-color: #C00909;
   padding: 10px 20px;
   border-radius: 20px;
   border: none;
@@ -79,7 +81,7 @@
   font-weight: 600;
 
   &[disabled]:hover {
-    background: rgb(235, 0, 0);;
+    background: #C00909;
     cursor: auto;
   }
 }

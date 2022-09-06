@@ -17,12 +17,14 @@
 
       .name {
         font-size: 40px;
+        color: #E94560;
       }
   
       .description {
         font-size: 22px;
         max-width: 500px;
         text-align: center;
+        color: #E94560;
       }
     }
 
@@ -31,6 +33,10 @@
       flex-direction: column;
       align-items: center;
       row-gap: 3rem;
+
+      .groupText {
+        color: #b9a700;
+      }
     }
 
     .startAudiocallButton {
