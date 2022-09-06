@@ -1,9 +1,211 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6rem;
+
   section {
-    min-height: 40vh;
     width: 100%;
+  }
+
+  .about {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    height: 40vw;
+    min-height: 500px;
+    background: url('../../assets/svg/bird.svg') no-repeat right ;
+    background-size: contain;
+
+    &_name {
+      font-weight: 700;
+      font-size: 44px;
+      color: #164E63;
+      margin-bottom: 2rem;
+    }
+
+    &_descr {
+      font-weight: 500;
+      font-size: 22px;
+      color: #164E63;
+      line-height: 3rem;
+    }
+  }
+
+  .scope {
+    display: flex;
+    flex-direction: column;
+    row-gap: 6rem;
     align-items: center;
+
+    &_textbook {
+      display: flex;
+      column-gap: 2rem;
+
+      .textbookImage {
+        background: url('../../assets/img/textbook.jpg') no-repeat center;
+        background-size: contain;
+        width: 20px;
+        height: 200px;
+        width: 280px;
+        border-radius: 10px;
+        padding: 2rem;
+        border: solid 4px rgb(30, 41, 59);
+
+        .textbookText {
+          color: rgb(221, 214, 18);
+          font-weight: 600;
+          font-size: 24px;
+        }
+
+        &:hover {
+          background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/textbook.jpg') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 200px;
+          width: 280px;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &_sprint {
+      display: flex;
+      column-gap: 2rem;
+      justify-content: right;
+
+      .sprintImage {
+        background: url('../../assets/img/sprint.jpg') no-repeat center;
+        background-size: contain;
+        width: 20px;
+        height: 200px;
+        width: 280px;
+        border-radius: 10px;
+        padding: 2rem;
+        border: solid 4px rgb(30, 41, 59);
+
+        .sprintText {
+          color: rgb(221, 214, 18);
+          font-weight: 600;
+          font-size: 24px;
+        }
+
+        &:hover {
+          background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/sprint.jpg') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 200px;
+          width: 280px;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &_audiocall {
+      display: flex;
+      column-gap: 2rem;
+
+      .audiocallImage {
+        background: url('../../assets/img/audiocall.jpg') no-repeat center;
+        background-size: contain;
+        width: 20px;
+        height: 200px;
+        width: 280px;
+        border-radius: 10px;
+        padding: 2rem;
+        border: solid 4px rgb(30, 41, 59);
+
+        .audiocallText {
+          color: rgb(221, 214, 18);
+          font-weight: 600;
+          font-size: 24px;
+        }
+
+        &:hover {
+          background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/audiocall.jpg') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 200px;
+          width: 280px;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .explanation {
+      font-style: italic;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 27px;
+      letter-spacing: 0.01em;
+      padding-top: 2rem;
+      max-width: 40%;
+    }
+  }
+
+  .team {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 4rem;
+
+    .teamMembers {
+      display: flex;
+      justify-content: center;
+      column-gap: 6rem;
+
+      .member {
+        display: flex;
+        background-color: rgb(241, 241, 241);
+        align-items: center;
+        flex-direction: column;
+        row-gap: 2rem;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 300px;
+  
+        .vladProfileImage {
+          background: url('../../assets/img/vlad.png') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 220px;
+          width: 220px;
+          border-radius: 50%;
+        }
+  
+        .mariaProfileImage {
+          background: url('../../assets/img/maria.png') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 220px;
+          width: 220px;
+          border-radius: 50%;
+        }
+  
+        .mikhailProfileImage {
+          background: url('../../assets/img/mikhail.png') no-repeat center;
+          background-size: contain;
+          width: 20px;
+          height: 220px;
+          width: 220px;
+          border-radius: 50%;
+        }
+  
+        .profileLink {
+          font-weight: 600;
+          color: rgb(30, 41, 59);
+        }
+  
+        .teamLead {
+          border-bottom: solid 2px rgb(187, 169, 13);
+        }
+    
+        .participation {
+          text-align: center;
+        }
+      }
+    }
   }
 }

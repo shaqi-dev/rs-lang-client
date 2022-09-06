@@ -15,7 +15,7 @@ import {
 } from '../../store/audiocall/audiocallSlice';
 import { selectCurrentGroup, selectCurrentPage } from '../../store/textbook/textbookSlice';
 import wordsGroupNames from '../../shared/wordsGroupNames';
-import { AudiocallResultPage } from '../../interfaces/AudiocallState';
+import { AudiocallResultPage } from '../../interfaces/audiocallState';
 import useGetGameWords from '../../hooks/useGetGameWords';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 

@@ -1,4 +1,13 @@
 import { FC, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { GameStatsShort } from '../../interfaces/statistics';
+import {
+  useLazyGetStatisticsQuery,
+  useUpdateStatisticsMutation,
+} from '../../services/statisticsApi';
+import getCurrentDate from '../../shared/getCurrentDate';
+import { selectCurrentUserId } from '../../store/auth/authSlice';
+import { clearStats, selectStats, setStats } from '../../store/sprint/sprintSlice';
 import Button from '../Button';
 import s from './SprintGame.module.scss';
 

@@ -5,9 +5,73 @@ import s from './Home.module.scss';
 const Home: FC = () => {
   return (
     <ContentWrapper className={s.wrapper}>
-      <section className={s.hero}>Hero section</section>
-      <section className={s.about}>About RS Lang</section>
-      <section className={s.team}>About Team</section>
+      <section className={s.about}>
+        <h2 className={s.about_name}>Rs Lang -</h2>
+        <p className={s.about_descr}>
+          приложение по изучению английского языка,
+          <br />
+          включающего в себя две игры и словарь.
+        </p>
+      </section>
+      <section className={s.scope}>
+        <h2>Возможности приложения</h2>
+        <div className={s.scope_textbook}>
+          <div className={s.textbookImage}>
+            <p className={s.textbookText}>Учебник</p>
+          </div>
+          <p className={s.explanation}>
+            Учебник включает в себя 3500 слов, y каждого есть: транскрипция, перевод, аудио, пример
+            использования в предложении.
+          </p>
+        </div>
+        <div className={s.scope_sprint}>
+          <p className={s.explanation}>
+            Проверь свою реакцию и возможность быстро принимать решения. Переведи за 30 секунд как
+            можно больше слов.
+          </p>
+          <div className={s.sprintImage}>
+            <p className={s.sprintText}>Спринт</p>
+          </div>
+        </div>
+        <div className={s.scope_audiocall}>
+          <div className={s.audiocallImage}>
+            <p className={s.audiocallText}>Аудиозвонок</p>
+          </div>
+          <p className={s.explanation}>
+            Испытай свой слух на понимание английских слов. Выбери из предложенных вариантов
+            правильный перевод.
+          </p>
+        </div>
+      </section>
+      <section className={s.team}>
+        <h2>О команде</h2>
+        <div className={s.teamMembers}>
+          <div className={s.member}>
+            <div className={s.mikhailProfileImage} />
+            <a href="https://github.com/1iekim" className={s.profileLink}>
+              1iekim
+            </a>
+            <p className={s.participation}>Разработка игры "Спринт", фикс багов.</p>
+          </div>
+          <div className={s.member}>
+            <div className={s.vladProfileImage} />
+            <a href="https://github.com/shaqi-dev" className={s.profileLink}>
+              shaqi-dev
+            </a>
+            <p className={s.teamLead}>Тимлид команды</p>
+            <p className={s.participation}>
+              Разработка структуры приложения, учебника, регистрации и графика. Фикс багов.
+            </p>
+          </div>
+          <div className={s.member}>
+            <div className={s.mariaProfileImage} />
+            <a href="https://github.com/maria98kgm" className={s.profileLink}>
+              maria98kgm
+            </a>
+            <p className={s.participation}>Разработка игры "Aудиозвонок", дизайн приложения.</p>
+          </div>
+        </div>
+      </section>
     </ContentWrapper>
   );
 };

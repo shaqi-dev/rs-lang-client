@@ -9,7 +9,7 @@ import {
   setResultPage,
 } from '../../store/audiocall/audiocallSlice';
 import { Word } from '../../interfaces/words';
-import { AudiocallResultPage } from '../../interfaces/AudiocallState';
+import { AudiocallResultPage } from '../../interfaces/audiocallState';
 
 interface AudiocallResultProps {
   correctWordsCount: number;

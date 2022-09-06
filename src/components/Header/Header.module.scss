@@ -1,11 +1,13 @@
-.root {
-  height: 80px;
-  display: flex;
-  align-items: center;
+body {
+  padding: 20px 48px;
 }
 
-.wrapper {
-  padding: 0;
+.header {
+  height: 48px;
+  display: flex;
+  align-items: center;
   flex-direction: row;
   justify-content: space-between;
+  // max-width: 1186px;
+  padding: 0px 40px;
 }

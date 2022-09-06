@@ -1,12 +1,6 @@
-@use '../../styles/variables' as *;
-
 .logo {
+  font-size: 24px;
+  font-weight: bold;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 3rem;
-  color: #000000;
-
-  &:hover {
-    color: $hover;
-  }
+  color: black;
 }
