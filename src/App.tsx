@@ -27,6 +27,7 @@ const App: FC = () => {
           )}
           <Route path="/rs-lang-client/games/audiocall" element={<Audiocall />} />
           <Route path="/rs-lang-client/games/sprint" element={<SprintGame />} />
+          <Route path="*" element={<Home />} />
         </Routes>
       </main>
       <Footer />
