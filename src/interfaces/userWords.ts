@@ -34,6 +34,8 @@ export interface MutateUserWordBody {
   optional: UserWordOptional;
 }
 
+export type MutateUserWordResponse = GetUserWordByIdData & MutateUserWordBody;
+
 export interface MutateUserWordData {
   userId: string;
   wordId: string;

@@ -93,8 +93,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
-        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
-
         await updateUserWord({ userId, wordId, body });
 
         const stats: GameStatsShort = {
@@ -109,8 +107,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
             ? prevStats.incorrectAnswers + 1
             : prevStats.incorrectAnswers,
         };
-
-        console.log(stats);
 
         dispatch(setStats(stats));
       } else {
@@ -129,8 +125,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         };
 
         await createUserWord({ userId, wordId, body });
-
-        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
 
         const stats: GameStatsShort = {
           ...prevStats,

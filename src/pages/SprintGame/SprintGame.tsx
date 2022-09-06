@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import SprintGameBegin from '../../components/SprintGameBegin';
 import SprintGameContent from '../../components/SprintGameContent';
@@ -13,6 +13,7 @@ import wordsGroupNames from '../../shared/wordsGroupNames';
 import shuffleArray from '../../shared/shuffleArray';
 import { selectCurrentUserId } from '../../store/auth/authSlice';
 import {
+  clearStats,
   // clearStats,
   selectSprintCorrectAnswers,
   selectSprintGroup,
@@ -31,6 +32,11 @@ import { MutateUserWordBody } from '../../interfaces/userWords';
 // import getCurrentDate from '../../shared/getCurrentDate';
 import { GameStatsShort } from '../../interfaces/statistics';
 import { useCreateUserWordMutation, useUpdateUserWordMutation } from '../../services/userWordsApi';
+import {
+  useLazyGetStatisticsQuery,
+  useUpdateStatisticsMutation,
+} from '../../services/statisticsApi';
+import getCurrentDate from '../../shared/getCurrentDate';
 
 // import s from './SprintGame.module.scss';
 
@@ -41,17 +47,23 @@ const SprintGame: FC = () => {
   // const [disabledBtn, setDisabledBtn] = useState<boolean>(true);
   let isStart = false;
 
+  const [timer, setTimer] = useState<NodeJS.Timer>();
   const [seconds, setSeconds] = useState<number>(30);
   const [iterator, setIterator] = useState<number>(0);
   const [answerCount, setAnswerCount] = useState<number>(0);
 
+  const [subPage, setSubPage] = useState(0);
   const [collection, setCollection] = useState<Word[] | AggregatedWord[]>([]);
+  const [usedWordsIds, setUsedWordsIds] = useState<string[]>([]);
   const [word, setWord] = useState<Word | AggregatedWord | null>(null);
   const [wordTranslate, setWordTranslate] = useState<string>('');
 
+  const currentDate = getCurrentDate();
+
   const [updateUserWord] = useUpdateUserWordMutation();
   const [createUserWord] = useCreateUserWordMutation();
-  const prevStats = useAppSelector(selectStats);
+  const [getStatistics] = useLazyGetStatisticsQuery();
+  const [updateStatistics] = useUpdateStatisticsMutation();
 
   const sprintGroup = useAppSelector(selectSprintGroup);
   const sprintPage = useAppSelector(selectSprintPage);
@@ -61,6 +73,7 @@ const SprintGame: FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const textbookGroup = useAppSelector(selectCurrentGroup);
   const textbookPage = useAppSelector(selectCurrentPage);
+  const stats = useAppSelector(selectStats);
 
   // const [currentChoise, setCurrentChoise] = useState<Word | AggregatedWord | null>(null);
   const [currentWinStreak, setCurrentWinStreak] = useState<number>(0);
@@ -88,20 +101,92 @@ const SprintGame: FC = () => {
 
   const subCollection = useGetGameWords({
     group,
-    page: page === 30 ? page - 1 : page + 1,
+    page: subPage,
   });
 
-  // FUNCTION FOR UODATE COLLECTION OF WORDS
-  async function updateCollection(): Promise<void> {
-    if (data) {
-      const shuffleData = shuffleArray([...data]);
-      setCollection([...collection, ...shuffleData]);
+  useEffect(() => {
+    setSubPage(Math.floor(Math.random() * 30));
+  }, [group, userId, fromTextbook]);
 
+  useEffect(() => {
+    if (stats.date !== currentDate) {
+      dispatch(clearStats());
+    }
+
+    if (userId) {
+      const loadCurrentDateStats = async (): Promise<void> => {
+        const { data: currentStatsData } = await getStatistics(userId);
+
+        const currentDateStats =
+          currentStatsData?.optional?.games?.sprint?.filter((x) => x.date === currentDate)[0] ||
+          undefined;
+
+        if (currentDateStats) {
+          dispatch(setStats(currentDateStats));
+        }
+      };
+
+      loadCurrentDateStats();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (seconds === 0 && userId) {
+      const updateStats = async (): Promise<void> => {
+        const { data: prevStatsData } = await getStatistics(userId);
+
+        const prevStats = prevStatsData?.optional?.games?.sprint || undefined;
+        const audioStats = prevStatsData?.optional?.games?.audiocall || undefined;
+        const currentDateStats = prevStats?.filter((x) => x.date === currentDate)[0] || undefined;
+
+        let sprint: GameStatsShort[];
+
+        if (prevStats) {
+          if (currentDateStats) {
+            sprint = [...prevStats.filter((x) => x.date !== currentDate), stats];
+          } else {
+            sprint = [...prevStats, stats];
+          }
+        } else {
+          sprint = [stats];
+        }
+
+        const body = {
+          optional: {
+            games: {
+              sprint,
+              audiocall: audioStats,
+            },
+          },
+        };
+
+        await updateStatistics({ userId, body });
+      };
+
+      updateStats();
+    }
+  }, [seconds, userId]);
+
+  // FUNCTION FOR UPDATE COLLECTION OF WORDS
+  async function updateCollection(): Promise<void> {
+    if (data && data.length) {
+      const shuffleData = shuffleArray([...data]);
+      setCollection([...shuffleData]);
+
+      const wordId = userId ? shuffleData[iterator]._id : shuffleData[iterator].id;
       setWord(shuffleData[iterator]);
-      if (shuffleData.length > 0)
-        setWordTranslate(shuffleData[Math.floor(Math.random() * data.length)].wordTranslate);
+      setUsedWordsIds([...usedWordsIds, wordId]);
+
+      // if (shuffleData.length > 0)
+      //   setWordTranslate(shuffleData[Math.floor(Math.random() * data.length)].wordTranslate);
     }
   }
+
+  useEffect(() => {
+    if (iterator === 0) {
+      updateCollection();
+    }
+  }, [iterator, data?.length]);
 
   // // SPRINT GAME STATS
   const evaluateAnswer = async (
@@ -155,24 +240,20 @@ const SprintGame: FC = () => {
           },
         };
 
-        // if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
-
         await updateUserWord({ userId, wordId, body });
 
-        const stats: GameStatsShort = {
-          ...prevStats,
-          learnedWords: learned ? prevStats.learnedWords + 1 : prevStats.learnedWords,
+        const nextStats: GameStatsShort = {
+          ...stats,
+          learnedWords: learned ? stats.learnedWords + 1 : stats.learnedWords,
           longestWinStreak:
-            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
-              ? prevStats.longestWinStreak + 1
-              : prevStats.longestWinStreak,
-          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
-          incorrectAnswers: !isCorrect
-            ? prevStats.incorrectAnswers + 1
-            : prevStats.incorrectAnswers,
+            isCorrect && currentWinStreak + 1 > stats.longestWinStreak
+              ? stats.longestWinStreak + 1
+              : stats.longestWinStreak,
+          correctAnswers: isCorrect ? stats.correctAnswers + 1 : stats.correctAnswers,
+          incorrectAnswers: !isCorrect ? stats.incorrectAnswers + 1 : stats.incorrectAnswers,
         };
 
-        dispatch(setStats(stats));
+        dispatch(setStats(nextStats));
       } else {
         const body: MutateUserWordBody = {
           difficulty: UserWordDifficulty.DEFAULT,
@@ -190,42 +271,81 @@ const SprintGame: FC = () => {
 
         await createUserWord({ userId, wordId, body });
 
-        // if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
-
-        const stats: GameStatsShort = {
-          ...prevStats,
-          newWords: prevStats.newWords + 1,
+        const nextStats: GameStatsShort = {
+          ...stats,
+          newWords: stats.newWords + 1,
           longestWinStreak:
-            isCorrect && currentWinStreak + 1 > prevStats.longestWinStreak
-              ? prevStats.longestWinStreak + 1
-              : prevStats.longestWinStreak,
-          correctAnswers: isCorrect ? prevStats.correctAnswers + 1 : prevStats.correctAnswers,
-          incorrectAnswers: !isCorrect
-            ? prevStats.incorrectAnswers + 1
-            : prevStats.incorrectAnswers,
+            isCorrect && currentWinStreak + 1 > stats.longestWinStreak
+              ? stats.longestWinStreak + 1
+              : stats.longestWinStreak,
+          correctAnswers: isCorrect ? stats.correctAnswers + 1 : stats.correctAnswers,
+          incorrectAnswers: !isCorrect ? stats.incorrectAnswers + 1 : stats.incorrectAnswers,
         };
 
-        dispatch(setStats(stats));
+        dispatch(setStats(nextStats));
       }
     }
   };
 
+  // TIMER FUNCTION
+  function stopTimer(): void {
+    clearInterval(timer);
+    setSeconds(0);
+    setGameState('gameResults');
+  }
+
+  function startTimer(): void {
+    if (isStart) return;
+    const countDown = new Date(new Date().getTime() + seconds * 1000).getTime();
+
+    const timerId = setInterval(() => {
+      const now = new Date().getTime();
+      const dist = countDown - now;
+      const sec = Math.floor((dist % (1000 * 60)) / 1000);
+      setSeconds(sec);
+
+      if (dist <= 0) {
+        stopTimer();
+      }
+    }, 100);
+
+    setTimer(timerId);
+  }
+
   // NEXT WORD
   function nextWord(): void {
     setIterator(iterator + 1);
-    setWord(collection[iterator]);
 
-    if (iterator >= 19 && fromTextbook) setIterator(0);
+    if (iterator + 1 <= collection.length) {
+      setWord(collection[iterator]);
 
-    if (iterator === 19 && subCollection && !fromTextbook) {
-      setCollection([...collection, ...subCollection]);
-    }
+      if (Math.round(Math.random())) {
+        const unusedWords = collection.filter((x) => {
+          if (userId) return !usedWordsIds.includes(x._id) && x._id !== collection[iterator]._id;
+          return !usedWordsIds.includes(x.id) && x.id !== collection[iterator].id;
+        });
 
-    if (Math.round(Math.random())) {
-      setWordTranslate(collection[Math.floor(Math.random() * collection.length)].wordTranslate);
+        if (unusedWords.length) {
+          setWordTranslate(
+            unusedWords[Math.floor(Math.random() * unusedWords.length)].wordTranslate,
+          );
+        } else if (subCollection) {
+          setWordTranslate(
+            subCollection[Math.floor(Math.random() * subCollection.length)].wordTranslate,
+          );
+        }
+      } else {
+        setWordTranslate(collection[iterator].wordTranslate);
+      }
     } else {
-      setWordTranslate(collection[iterator].wordTranslate);
+      stopTimer();
     }
+
+    // if (iterator >= 19 && fromTextbook) setIterator(0);
+
+    // if (iterator === 19 && subCollection && !fromTextbook) {
+    //   setCollection([...collection, ...subCollection]);
+    // }
   }
 
   // CHECK ANSWER
@@ -255,26 +375,6 @@ const SprintGame: FC = () => {
     nextWord();
   };
 
-  // TIMER FUNCTION
-  function startTimer(): void {
-    if (isStart) return;
-    const countDown = new Date(new Date().getTime() + seconds * 1000).getTime();
-
-    const timerId = setInterval(() => {
-      const now = new Date().getTime();
-      const dist = countDown - now;
-      const sec = Math.floor((dist % (1000 * 60)) / 1000);
-      setSeconds(sec);
-
-      if (dist <= 0) {
-        clearInterval(timerId);
-        setSeconds(0);
-        // setDisabledBtn(true);
-        setGameState('gameResults');
-      }
-    }, 100);
-  }
-
   // SELECT LEVEL
   const handleClickWordsGroupItem = (groupName: string): void => {
     const selectedGroup: number = wordsGroupNames.indexOf(groupName);
@@ -288,8 +388,8 @@ const SprintGame: FC = () => {
   // START GAME
   const startPlay = async (): Promise<void> => {
     // setDisabledBtn(false);
-    await updateCollection();
-    setIterator(iterator + 1);
+    // await updateCollection();
+    nextWord();
     startTimer();
     setGameState('gameContent');
     dispatch(setSprintCorrectAnswers([]));
@@ -303,6 +403,7 @@ const SprintGame: FC = () => {
     setSeconds(30);
     setIterator(0);
     setAnswerCount(0);
+    setUsedWordsIds([]);
     setCollection([]);
     dispatch(setSprintPage(Math.floor(Math.random() * 30)));
     isStart = !isStart;
