@@ -9,8 +9,8 @@ import { useAppDispatch } from '../../../hooks/redux';
 import { useLoginMutation } from '../../../services/authApi';
 import { setCredentials } from '../../../store/auth/authSlice';
 import type { SignInResponse, SignInUserData } from '../../../interfaces/signIn';
-import s from './SignInForm.module.scss';
 import { isFetchBaseQueryError, isErrorWithMessage } from '../../../shared/queryErrorHelpers';
+import s from './SignInForm.module.scss';
 
 const SignInForm: FC = () => {
   const dispatch = useAppDispatch();
@@ -42,8 +42,11 @@ const SignInForm: FC = () => {
         reset();
         navigate(-1);
       } catch (e) {
-        if (isFetchBaseQueryError(e)) {
-          const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
+        if (isFetchBaseQueryError(e) && 'originalStatus' in e) {
+          const errorMessage =
+            (e.originalStatus === 404 && 'Вы ввели неверную эл. почту') ||
+            (e.originalStatus === 403 && 'Вы ввели неверный пароль') ||
+            e.data;
           setApiError(errorMessage);
         } else if (isErrorWithMessage(e)) {
           setApiError(e.message);
@@ -58,7 +61,7 @@ const SignInForm: FC = () => {
 
   return (
     <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
-      {apiError && <ErrorBanner>API Error: {apiError}</ErrorBanner>}
+      {apiError && <ErrorBanner>{apiError}</ErrorBanner>}
       <input
         type="email"
         placeholder="Эл. почта"

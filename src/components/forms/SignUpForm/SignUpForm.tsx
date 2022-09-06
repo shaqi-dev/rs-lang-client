@@ -69,8 +69,11 @@ const SignUpForm: FC = () => {
           navigate(-1);
         }
       } catch (e) {
-        if (isFetchBaseQueryError(e)) {
-          const errorMessage = 'error' in e ? e.error : JSON.stringify(e.data);
+        console.log(e);
+        if (isFetchBaseQueryError(e) && 'originalStatus' in e) {
+          const errorMessage =
+            (e.originalStatus === 417 && 'Пользователь с данной эл. почтой уже существует') ||
+            e.data;
           setApiError(errorMessage);
         } else if (isErrorWithMessage(e)) {
           setApiError(e.message);
@@ -87,7 +90,7 @@ const SignUpForm: FC = () => {
 
   return (
     <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
-      {apiError && <ErrorBanner>API Error: {apiError}</ErrorBanner>}
+      {apiError && <ErrorBanner>{apiError}</ErrorBanner>}
       <input
         type="email"
         placeholder="Эл. почта"
