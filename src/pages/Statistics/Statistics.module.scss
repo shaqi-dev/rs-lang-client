@@ -1,3 +1,7 @@
+.wrapper {
+  gap: 80px;
+}
+
 .shortStatsSection {
   display: flex;
   flex-direction: column;
@@ -40,5 +44,18 @@
   padding-bottom: 15px;
   font-weight: 500;
   font-size: 2rem;
+  text-align: center;
+}
+
+.longStatsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.chartTitle {
+  padding-bottom: 20px;
+  font-weight: 500;
+  font-size: 2.4rem;
   text-align: center;
 }
