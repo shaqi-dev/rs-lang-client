@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import ContentWrapper from '../../layouts/ContentWrapper';
 import s from './Home.module.scss';
 
@@ -16,9 +17,11 @@ const Home: FC = () => {
       <section className={s.scope}>
         <h2>Возможности приложения</h2>
         <div className={s.scope_textbook}>
-          <div className={s.textbookImage}>
-            <p className={s.textbookText}>Учебник</p>
-          </div>
+          <Link to="/rs-lang-client/textbook" className={s.link}>
+            <div className={s.textbookImage}>
+              <p className={s.textbookText}>Учебник</p>
+            </div>
+          </Link>
           <p className={s.explanation}>
             Учебник включает в себя 3500 слов, y каждого есть: транскрипция, перевод, аудио, пример
             использования в предложении.
@@ -29,14 +32,18 @@ const Home: FC = () => {
             Проверь свою реакцию и возможность быстро принимать решения. Переведи за 30 секунд как
             можно больше слов.
           </p>
-          <div className={s.sprintImage}>
-            <p className={s.sprintText}>Спринт</p>
-          </div>
+          <Link to="/rs-lang-client/games/sprint" className={s.link}>
+            <div className={s.sprintImage}>
+              <p className={s.sprintText}>Спринт</p>
+            </div>
+          </Link>
         </div>
         <div className={s.scope_audiocall}>
-          <div className={s.audiocallImage}>
-            <p className={s.audiocallText}>Аудиозвонок</p>
-          </div>
+          <Link to="/rs-lang-client/games/audiocall" className={s.link}>
+            <div className={s.audiocallImage}>
+              <p className={s.audiocallText}>Аудиозвонок</p>
+            </div>
+          </Link>
           <p className={s.explanation}>
             Испытай свой слух на понимание английских слов. Выбери из предложенных вариантов
             правильный перевод.
