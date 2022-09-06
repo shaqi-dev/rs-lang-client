@@ -13,48 +13,54 @@
   
     &_answer {
       border: none;
-      background-color: rgb(0, 217, 255);
+      background-color: transparent;
       padding: 10px 20px;
-      border-radius: 10px;
+      border-radius: 20px;
+      border: solid 2px #E94560;
       font-size: 16px;
       cursor: pointer;
-  
+      color: #E9E245;
+
       &:hover {
-        background-color: rgb(0, 181, 212);
+        background-color: #E94560;
       }
   
       &:disabled {
         cursor: default;
-        color: black;
       }
   
       &[disabled]:hover {
-        background: rgb(0, 217, 255);
+        background: transparent;
       }
     }
   }
 
   .dontKnowButton {
     border: none;
-    background-color: rgb(245, 248, 46);
-    padding: 10px 30px;
+    background-color: transparent;
+    padding: 12px 32px;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
+    color: #E94560;
+    font-weight: 600;
+    border: 2px solid #E9E245;
 
     &:hover {
-      background-color: rgb(183, 185, 34);
+      background-color: #E9E245;
     }
   }
 }
 
 .correctAnswer {
   background-color: rgb(79, 197, 0);
-  border: none;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 20px;
+  border: none;
   font-size: 16px;
   cursor: pointer;
+  color: #E9E245;
+  font-weight: 600;
 
   &[disabled]:hover {
     background: rgb(79, 197, 0);
@@ -63,15 +69,17 @@
 }
 
 .wrongAnswer {
-  border: none;
+  background-color: rgb(235, 0, 0);;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 20px;
+  border: none;
   font-size: 16px;
   cursor: pointer;
-  background-color: rgb(235, 0, 0);
+  color: #E9E245;
+  font-weight: 600;
 
   &[disabled]:hover {
-    background: rgb(235, 0, 0);
+    background: rgb(235, 0, 0);;
     cursor: auto;
   }
 }

@@ -234,7 +234,7 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           onClick={(): void => handleChooseAnswer(null)}
           className={s.dontKnowButton}
         >
-          Don't know
+          Не знаю
         </button>
       )}
     </div>
