@@ -26,6 +26,7 @@ import { GameStatsShort } from '../../interfaces/statistics';
 
 export interface AudiocallGameProps {
   data: Word[] | AggregatedWord[];
+  fakeData: Word[] | AggregatedWord[];
   tryAgain: () => void;
 }
 
@@ -35,13 +36,14 @@ const playAudio = (word: Word | AggregatedWord): void => {
   audio.play();
 };
 
-const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
+const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => {
   const dispatch = useAppDispatch();
 
   const userId = useAppSelector(selectCurrentUserId);
   const shouldContinue = useAppSelector(selectShouldContinue);
   const stats = useAppSelector(selectStats);
   const currentDate = getCurrentDate();
+  const fullData = [...data, ...fakeData];
 
   const [wordsCounter, setWordsCounter] = useState(0);
   const [currentCorrectAnswer, setCurrentCorrectAnswer] = useState<Word | AggregatedWord>();
@@ -63,7 +65,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     const fakeWords: Word[] | AggregatedWord[] = [];
 
     for (let i = 0; i < 4; ) {
-      const fakeWord = data[Math.floor(Math.random() * data.length)];
+      const fakeWord = fullData[Math.floor(Math.random() * fullData.length)];
       const fakeWordId = userId ? fakeWord._id : fakeWord.id;
 
       if (
@@ -107,11 +109,11 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
   }, []);
 
   useEffect(() => {
-    if (wordsCounter < 10) {
+    if (wordsCounter < 10 && wordsCounter < data.length) {
       generateNextAnswers();
     }
 
-    if (wordsCounter === 10 && userId) {
+    if (userId && (wordsCounter === 10 || wordsCounter === data.length)) {
       const updateStats = async (): Promise<void> => {
         const { data: prevStatsData } = await getStatistics(userId);
 
@@ -145,7 +147,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
 
       updateStats();
     }
-  }, [wordsCounter]);
+  }, [wordsCounter, data.length]);
 
   const handleContinueGame = (): void => {
     dispatch(setDisableAnswers(false));
@@ -159,9 +161,24 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
     setWordsCounter(0);
   };
 
+  // Action BTN
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (shouldContinue && (e.key === ' ' || e.keyCode === 32)) {
+        handleContinueGame();
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentCorrectAnswer, shouldContinue]);
+
   return (
     <div className={s.audiocallGame}>
-      {currentCorrectAnswer && wordsCounter < 10 && (
+      {currentCorrectAnswer && wordsCounter < 10 && wordsCounter < data.length && (
         <>
           <AudiocallMeaning
             imageLink={`${API_BASE}/${currentCorrectAnswer.image}`}
@@ -184,9 +201,9 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, tryAgain }) => {
           Continue
         </button>
       )}
-      {wordsCounter === 10 && (
+      {(wordsCounter === 10 || wordsCounter === data.length) && (
         <>
-          <AudiocallResult />
+          <AudiocallResult correctWordsCount={data.length} />
           <button type="button" onClick={handleTryAgain} className={s.tryAgainButton}>
             Try Again
           </button>

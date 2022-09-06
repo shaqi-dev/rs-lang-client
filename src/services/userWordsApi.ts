@@ -2,7 +2,7 @@ import useAuth from '../hooks/useAuth';
 import type {
   GetUserWordByIdData,
   MutateUserWordData,
-  MutateUserWordBody,
+  MutateUserWordResponse,
   UserWord,
 } from '../interfaces/userWords';
 
@@ -10,32 +10,44 @@ export const userWordsApi = useAuth.injectEndpoints({
   endpoints: (builder) => ({
     getUserWords: builder.query<UserWord[], string | null>({
       query: (userId) => `users/${userId}/words`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((word) => ({ type: 'UserWords' as const, id: word.wordId })),
+              'UserWords',
+            ]
+          : ['UserWords'],
     }),
     getUserWordById: builder.query<UserWord, GetUserWordByIdData>({
       query: ({ userId, wordId }) => `users/${userId}/words/${wordId}`,
+      providesTags: (result) =>
+        result ? [{ type: 'UserWords', id: result.wordId }] : ['UserWords'],
     }),
-    createUserWord: builder.mutation<MutateUserWordBody, MutateUserWordData>({
+    createUserWord: builder.mutation<MutateUserWordResponse, MutateUserWordData>({
       query: ({ userId, wordId, body }) => ({
         url: `users/${userId}/words/${wordId}`,
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'UserWords', id: 'CREATE_WORD' }],
+      invalidatesTags: (result) =>
+        result ? [{ type: 'UserWords', id: result.wordId }] : ['UserWords'],
     }),
-    updateUserWord: builder.mutation<MutateUserWordBody, MutateUserWordData>({
+    updateUserWord: builder.mutation<MutateUserWordResponse, MutateUserWordData>({
       query: ({ userId, wordId, body }) => ({
         url: `users/${userId}/words/${wordId}`,
         method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: 'UserWords', id: 'UPDATE_WORD' }],
+      invalidatesTags: (result) =>
+        result ? [{ type: 'UserWords', id: result.wordId }] : ['UserWords'],
     }),
-    deleteUserWord: builder.mutation<void, GetUserWordByIdData>({
+    deleteUserWord: builder.mutation<MutateUserWordResponse, GetUserWordByIdData>({
       query: ({ userId, wordId }) => ({
         url: `users/${userId}/words/${wordId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'UserWords', id: 'DELETE_WORD' }],
+      invalidatesTags: (result) =>
+        result ? [{ type: 'UserWords', id: result.wordId }] : ['UserWords'],
     }),
   }),
 });

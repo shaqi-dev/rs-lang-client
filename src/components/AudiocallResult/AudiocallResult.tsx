@@ -11,13 +11,18 @@ import {
 import { Word } from '../../interfaces/words';
 import { AudiocallResultPage } from '../../interfaces/audiocallState';
 
-const AudiocallResult: FC = () => {
+interface AudiocallResultProps {
+  correctWordsCount: number;
+}
+
+const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
   const dispatch = useAppDispatch();
   const wrongAnswers = useAppSelector(selectWrongAnswers);
   const correctAnswers = useAppSelector(selectCorrectAnswers);
   const resultPage = useAppSelector(selectResultPage);
+  const pieChartDivider = correctWordsCount < 10 ? correctWordsCount : 10;
 
-  const correctAnswersPers = correctAnswers.length * 10;
+  const correctAnswersPers = (correctAnswers.length / pieChartDivider) * 100;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
     '--border-thickness': '10px',

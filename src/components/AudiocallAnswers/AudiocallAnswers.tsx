@@ -93,8 +93,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
           },
         };
 
-        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
-
         await updateUserWord({ userId, wordId, body });
 
         const stats: GameStatsShort = {
@@ -109,8 +107,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
             ? prevStats.incorrectAnswers + 1
             : prevStats.incorrectAnswers,
         };
-
-        console.log(stats);
 
         dispatch(setStats(stats));
       } else {
@@ -129,8 +125,6 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
         };
 
         await createUserWord({ userId, wordId, body });
-
-        if (isCorrect) console.log(currentWinStreak + 1, prevStats.longestWinStreak);
 
         const stats: GameStatsShort = {
           ...prevStats,
@@ -172,6 +166,38 @@ const AudiocallAnswers: FC<AudiocallAnswersProps> = ({ currentAnswers, currentCo
     dispatch(setDisableAnswers(true));
     dispatch(setShouldContinue(true));
   };
+
+  // Action BTN
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (
+        !disable &&
+        (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4' || e.key === '5')
+      ) {
+        handleChooseAnswer(currentAnswers[+e.key - 1]);
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentChoise, currentAnswers, disable]);
+
+  useEffect(() => {
+    const onKeypress = (e: KeyboardEvent): void => {
+      if (!disable && (e.key === ' ' || e.keyCode === 32)) {
+        handleChooseAnswer(null);
+      }
+    };
+
+    document.addEventListener('keydown', onKeypress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeypress);
+    };
+  }, [currentChoise, currentAnswers]);
 
   return (
     <div className={s.audiocallAnswersContainer}>

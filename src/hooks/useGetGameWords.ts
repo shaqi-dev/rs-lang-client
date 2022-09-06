@@ -52,29 +52,20 @@ const useGetGameWords = ({
               result = [...result, ...currentWordsWithoutLearned];
             }
 
-            if (result.length >= 20) {
+            if (result.length >= 20 || currentPage === 0) {
               setMainWordsWithoutLearned(result.slice(0, 20));
-            } else {
-              fetchPage(currentPage + 1);
+            } else if (currentPage !== 0) {
+              fetchPage(currentPage - 1);
             }
-          } else {
-            fetchPage(currentPage + 1);
+          } else if (currentPage !== 0) {
+            fetchPage(currentPage - 1);
           }
         })();
       };
 
       fetchMainWordsWithoutLearned();
     }
-  }, [
-    group,
-    page,
-    userId,
-    wordsPerPage,
-    textbookView,
-    isGuest,
-    isUserFromNavbar,
-    isUserFromTextbook,
-  ]);
+  }, [group, userId, wordsPerPage, textbookView, isGuest, isUserFromNavbar, isUserFromTextbook]);
 
   const getAggregatedWordsResult = (response: typeof mainWordsResponse): GetGameWordsResponse => {
     const data = response?.data?.[0];
