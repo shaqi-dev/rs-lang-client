@@ -1,46 +1,168 @@
-.wordContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 25px 0 20px;
-}
+.gameContentContainer {
+	display: flex;
+	flex-direction: column;
+	row-gap: 6rem;
+	border: solid 2px rgb(0, 54, 102);
+	border-radius: 16px;
+  padding: 6rem;
 
-.content {
-    display: flex;
-    justify-content: space-evenly;
+	.timerAndCount {
+		display: flex;
+		flex-direction: column;
+		row-gap: 6rem;
 
-    &_timer {
-        font-size: 24px;
-        font-weight: bold;
-        padding: 20px;
-        text-align: center;
-    }
+		.content {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			column-gap: 14rem;
+	
+			&_timer {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				row-gap: 2rem;
+				background-color: rgb(30, 41, 59);
+				padding: 1rem 2rem;
+				border-radius: 10px;
+				width: 110px;
+	
+				.clockIcon {
+					width: 32px;
+					height: 32px;
+					color: white;
+				}
 
-    &_counter {
-        margin-left: 50px;
-        font-size: 18px;
-        padding: 20px;
-        text-align: center;
-    }
-}
+				.clockCount {
+					background-color: yellow;
+					padding: 0.5rem;
+					border-radius: 6px;
+				}
+			}
 
-.falseButton, .trueButton {
-    margin: 0 30px;
-    width: 150px;
-}
+			&_counter {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				row-gap: 2rem;
+				background-color: rgb(30, 41, 59);
+				padding: 1rem 2rem;
+				border-radius: 10px;
+				width: 110px;
 
-.button {
-    &_true, &_false {
-        width: 125px;
-        height: 45px;
-        margin: 0 10px;
-    }
+				.counterText {
+					color: white;
+					height: 32px;
+				}
 
-    &_true {
-        background-color: rgba(58, 156, 44, 0.69);
-    }
+				.counterCount {
+					background-color: yellow;
+					padding: 0.5rem;
+					border-radius: 6px;
+				}
+			}
+		}
 
-    &_false {
-        background-color: rgba(156, 58, 44, 0.69);
-    }
+		.wordContainer {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			column-gap: 2rem;
+
+			.wordLeft {
+				display: flex;
+				justify-content: right;
+				width: 200px;
+			}
+
+			.wordRight {
+				display: flex;
+				justify-content: left;
+				width: 200px;
+			}
+
+			p {
+				padding: 10px 40px;
+				font-weight: 600;
+				font-size: 18px;
+				background-color: rgb(30, 41, 59);
+				width: 200px;
+				text-align: center;
+				color: white;
+				border-radius: 10px;
+			}
+		}
+	}
+
+	.buttonContainer {
+		display: flex;
+		justify-content: center;
+		column-gap: 6rem;
+
+		&_true, &_false {
+			border: solid 2px rgb(30, 41, 59);
+			background-color: transparent;
+			color: rgb(30, 41, 59);
+			font-weight: 800;
+		}
+			
+		&_true {
+			&:hover {
+				background-color: rgb(134, 214, 14);
+			}
+		}
+			
+		&_false {
+			&:hover {
+				background-color: rgb(255, 36, 36);
+			}
+		}
+	}
+
+    // .wordContainer {
+    //     display: flex;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     margin: 25px 0 20px;
+    // }
+    
+    // .content {
+    //     display: flex;
+    //     justify-content: space-evenly;
+    
+    //     &_timer {
+    //         font-size: 24px;
+    //         font-weight: bold;
+    //         padding: 20px;
+    //         text-align: center;
+    //     }
+    
+    //     &_counter {
+    //         margin-left: 50px;
+    //         font-size: 18px;
+    //         padding: 20px;
+    //         text-align: center;
+    //     }
+    // }
+    
+    // .falseButton, .trueButton {
+    //     margin: 0 30px;
+    //     width: 150px;
+    // }
+    
+    // .button {
+    //     &_true, &_false {
+    //         width: 125px;
+    //         height: 45px;
+    //         margin: 0 10px;
+    //     }
+    
+    //     &_true {
+    //         background-color: rgba(58, 156, 44, 0.69);
+    //     }
+    
+    //     &_false {
+    //         background-color: rgba(156, 58, 44, 0.69);
+    //     }
+    // }
 }

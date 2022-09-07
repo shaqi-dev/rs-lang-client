@@ -22,7 +22,9 @@ const SprintGroupItem: FC<PropsWithChildren<SprintGroupItemProps>> = ({
   return (
     <button
       type="button"
-      className={`${s.root} ${active && s.root_active} ${classNamesFromProps}`}
+      className={`${s.groupItem} ${active && s[`${classNamesFromProps}_active`]} ${
+        s[classNamesFromProps]
+      }`}
       onClick={onClick}
     >
       {children}

@@ -1,16 +1,88 @@
 @use '../../styles/variables' as *;
 
-.root {
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
+.groupItem {
   cursor: pointer;
+  box-sizing: border-box;
+  padding: 12px 30px;
+  border: 2.8px solid;
+  border-radius: 8px;
+  border-color: rgb(30, 41, 59);
+}
 
-  &:hover {
-    background: $hover;
+.A1 {
+  // border-color: #05b32a;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #00AA30;
+
+  &:hover, &_active {
+    background-color: #05b32a;
+    color: #FFFFFF;
   }
+}
 
-  &_active {
-    background: $active;
+.A2 {
+  // border-color: #97b60a;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #5CA400;
+
+  &:hover, &_active {
+    background-color: #97b60a;
+    color: #FFFFFF;
+  }
+}
+
+.B1 {
+  // border-color: #cfc505;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #9A940E;
+
+  &:hover, &_active {
+    background-color: #cfc505;
+    color: #FFFFFF;
+  }
+}
+
+.B2 {
+  // border-color: #C59B07;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #A58000;
+
+  &:hover, &_active {
+    background-color: #C59B07;
+    color: #FFFFFF;
+  }
+}
+
+.C1 {
+  // border-color: #C26C06;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #C96D00;
+
+  &:hover, &_active {
+    background-color: #C26C06;
+    color: #FFFFFF;
+  }
+}
+
+.C2 {
+  // border-color: #C52300;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #CF2F0C;
+
+  &:hover, &_active {
+    background-color: #C52300;
+    color: #FFFFFF;
   }
 }

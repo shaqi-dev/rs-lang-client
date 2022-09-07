@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 import Button from '../Button';
 import s from './SprintGame.module.scss';
+import { ReactComponent as ClockIcon } from '../../assets/svg/clock-icon.svg';
 
 interface SprintGameProps {
   seconds: number;
@@ -39,22 +40,30 @@ const SprintGameContent: FC<SprintGameProps> = ({
 
   if (word) {
     return (
-      <>
-        <section>
+      <div className={s.gameContentContainer}>
+        <section className={s.timerAndCount}>
           <div className={s.content}>
-            <span className={s.content_timer}>{seconds}</span>
-            <span className={s.content_counter}>Подряд: {answerCount}</span>
+            <div className={s.content_timer}>
+              <ClockIcon className={s.clockIcon} />
+              <div className={s.clockCount}>{seconds}</div>
+            </div>
+            <span className={s.content_counter}>
+              <p className={s.counterText}>Подряд:</p>
+              <div className={s.counterCount}>{answerCount}</div>
+            </span>
           </div>
           <div className={s.wordContainer}>
-            <h2>{word || 'Слова закончились!'}</h2>
+            <div className={s.wordLeft}>
+              <p>{word || 'Слова закончились!'}</p>
+            </div>
             {word && <span>=</span>}
-            {word && <h2>{translate || 'Перевод'}?</h2>}
+            <div className={s.wordRight}>{word && <p>{translate || 'Перевод'}</p>}</div>
           </div>
         </section>
         {word && (
-          <section className={s.button}>
+          <section className={s.buttonContainer}>
             <Button
-              className={s.button_true}
+              className={s.buttonContainer_true}
               // disabled={disabledBtn}
               type="button"
               onClick={(): void => checkWord(true)}
@@ -62,7 +71,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
               Верно
             </Button>
             <Button
-              className={s.button_false}
+              className={s.buttonContainer_false}
               // disabled={disabledBtn}
               type="button"
               onClick={(): void => checkWord(false)}
@@ -71,7 +80,7 @@ const SprintGameContent: FC<SprintGameProps> = ({
             </Button>
           </section>
         )}
-      </>
+      </div>
     );
   }
 
