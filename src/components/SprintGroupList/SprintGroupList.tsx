@@ -20,6 +20,7 @@ const SprintGroupList: FC<SprintGroupListProps> = ({ onClickItem }) => {
           <SprintGroupItem
             active={activeGroupName === name}
             onClick={(): void => onClickItem(name)}
+            className={name}
           >
             {name}
           </SprintGroupItem>
