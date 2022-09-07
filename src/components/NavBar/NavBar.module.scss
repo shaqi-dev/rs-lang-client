@@ -29,6 +29,12 @@
         border-radius: 9px;
         background-color: rgba(30, 41, 59, 1);
         color: white;
+
+        &:hover {
+          background-color: white;
+          color: rgba(30, 41, 59, 1);
+          border: solid 2px rgba(30, 41, 59, 1);
+        }
       }
 
       .userContainer {

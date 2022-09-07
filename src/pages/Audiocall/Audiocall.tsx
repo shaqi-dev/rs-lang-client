@@ -75,12 +75,20 @@ const Audiocall: FC = () => {
     <ContentWrapper className={s.audiocallWrapper}>
       {!gameStarted && (
         <div className={s.audiocallWrapper_groupsAndButton}>
-          <h1>Audiocall Game</h1>
+          <div className={s.gameDescription}>
+            <h1 className={s.name}>Аудиовызов</h1>
+            <p className={s.description}>
+              Тренирует слуховое восприятие и улучшает понимание речи.
+            </p>
+          </div>
           {!fromTextbook && (
-            <AudiocallGroupList
-              onClickItem={handleClickWordsGroupItem}
-              activeGroup={audiocallGroup}
-            />
+            <div className={s.groupContent}>
+              <p className={s.groupText}>Cложность:</p>
+              <AudiocallGroupList
+                onClickItem={handleClickWordsGroupItem}
+                activeGroup={audiocallGroup}
+              />
+            </div>
           )}
           <button
             className={s.startAudiocallButton}
@@ -88,7 +96,7 @@ const Audiocall: FC = () => {
             onClick={startGame}
             disabled={!data || !data.length}
           >
-            Start Game
+            Начать
           </button>
         </div>
       )}

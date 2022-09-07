@@ -1,42 +1,88 @@
 @use '../../styles/variables' as *;
 
 .groupItem {
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
-  background-color: rgb(0, 230, 31);
+  box-sizing: border-box;
+  padding: 12px 30px;
+  border: 2.8px solid;
+  border-radius: 8px;
+  border-color: rgb(30, 41, 59);
+}
 
-  &:hover {
-    background-color: rgb(0, 167, 22);
-  }
+.A1 {
+  // border-color: #05b32a;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #00AA30;
 
-  &_active {
-    background-color: rgb(10, 112, 23);
-    color: white;
+  &:hover, &_active {
+    background-color: #05b32a;
+    color: #FFFFFF;
   }
 }
 
-// .A1 {
-//   background-color: rgb(95, 255, 47);
-// }
+.A2 {
+  // border-color: #97b60a;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #5CA400;
 
-// .A2 {
-//   background-color: rgb(200, 255, 47);
-// }
+  &:hover, &_active {
+    background-color: #97b60a;
+    color: #FFFFFF;
+  }
+}
 
-// .B1 {
-//   background-color: rgb(250, 246, 41);
-// }
+.B1 {
+  // border-color: #cfc505;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #9A940E;
 
-// .B2 {
-//   background-color: rgb(255, 224, 47);
-// }
+  &:hover, &_active {
+    background-color: #cfc505;
+    color: #FFFFFF;
+  }
+}
 
-// .C1 {
-//   background-color: rgb(255, 182, 47);
-// }
+.B2 {
+  // border-color: #C59B07;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #A58000;
 
-// .C2 {
-//   background-color: rgb(255, 106, 47);
-// }
+  &:hover, &_active {
+    background-color: #C59B07;
+    color: #FFFFFF;
+  }
+}
+
+.C1 {
+  // border-color: #C26C06;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #C96D00;
+
+  &:hover, &_active {
+    background-color: #C26C06;
+    color: #FFFFFF;
+  }
+}
+
+.C2 {
+  // border-color: #C52300;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 18px;
+  color: #CF2F0C;
+
+  &:hover, &_active {
+    background-color: #C52300;
+    color: #FFFFFF;
+  }
+}
