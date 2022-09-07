@@ -3,61 +3,56 @@
 .groupItem {
   cursor: pointer;
   box-sizing: border-box;
-  width: 58px;
-  height: 58px;
-  border: 4px solid;
-  border-radius: 50%;
+  padding: 12px 30px;
+  border: 2.8px solid;
+  border-radius: 8px;
+  border-color: rgb(30, 41, 59);
 }
 
 .A1 {
-  border-color: #07DD36;
+  // border-color: #05b32a;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #00AA30;
 
-  &:hover {
-    background-color: #07DD36;
-    color: #FFFFFF;
-  }
-
-  &_active {
-    background-color: #07DD36;
+  &:hover, &_active {
+    background-color: #05b32a;
     color: #FFFFFF;
   }
 }
 
 .A2 {
-  border-color: #6AB60A;
+  // border-color: #97b60a;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #5CA400;
 
   &:hover, &_active {
-    background-color: #6AB60A;
+    background-color: #97b60a;
     color: #FFFFFF;
   }
 }
 
 .B1 {
-  border-color: #DDD407;
+  // border-color: #cfc505;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #9A940E;
 
   &:hover, &_active {
-    background-color: #DDD407;
+    background-color: #cfc505;
     color: #FFFFFF;
   }
 }
 
 .B2 {
-  border-color: #C59B07;
+  // border-color: #C59B07;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #A58000;
 
   &:hover, &_active {
@@ -67,10 +62,10 @@
 }
 
 .C1 {
-  border-color: #C26C06;
+  // border-color: #C26C06;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #C96D00;
 
   &:hover, &_active {
@@ -80,10 +75,10 @@
 }
 
 .C2 {
-  border-color: #C52300;
+  // border-color: #C52300;
   background-color: transparent;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   color: #CF2F0C;
 
   &:hover, &_active {

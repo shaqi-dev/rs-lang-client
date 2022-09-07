@@ -19,7 +19,8 @@
       border: solid 2px #E94560;
       font-size: 16px;
       cursor: pointer;
-      color: #b9a700;
+      color: rgb(30, 41, 59);
+      font-weight: 600;
 
       &:hover {
         background-color: #E94560;
@@ -32,7 +33,7 @@
   
       &[disabled]:hover {
         background: transparent;
-        color: #b9a700;
+        color: rgb(30, 41, 59);
       }
     }
   }
@@ -44,7 +45,7 @@
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    color: #E94560;
+    color: rgb(30, 41, 59);
     font-weight: 600;
     border: 2px solid #E9E245;
 
@@ -55,17 +56,16 @@
 }
 
 .correctAnswer {
-  background-color: #069325;
+  background-color: #009643;
   padding: 10px 20px;
   border-radius: 20px;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #E9E245;
   font-weight: 600;
+  color: white;
 
   &[disabled]:hover {
-    background: #069325;
     cursor: auto;
   }
 }
@@ -77,11 +77,10 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #E9E245;
   font-weight: 600;
+  color: white;
 
   &[disabled]:hover {
-    background: #C00909;
     cursor: auto;
   }
 }

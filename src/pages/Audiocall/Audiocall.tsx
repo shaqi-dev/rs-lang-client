@@ -83,7 +83,7 @@ const Audiocall: FC = () => {
           </div>
           {!fromTextbook && (
             <div className={s.groupContent}>
-              <p className={s.groupText}>Выбери уровень сложности:</p>
+              <p className={s.groupText}>Cложность:</p>
               <AudiocallGroupList
                 onClickItem={handleClickWordsGroupItem}
                 activeGroup={audiocallGroup}

@@ -2,6 +2,7 @@
 
 .audiocallWrapper {
   display: flex;
+  margin-top: 6rem;
 
   &_groupsAndButton {
     display: flex;
@@ -16,15 +17,15 @@
       row-gap: 4rem;
 
       .name {
-        font-size: 40px;
-        color: #E94560;
+        font-size: 50px;
+        color: rgb(30, 41, 59);
       }
   
       .description {
-        font-size: 22px;
+        font-size: 26px;
         max-width: 500px;
         text-align: center;
-        color: #E94560;
+        color: rgb(30, 41, 59);
       }
     }
 
@@ -35,7 +36,8 @@
       row-gap: 3rem;
 
       .groupText {
-        color: #b9a700;
+        color: rgb(30, 41, 59);
+        font-size: 22px;
       }
     }
 
