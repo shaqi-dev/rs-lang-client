@@ -20,7 +20,7 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({
   load,
 }) => {
   return (
-    <>
+    <div className={s.gameStartContainer}>
       <section className={s.rules}>
         <h2 className={s.gameTitle}>Спринт</h2>
         <p className={s.gameRules}>
@@ -38,11 +38,11 @@ const SprintGameBegin: FC<SprintGameBeginProps> = ({
             type="button"
             onClick={startPlay}
           >
-            Начать!
+            Начать
           </Button>
         )}
       </section>
-    </>
+    </div>
   );
 };
 

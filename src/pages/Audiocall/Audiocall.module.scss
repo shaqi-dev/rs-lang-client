@@ -10,18 +10,50 @@
     align-items: center;
     row-gap: 6rem;
 
+    .gameDescription {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 4rem;
+
+      .name {
+        font-size: 50px;
+        color: rgb(30, 41, 59);
+      }
+  
+      .description {
+        font-size: 24px;
+        max-width: 500px;
+        text-align: center;
+        color: rgb(30, 41, 59);
+      }
+    }
+
+    .groupContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 3rem;
+
+      .groupText {
+        color: rgb(30, 41, 59);
+        font-size: 22px;
+        font-weight: 600;
+      }
+    }
+
     .startAudiocallButton {
-      width: 90px;
-      height: 40px;
+      width: 130px;
+      height: 48px;
       cursor: pointer;
       font-size: 16px;
       font-weight: 500;
       border: none;
-      background-color: rgb(255, 223, 42);
+      background-color: #E0E50F;
       border-radius: 10px;
 
       &:hover {
-        background-color: rgb(216, 189, 38);
+        background-color: rgb(167, 146, 28)
       }
     }
   }

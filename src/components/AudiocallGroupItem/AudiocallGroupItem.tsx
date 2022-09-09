@@ -22,7 +22,9 @@ const AudiocallGroupItem: FC<PropsWithChildren<AudiocallGroupItemProps>> = ({
   return (
     <button
       type="button"
-      className={`${s.groupItem} ${active && s.groupItem_active} ${s[classNamesFromProps]}`}
+      className={`${s.groupItem} ${active && s[`${classNamesFromProps}_active`]} ${
+        s[classNamesFromProps]
+      }`}
       onClick={onClick}
     >
       {children}

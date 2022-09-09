@@ -10,6 +10,7 @@ import {
 } from '../../store/audiocall/audiocallSlice';
 import { Word } from '../../interfaces/words';
 import { AudiocallResultPage } from '../../interfaces/audiocallState';
+import { ReactComponent as DefaultAudioButton } from '../../assets/svg/default-audio-button.svg';
 
 interface AudiocallResultProps {
   correctWordsCount: number;
@@ -70,13 +71,10 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
               {correctAnswers.map((answer: Word) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
-                    <button
-                      type="button"
+                    <DefaultAudioButton
                       onClick={(): void => playAudio(answer.audio)}
                       className={s.listElement_audioButton}
-                    >
-                      Play Audio
-                    </button>
+                    />
                     <p className={s.listElement_word}>
                       {answer.word} - {answer.wordTranslate}
                     </p>
@@ -89,13 +87,10 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
               {wrongAnswers.map((answer) => {
                 return (
                   <li key={answer.word} className={s.listElement}>
-                    <button
-                      type="button"
+                    <DefaultAudioButton
                       onClick={(): void => playAudio(answer.audio)}
                       className={s.listElement_audioButton}
-                    >
-                      Play Audio
-                    </button>
+                    />
                     <p className={s.listElement_word}>
                       {answer.word} - {answer.wordTranslate}
                     </p>
