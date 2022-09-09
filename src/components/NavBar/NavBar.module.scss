@@ -1,0 +1,70 @@
+@use '../../styles/_variables.scss' as *;
+
+.navbar {
+  &_content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    font-size: 18px;
+    
+    .item {
+      list-style: none;
+      cursor: pointer;
+
+      .link {
+        color: black;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        color: rgba(13, 148, 136, 1);
+      }
+
+      .logInButton {
+        width: 90px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background-color: rgba(30, 41, 59, 1);
+        color: white;
+
+        &:hover {
+          background-color: white;
+          color: rgba(30, 41, 59, 1);
+          border: solid 2px rgba(30, 41, 59, 1);
+        }
+      }
+
+      .userContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
+        border-radius: 9px;
+        background-color: rgba(52, 211, 153, 1);
+        height: 50px;
+        width: 180px;
+        cursor: auto;
+      }
+
+      .logOutButton {
+        border: solid rgba(30, 41, 59, 1) 2px;
+        width: 90px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background-color: white;
+        color: rgba(30, 41, 59, 1);
+
+        &:hover {
+          background-color: rgba(13, 148, 136, 1);
+          color: white;
+        }
+      }
+    }
+  }
+}

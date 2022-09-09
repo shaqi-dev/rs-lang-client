@@ -1,0 +1,10 @@
+.list {
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+
+    &_title {
+        text-align: center;
+    }
+}

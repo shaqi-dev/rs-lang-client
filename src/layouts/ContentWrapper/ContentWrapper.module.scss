@@ -1,0 +1,11 @@
+@use '../../styles/variables' as *;
+
+.root {
+  width: 90%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

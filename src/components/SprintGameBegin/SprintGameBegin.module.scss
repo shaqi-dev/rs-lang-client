@@ -1,0 +1,55 @@
+.gameStartContainer {
+	margin-top: 6rem;
+	display: flex;
+	flex-direction: column;
+	row-gap: 6rem;
+
+	.rules {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+		row-gap: 4rem;
+
+		.gameTitle {
+			font-size: 50px;
+			color: rgb(30, 41, 59);
+		}
+	
+		.gameRules {
+			font-size: 24px;
+			max-width: 600px;
+			text-align: center;
+			color: rgb(30, 41, 59);
+		}
+	}
+
+	.selectLevel {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		row-gap: 3rem;
+
+		&_title {
+			color: rgb(30, 41, 59);
+			font-size: 22px;
+			font-weight: 600;
+		}
+
+		&_btn {
+			margin-top: 4rem;
+			width: 130px;
+      height: 48px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      background-color: #E0E50F;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: rgb(167, 146, 28)
+      }
+		}
+	}
+}

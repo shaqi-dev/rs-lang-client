@@ -1,0 +1,55 @@
+@use '../../styles/_variables.scss' as *;
+
+.root {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: $disabled;
+    pointer-events: none;
+  }
+}
+
+.primary {
+  color: $light;
+  background: $primary;
+
+  &:hover {
+    background: $hover;
+  }
+}
+
+.secondary {
+  padding: 9px 15px;
+  border: #28335b 1px solid;
+  color: $primary;
+  background: none;
+
+  &:hover {
+    border: $hover 1px solid;
+    color: $hover;
+  }
+}
+
+.link {
+  font-size: 1.8rem;
+  padding: 0px;
+  border: none;
+  color: $primary;
+  background: none;
+
+  &:hover {
+    color: $hover;
+  }
+}
+
+.active {
+  color: $active;
+}
+
+.inactive {
+  opacity: 0.5;
+}

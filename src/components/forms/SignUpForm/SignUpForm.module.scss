@@ -1,0 +1,37 @@
+@use '../../../styles/variables' as *;
+
+.root {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.textInput {
+  padding: 10px 15px;
+  width: 100%;
+  border-radius: 5px;
+  border: solid 1px #d3d3d3;
+  background-color: #f1f1f1;
+
+  &:disabled {
+    color: $disabled;
+    background-color: $disabled-light;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  &:-webkit-autofill:disabled {
+    -webkit-text-fill-color: $disabled !important;
+    -webkit-box-shadow: 0 0 0 30px $disabled-light inset !important;
+    box-shadow: 0 0 0 30px $disabled-light inset !important;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+}
+
+.validateError {
+  color: $error;
+  font-size: 1.4rem;
+  text-align: center;
+}

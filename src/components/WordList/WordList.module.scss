@@ -1,0 +1,15 @@
+.root {
+  height: fit-content;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  &_learned {
+    outline: 4px #2e9a00 dashed;
+  }
+}
+
+.listItem {
+  list-style: none;
+}

@@ -1,0 +1,43 @@
+@use '../../../styles/_variables.scss' as *;
+
+.root {
+  display: flex;
+  justify-content: center;
+
+  .handler {
+    position: relative;
+  }
+  
+  .list {
+    position: absolute;
+    display: none;
+    padding: 15px 20px;
+    flex-direction: column;
+    background-color: #dedede;
+    border-radius: 8px;
+    gap: 10px;
+    list-style: none;
+    margin-top: 22px;
+  }
+
+  .link {
+    text-decoration: none;
+    color: $primary;
+  }
+
+  &:hover {
+    .handler {
+      color: rgba(13, 148, 136, 1);
+    }
+
+    .list {
+      display: flex;
+    }
+  }
+
+  .item:hover {
+    .link {
+      color: rgba(13, 148, 136, 1);
+    }
+  }
+}
