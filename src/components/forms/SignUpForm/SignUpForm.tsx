@@ -152,7 +152,7 @@ const SignUpForm: FC = () => {
         })}
       />
       <ErrorMessage errors={errors} name="passwordRepeat" render={renderErrorMessage} />
-      <Button type="submit" buttonStyle="primary" disabled={isLoading}>
+      <Button type="submit" buttonStyle="primary" disabled={isLoading} className={s.signUp}>
         Зарегистрироваться
       </Button>
     </form>

@@ -26,3 +26,5 @@ const Auth: FC = () => {
 };
 
 export default Auth;
+
+// 007965, F58634, FFCC29

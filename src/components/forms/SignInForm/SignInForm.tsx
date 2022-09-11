@@ -84,7 +84,7 @@ const SignInForm: FC = () => {
         })}
       />
       <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
-      <Button type="submit" buttonStyle="primary" disabled={isLoading}>
+      <Button type="submit" buttonStyle="primary" disabled={isLoading} className={s.signIn}>
         Войти
       </Button>
     </form>
