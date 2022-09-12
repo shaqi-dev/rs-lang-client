@@ -54,7 +54,12 @@
 
 .userActions {
   display: flex;
-  gap: 5px;
+  justify-content: space-between;
+}
+
+.actionButton {
+  padding: 8px 12px;
+  border-color: #bababa;
 }
 
 .textBlock {

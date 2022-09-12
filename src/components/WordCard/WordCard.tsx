@@ -159,6 +159,8 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
             <Button
               type="button"
               onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveHardWord}
+              buttonStyle="secondary"
+              className={s.actionButton}
             >
               {isMainView && (isHardWord ? 'Удалить из сложных' : 'Добавить в сложные')}
               {isUserView && 'Удалить из сложных'}
@@ -166,6 +168,8 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
             <Button
               type="button"
               onClick={!isLearnedWord ? handleAddLearnedWord : handleRemoveLearnedWord}
+              buttonStyle="secondary"
+              className={s.actionButton}
             >
               {isLearnedWord ? 'Удалить из изученных' : 'Добавить в изученные'}
             </Button>
