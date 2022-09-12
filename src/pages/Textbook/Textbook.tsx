@@ -41,7 +41,9 @@ const Textbook: FC = () => {
   const firstWordOnPage = wordsResponse?.words?.[0] || null;
 
   useEffect(() => {
-    dispatch(setPage(0));
+    return () => {
+      dispatch(setPage(0));
+    };
   }, [dispatch, group, view]);
 
   useEffect(() => {
