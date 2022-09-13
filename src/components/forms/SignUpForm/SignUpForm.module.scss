@@ -3,10 +3,11 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 2rem;
 
   .signUp {
     background-color: #002520;
+    margin-top: 1rem;
     
     &:hover {
       background-color: #00493f;
@@ -41,8 +42,16 @@
   }
 }
 
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
 .validateError {
-  color: $error;
-  font-size: 1.4rem;
-  text-align: center;
+  color: rgb(255, 58, 58);
+  font-size: 13px;
+  position: absolute;
+  bottom: -18px;
+  font-weight: 600;
 }

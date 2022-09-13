@@ -62,28 +62,32 @@ const SignInForm: FC = () => {
   return (
     <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
       {apiError && <ErrorBanner>{apiError}</ErrorBanner>}
-      <input
-        type="email"
-        placeholder="Эл. почта"
-        className={s.textInput}
-        autoComplete="email"
-        disabled={isLoading}
-        {...register('email', {
-          required: EMAIL_REQUIRED,
-        })}
-      />
-      <ErrorMessage errors={errors} name="email" render={renderErrorMessage} />
-      <input
-        type="password"
-        placeholder="Пароль"
-        className={s.textInput}
-        autoComplete="current-password"
-        disabled={isLoading}
-        {...register('password', {
-          required: PASSWORD_REQUIRED,
-        })}
-      />
-      <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
+      <div className={s.inputContainer}>
+        <input
+          type="email"
+          placeholder="Эл. почта"
+          className={s.textInput}
+          autoComplete="email"
+          disabled={isLoading}
+          {...register('email', {
+            required: EMAIL_REQUIRED,
+          })}
+        />
+        <ErrorMessage errors={errors} name="email" render={renderErrorMessage} />
+      </div>
+      <div className={s.inputContainer}>
+        <input
+          type="password"
+          placeholder="Пароль"
+          className={s.textInput}
+          autoComplete="current-password"
+          disabled={isLoading}
+          {...register('password', {
+            required: PASSWORD_REQUIRED,
+          })}
+        />
+        <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
+      </div>
       <Button type="submit" buttonStyle="primary" disabled={isLoading} className={s.signIn}>
         Войти
       </Button>

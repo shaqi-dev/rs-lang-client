@@ -85,73 +85,81 @@ const SignUpForm: FC = () => {
   };
 
   const renderErrorMessage = ({ message }: { message: string }): ReactNode => (
-    <p className={s.validateError}>{message}</p>
+    <p className={s.validateError}>{`${message}!`}</p>
   );
 
   return (
     <form className={s.root} onSubmit={handleSubmit(onSubmit)}>
       {apiError && <ErrorBanner>{apiError}</ErrorBanner>}
-      <input
-        type="email"
-        placeholder="Эл. почта"
-        className={s.textInput}
-        autoComplete="email"
-        disabled={isLoading}
-        {...register('email', {
-          required: EMAIL_REQUIRED,
-          pattern: {
-            value: RE_EMAIL,
-            message: EMAIL_NOT_VALID,
-          },
-        })}
-      />
-      <ErrorMessage errors={errors} name="email" render={renderErrorMessage} />
-      <input
-        type="text"
-        placeholder="Имя"
-        className={s.textInput}
-        autoComplete="name"
-        disabled={isLoading}
-        {...register('name', {
-          required: USERNAME_REQUIRED,
-          pattern: {
-            value: RE_USERNAME,
-            message: USERNAME_TOO_SHORT,
-          },
-        })}
-      />
-      <ErrorMessage errors={errors} name="name" render={renderErrorMessage} />
-      <input
-        type="password"
-        placeholder="Пароль"
-        className={s.textInput}
-        autoComplete="new-password"
-        disabled={isLoading}
-        {...register('password', {
-          required: PASSWORD_REQUIRED,
-          pattern: {
-            value: RE_PASSWORD,
-            message: PASSWORD_TOO_WEAK,
-          },
-        })}
-      />
-      <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
-      <input
-        type="password"
-        placeholder="Повторите пароль"
-        className={s.textInput}
-        autoComplete="new-password"
-        disabled={isLoading}
-        {...register('passwordRepeat', {
-          required: PASSWORD_REPEAT_REQUIRED,
-          pattern: {
-            value: RE_PASSWORD,
-            message: PASSWORD_TOO_WEAK,
-          },
-          validate: (value) => value === passwordRef.current || PASSWORDS_NOT_MATCH,
-        })}
-      />
-      <ErrorMessage errors={errors} name="passwordRepeat" render={renderErrorMessage} />
+      <div className={s.inputContainer}>
+        <input
+          type="email"
+          placeholder="Эл. почта"
+          className={s.textInput}
+          autoComplete="email"
+          disabled={isLoading}
+          {...register('email', {
+            required: EMAIL_REQUIRED,
+            pattern: {
+              value: RE_EMAIL,
+              message: EMAIL_NOT_VALID,
+            },
+          })}
+        />
+        <ErrorMessage errors={errors} name="email" render={renderErrorMessage} />
+      </div>
+      <div className={s.inputContainer}>
+        <input
+          type="text"
+          placeholder="Имя"
+          className={s.textInput}
+          autoComplete="name"
+          disabled={isLoading}
+          {...register('name', {
+            required: USERNAME_REQUIRED,
+            pattern: {
+              value: RE_USERNAME,
+              message: USERNAME_TOO_SHORT,
+            },
+          })}
+        />
+        <ErrorMessage errors={errors} name="name" render={renderErrorMessage} />
+      </div>
+      <div className={s.inputContainer}>
+        <input
+          type="password"
+          placeholder="Пароль"
+          className={s.textInput}
+          autoComplete="new-password"
+          disabled={isLoading}
+          {...register('password', {
+            required: PASSWORD_REQUIRED,
+            pattern: {
+              value: RE_PASSWORD,
+              message: PASSWORD_TOO_WEAK,
+            },
+          })}
+        />
+        <ErrorMessage errors={errors} name="password" render={renderErrorMessage} />
+      </div>
+      <div className={s.inputContainer}>
+        <input
+          type="password"
+          placeholder="Повторите пароль"
+          className={s.textInput}
+          autoComplete="new-password"
+          disabled={isLoading}
+          {...register('passwordRepeat', {
+            required: PASSWORD_REPEAT_REQUIRED,
+            pattern: {
+              value: RE_PASSWORD,
+              message: PASSWORD_TOO_WEAK,
+            },
+            validate: (value) => value === passwordRef.current || PASSWORDS_NOT_MATCH,
+          })}
+        />
+        <ErrorMessage errors={errors} name="passwordRepeat" render={renderErrorMessage} />
+      </div>
       <Button type="submit" buttonStyle="primary" disabled={isLoading} className={s.signUp}>
         Зарегистрироваться
       </Button>
