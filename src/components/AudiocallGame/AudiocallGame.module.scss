@@ -32,15 +32,15 @@
 
 .tryAgainButton {
   border: none;
-    background-color: rgb(58, 255, 101);
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 2rem;
+  background-color: rgb(58, 255, 101);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 2rem;
 
-    &:hover {
-      background-color: rgb(48, 212, 84);
-    }
+  &:hover {
+    background-color: rgb(48, 212, 84);
+  }
 }

@@ -14,9 +14,10 @@ import { ReactComponent as DefaultAudioButton } from '../../assets/svg/default-a
 
 interface AudiocallResultProps {
   correctWordsCount: number;
+  tryAgain: () => void;
 }
 
-const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
+const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain }) => {
   const dispatch = useAppDispatch();
   const wrongAnswers = useAppSelector(selectWrongAnswers);
   const correctAnswers = useAppSelector(selectCorrectAnswers);
@@ -101,6 +102,9 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
           </div>
         )}
       </div>
+      <button type="button" onClick={tryAgain} className={s.tryAgainButton}>
+        Try Again
+      </button>
     </div>
   );
 };

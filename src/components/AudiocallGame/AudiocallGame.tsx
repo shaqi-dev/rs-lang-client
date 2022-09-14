@@ -202,12 +202,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => 
         </div>
       )}
       {(wordsCounter === 10 || wordsCounter === data.length) && (
-        <>
-          <AudiocallResult correctWordsCount={data.length} />
-          <button type="button" onClick={handleTryAgain} className={s.tryAgainButton}>
-            Try Again
-          </button>
-        </>
+        <AudiocallResult correctWordsCount={data.length} tryAgain={handleTryAgain} />
       )}
     </section>
   );
