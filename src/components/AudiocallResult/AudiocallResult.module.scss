@@ -32,6 +32,7 @@
   .resultsBody {
     display: flex;
     justify-content: center;
+    height: 340px;
 
     .pieChartContainer {
       display: flex;
@@ -39,37 +40,12 @@
       justify-content: center;
       text-align: center;
       row-gap: 2rem;
-
-      .pieChart {
-        --w:150px;
-  
-        width:var(--w);
-        aspect-ratio:1;
-        position:relative;
-        display:inline-grid;
-        margin:5px;
-        place-content:center;
-        font-size:25px;
-        font-weight:bold;
-        font-family:sans-serif;
-      }
-  
-      .pieChart:before{
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        inset: 0;
-        background: conic-gradient(var(--main-color) calc(var(--percentage)*1%),#0000 0);
-        -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--border-thickness)),#000 calc(100% - var(--border-thickness)));
-            mask:radial-gradient(farthest-side,#0000 calc(99% - var(--border-thickness)),#000 calc(100% - var(--border-thickness)));
-      }
     }
 
     .audiocallResultWords {
       display: flex;
       flex-direction: column;
       row-gap: 3rem;
-      height: 400px;
       width: 500px;
       overflow-y: auto;
       padding: 20px;
@@ -111,6 +87,44 @@
     }
   }
 }
+
+.pieChart {
+  --w: 200px;
+
+  width: var(--w);
+  aspect-ratio: 1;
+  position: relative;
+  display: inline-grid;
+  place-content: center;
+  margin: 5px;
+  font-size: 34px;
+  font-weight: bold;
+  font-family: sans-serif;
+  color: #1E293B;
+  animation: p 1s .10s both;
+}
+
+.pieChart::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(var(--main-color) calc(var(--percentage)*1%), rgb(196, 204, 209) 0);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--border-thickness)), #000 calc(100% - var(--border-thickness)));
+  mask: radial-gradient(farthest-side, #0000 calc(99% - var(--border-thickness)),#000 calc(100% - var(--border-thickness)));
+}
+
+@property --percentage {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes p {
+  from {--percentage: 0}
+}
+
+// scroll-bar
 
 .audiocallResultWords::-webkit-scrollbar {
   width: 8px;

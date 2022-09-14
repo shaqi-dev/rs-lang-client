@@ -177,9 +177,9 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => 
   }, [currentCorrectAnswer, shouldContinue]);
 
   return (
-    <div className={s.audiocallGame}>
+    <section className={s.audiocallGame}>
       {currentCorrectAnswer && wordsCounter < 10 && wordsCounter < data.length && (
-        <>
+        <div className={s.gameContainer}>
           <AudiocallMeaning
             imageLink={`${API_BASE}/${currentCorrectAnswer.image}`}
             imageAlt={`${currentCorrectAnswer.word}`}
@@ -190,16 +190,16 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => 
             currentAnswers={currentAnswers}
             currentCorrectAnswer={currentCorrectAnswer}
           />
-        </>
-      )}
-      {shouldContinue && (
-        <button
-          type="button"
-          onClick={handleContinueGame}
-          className={s.audiocallGame_continueButton}
-        >
-          Continue
-        </button>
+          {shouldContinue && (
+            <button
+              type="button"
+              onClick={handleContinueGame}
+              className={s.gameContainer_continueButton}
+            >
+              Continue
+            </button>
+          )}
+        </div>
       )}
       {(wordsCounter === 10 || wordsCounter === data.length) && (
         <>
@@ -209,7 +209,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => 
           </button>
         </>
       )}
-    </div>
+    </section>
   );
 };
 

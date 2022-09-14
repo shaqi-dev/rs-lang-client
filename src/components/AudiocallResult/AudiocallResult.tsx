@@ -26,8 +26,8 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
   const correctAnswersPers = (correctAnswers.length / pieChartDivider) * 100;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
-    '--border-thickness': '10px',
-    '--main-color': 'lawngreen',
+    '--border-thickness': '24px',
+    '--main-color': 'rgb(90, 220, 0)',
   } as React.CSSProperties;
 
   const playAudio = (audioLink: string): void => {
