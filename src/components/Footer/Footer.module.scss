@@ -1,40 +1,75 @@
-.root {
-  height: 100px;
+@use '../../styles/_variables.scss' as *;
+
+footer {
+  // height: 48px;
   display: flex;
   align-items: center;
-}
-
-.wrapper {
-  padding: 0;
   flex-direction: row;
-  justify-content: center;
-  gap: 60px;
-}
+  justify-content: space-between;
+  padding: 0px 40px;
+  margin: 2rem 0;
+  color: $primary-font-color;
+  column-gap: 2rem;
 
-.year {
-  width: 40px;
-  font-weight: bold;
-}
+  .schoolInfo {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    row-gap: 1rem;
 
-.rslogo {
-  height: 40px;
-}
+    .rslogo {
+      height: 36px;
+    }
+  }
 
-.developersList {
-  display: flex;
-  gap: 20px;
-}
+  .developersList {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+    column-gap: 2rem;
 
-.developersTitle {
-  font-weight: 500;
-  font-size: 1.4rem;
-}
-
-.developersItem {
-  list-style: none;
-  font-size: 1.4rem;
+    .developersTitle {
+      font-weight: 500;
+      font-size: 1.6rem;
+    }
   
-  a {
-    color: #151515;
+    .developersItem {
+      list-style: none;
+      font-size: 1.4rem;
+      
+      a {
+        color: $primary-font-color;
+      }
+    }
   }
 }
+
+@media (max-width: 560px) {
+  footer {
+    padding: 0px 20px;
+  }
+}
+
+// .root {
+//   height: 100px;
+//   display: flex;
+//   align-items: center;
+// }
+
+// .wrapper {
+//   padding: 0;
+//   flex-direction: row;
+//   justify-content: center;
+//   gap: 60px;
+// }
+
+// .year {
+//   width: 40px;
+//   font-weight: bold;
+// }
+
+// .rslogo {
+//   height: 40px;
+// }
+

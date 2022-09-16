@@ -14,7 +14,7 @@
     flex-direction: column;
     justify-content: center;
     height: 40vw;
-    min-height: 500px;
+    min-height: 400px;
     background: url('../../assets/svg/bird.svg') no-repeat right ;
     background-size: contain;
 
@@ -42,11 +42,11 @@
     &_textbook {
       display: flex;
       column-gap: 2rem;
+      flex-wrap: wrap;
 
       .textbookImage {
         background: url('../../assets/img/textbook.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
@@ -63,7 +63,6 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/textbook.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
@@ -77,11 +76,11 @@
       display: flex;
       column-gap: 2rem;
       justify-content: right;
+      flex-wrap: wrap;
 
       .sprintImage {
         background: url('../../assets/img/sprint.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
@@ -98,7 +97,6 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/sprint.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
@@ -111,11 +109,11 @@
     &_audiocall {
       display: flex;
       column-gap: 2rem;
+      flex-wrap: wrap;
 
       .audiocallImage {
         background: url('../../assets/img/audiocall.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
@@ -132,7 +130,6 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/audiocall.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
@@ -166,7 +163,9 @@
     .teamMembers {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       column-gap: 6rem;
+      row-gap: 6rem;
 
       .member {
         display: flex;
@@ -217,6 +216,26 @@
         .participation {
           text-align: center;
         }
+      }
+    }
+  }
+
+  .scope, .team {
+    h2 {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .wrapper {
+    .scope {
+      &_sprint {
+        flex-direction: column-reverse;
+      }
+
+      .explanation {
+        max-width: 90%;
       }
     }
   }
