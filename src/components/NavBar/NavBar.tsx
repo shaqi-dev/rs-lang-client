@@ -3,17 +3,17 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { logout, selectCurrentUsername } from '../../store/auth/authSlice';
 import Button from '../Button';
-import Dropdown, { DropdownOption } from './Dropdown';
+// import Dropdown, { DropdownOption } from './Dropdown';
 import s from './NavBar.module.scss';
 
 interface NavBarProps {
   userId: string | null;
 }
 
-const gamesOptions: DropdownOption[] = [
-  { name: 'Спринт', link: 'rs-lang-client/games/sprint' },
-  { name: 'Аудиовызов', link: 'rs-lang-client/games/audiocall' },
-];
+// const gamesOptions: DropdownOption[] = [
+//   { name: 'Спринт', link: 'rs-lang-client/games/sprint' },
+//   { name: 'Аудиовызов', link: 'rs-lang-client/games/audiocall' },
+// ];
 
 const NavBar: FC<NavBarProps> = ({ userId }) => {
   const dispatch = useAppDispatch();
@@ -31,8 +31,18 @@ const NavBar: FC<NavBarProps> = ({ userId }) => {
             Учебник
           </Link>
         </li>
-        <li className={`${s.item} ${s.dropdown}`}>
+        {/* <li className={`${s.item} ${s.dropdown}`}>
           <Dropdown options={gamesOptions} />
+        </li> */}
+        <li className={s.item}>
+          <Link to="rs-lang-client/games/audiocall" className={s.link}>
+            Аудиовызов
+          </Link>
+        </li>
+        <li className={s.item}>
+          <Link to="rs-lang-client/games/sprint" className={s.link}>
+            Спринт
+          </Link>
         </li>
         {!!userId && (
           <li className={s.item}>

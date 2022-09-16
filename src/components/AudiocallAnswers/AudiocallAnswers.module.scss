@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .audiocallAnswersContainer {
   display: flex;
   align-items: center;
@@ -19,7 +21,7 @@
       border: solid 2px #E94560;
       font-size: 16px;
       cursor: pointer;
-      color: rgb(30, 41, 59);
+      color: $primary-font-color;
       font-weight: 600;
 
       &:hover {
@@ -33,7 +35,7 @@
   
       &[disabled]:hover {
         background: transparent;
-        color: rgb(30, 41, 59);
+        color: $primary-font-color;
       }
     }
   }
@@ -45,7 +47,7 @@
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    color: rgb(30, 41, 59);
+    color: $primary-font-color;
     font-weight: 600;
     border: 2px solid #E9E245;
 

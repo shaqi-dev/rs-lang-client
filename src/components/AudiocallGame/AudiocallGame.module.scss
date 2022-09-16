@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 .audiocallGame {
   display: flex;
   flex-direction: column;
@@ -19,7 +21,7 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      color: rgb(30, 41, 59);
+      color: $primary-font-color;
       font-weight: 600;
       background-color: #E9E245;
 
