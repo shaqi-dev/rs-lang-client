@@ -46,3 +46,11 @@
     background-color: rgb(48, 212, 84);
   }
 }
+
+@media (max-width: 560px) {
+  .audiocallGame {
+    .gameContainer {
+      padding: 2rem 1rem;
+    }
+  }
+}
