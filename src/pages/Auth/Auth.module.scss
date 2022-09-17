@@ -1,22 +1,26 @@
+@use '../../styles/variables' as *;
+
 .wrapper {
   gap: 2.6rem;
-  background-color: #007965;
-  width: 280px;
+  border: solid 2px;
   border-radius: 12px;
   display: flex;
+  align-items: center;
   flex-direction: column;
+  padding: 2rem 4rem;
+  color: $primary-font-color;
 
   .title {
-    padding-top: 1.6rem;
+    // padding-top: 1.6rem;
     font-size: 3.2rem;
     font-weight: bold;
-    color: #FFCC29;
   }
   
   .switch {
     width: 200px;
-    color: #FFCC29;
-    border-color: #FFCC29;;
+    color: #007965;
+    border-color: #007965;
+    font-size: 17px;
 
     &:hover {
       background-color: #FFCC29;

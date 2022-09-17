@@ -15,12 +15,14 @@ const Auth: FC = () => {
   };
 
   return (
-    <ContentWrapper className={s.wrapper}>
-      <p className={s.title}>Авторизация</p>
-      {form === 'signIn' ? <SignInForm /> : <SignUpForm />}
-      <Button type="button" buttonStyle="secondary" onClick={toggleForm} className={s.switch}>
-        {form === 'signIn' ? 'Зарегистрироваться' : 'Войти'}
-      </Button>
+    <ContentWrapper>
+      <section className={s.wrapper}>
+        <p className={s.title}>Авторизация</p>
+        {form === 'signIn' ? <SignInForm /> : <SignUpForm />}
+        <Button type="button" buttonStyle="secondary" onClick={toggleForm} className={s.switch}>
+          {form === 'signIn' ? 'Зарегистрироваться' : 'Войти'}
+        </Button>
+      </section>
     </ContentWrapper>
   );
 };

@@ -3,9 +3,10 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.4rem;
 
   .signIn {
+    font-size: 17px;
     background-color: #002520;
     margin-top: 1rem;
     
@@ -17,9 +18,11 @@
 
 .textInput {
   padding: 10px 15px;
-  width: 100%;
+  width: 260px;
   border-radius: 5px;
-  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  border: solid 1.6px $primary-font-color;
 
   &:disabled {
     color: $disabled;
@@ -39,6 +42,7 @@
   &:focus {
     outline: 2px solid #FFCC29;
     border-radius: 6px;
+    border: none;
   }
 }
 
@@ -50,8 +54,14 @@
 
 .validateError {
   color: rgb(255, 58, 58);
-  font-size: 13px;
+  font-size: 14px;
   position: absolute;
-  bottom: -18px;
+  bottom: -32px;
   font-weight: 600;
+}
+
+@media (max-width: 370px) {
+  .textInput {
+    width: 220px;
+  }
 }
