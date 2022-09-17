@@ -56,7 +56,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain
           className={s.resultsNav_button}
           onClick={(): void => handleSetResultPage(AudiocallResultPage.WORDS)}
         >
-          Words
+          Слова
         </button>
       </div>
       <div className={s.resultsBody}>
@@ -67,7 +67,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain
           </div>
         ) : (
           <div className={s.audiocallResultWords}>
-            <p className={s.correctWrongText}>{`Correct answers (${correctAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Верные ответы (${correctAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
               {correctAnswers.map((answer: Word) => {
                 return (
@@ -83,7 +83,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain
                 );
               })}
             </ul>
-            <p className={s.correctWrongText}>{`Wrong answers (${wrongAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Неверные ответы (${wrongAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
               {wrongAnswers.map((answer) => {
                 return (
@@ -103,7 +103,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain
         )}
       </div>
       <button type="button" onClick={tryAgain} className={s.tryAgainButton}>
-        Try Again
+        Играть снова
       </button>
     </div>
   );

@@ -56,7 +56,7 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
           className={s.resultsNav_button}
           onClick={(): void => handleSetResultPage(SprintResultPage.WORDS)}
         >
-          Words
+          Слова
         </button>
       </div>
       <div className={s.resultsBody}>
@@ -67,7 +67,7 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
           </div>
         ) : (
           <div className={s.sprintResultWords}>
-            <p className={s.correctWrongText}>{`Correct answers (${correctCollection.length}):`}</p>
+            <p className={s.correctWrongText}>{`Верные ответы (${correctCollection.length}):`}</p>
             <ul className={s.sprintResultWords_list}>
               {correctCollection.map((answer: Word) => {
                 return (
@@ -83,7 +83,7 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
                 );
               })}
             </ul>
-            <p className={s.correctWrongText}>{`Wrong answers (${wrongCollection.length}):`}</p>
+            <p className={s.correctWrongText}>{`Неверные ответы (${wrongCollection.length}):`}</p>
             <ul className={s.sprintResultWords_list}>
               {wrongCollection.map((answer) => {
                 return (
@@ -105,26 +105,6 @@ const SprintGameResult: FC<SprintGameResultContent> = ({
       <Button type="button" onClick={(): void => restart()} className={s.tryAgainButton}>
         Начать сначала
       </Button>
-      {/* <h3 className={s.list_title}>Не знаю {wrongCollection.length}</h3>
-      <ul className={(s.list_correct, s.list)}>
-        {wrongCollection.map((wordItem) => (
-          <li key={Math.random() ** 2}>
-            {wordItem.word} - {wordItem.wordTranslate}
-          </li>
-        ))}
-      </ul>
-      <hr />
-      <h3 className={s.list_title}>Знаю {correctCollection.length}</h3>
-      <ul className={(s.list_correct, s.list)}>
-        {correctCollection.map((wordItem) => (
-          <li key={Math.random() ** 3}>
-            {wordItem.word} - {wordItem.wordTranslate}
-          </li>
-        ))}
-      </ul>
-      <Button type="button" onClick={(): void => restart()}>
-        Начать сначала
-      </Button> */}
     </div>
   );
 };

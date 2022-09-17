@@ -196,7 +196,7 @@ const AudiocallGame: FC<AudiocallGameProps> = ({ data, fakeData, tryAgain }) => 
               onClick={handleContinueGame}
               className={s.gameContainer_continueButton}
             >
-              Continue
+              Продолжить
             </button>
           )}
         </div>
