@@ -1,48 +1,75 @@
 @use '../../styles/variables' as *;
 
 .wrapper {
-  gap: 40px;
-}
-
-.sectionTitle {
-  font-weight: bold;
-  font-size: 3.2rem;
-}
-
-.viewSection {
-  width: 100%;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  justify-content: left;
+  row-gap: 4rem;
+  color: $primary-font-color;
 
-  &_button {
-    font-size: 3.2rem;
+  .viewSection {
+    display: flex;
+    column-gap: 2rem;
+    border: solid 2px;
+    padding: 1rem 2rem;
+    width: fit-content;
+    border-radius: 10px;
+
+    button {
+      font-size: 26px;
+    }
+  }
+
+  .groupsSection {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    font-size: 20px;
+    // padding: 0 2rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .wordsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .sectionTitle {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .wordsBody {
+      display: flex;
+      justify-content: space-between;
+      row-gap: 4rem;
+    }
+  }
+
+  .gamesSection {
+    flex-direction: column;
+
+    .sectionTitle {
+      font-size: 24px;
+      margin: 0;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .gamesBody {
+      display: flex;
+      justify-content: center;
+      gap: 2em;
+    }
   }
 }
 
-.groupsSection, .wordsSection, .gamesSection {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.groupsSection {
-  align-self: baseline;
-}
-
-.gamesSection {
-  width: 100%;
-}
-
-.wordsBody, .gamesBody {
-  display: flex;
-  gap: 40px;
-}
-
-.wordsBody {
-  justify-content: space-between;
-}
-
-.gamesBody {
-  justify-content: center;
+@media (max-width: 700px) {
+  .wordsBody {
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+  }
 }
