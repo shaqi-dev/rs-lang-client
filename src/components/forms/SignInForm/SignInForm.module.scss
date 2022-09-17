@@ -3,15 +3,26 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2.4rem;
+
+  .signIn {
+    font-size: 17px;
+    background-color: #002520;
+    margin-top: 1rem;
+    
+    &:hover {
+      background-color: #00493f;
+    }
+  }
 }
 
 .textInput {
   padding: 10px 15px;
-  width: 100%;
+  width: 260px;
   border-radius: 5px;
-  border: solid 1px #d3d3d3;
-  background-color: #f1f1f1;
+  font-size: 14px;
+  font-weight: 500;
+  border: solid 1.6px $primary-font-color;
 
   &:disabled {
     color: $disabled;
@@ -27,10 +38,30 @@
     opacity: 0.8;
     pointer-events: none;
   }
+
+  &:focus {
+    outline: 2px solid #FFCC29;
+    border-radius: 6px;
+    border: none;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .validateError {
-  color: $error;
-  font-size: 1.4rem;
-  text-align: center;
+  color: rgb(255, 58, 58);
+  font-size: 14px;
+  position: absolute;
+  bottom: -32px;
+  font-weight: 600;
+}
+
+@media (max-width: 370px) {
+  .textInput {
+    width: 220px;
+  }
 }

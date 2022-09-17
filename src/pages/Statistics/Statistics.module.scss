@@ -1,61 +1,99 @@
+@use '../../styles/variables' as *;
+
 .wrapper {
-  gap: 80px;
+  gap: 8rem;
+  color: $primary-font-color;
 }
 
 .shortStatsSection {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-}
+  align-items: center;
+  gap: 3rem;
 
-.sectionTitle {
-  font-weight: 500;
-  font-size: 3.2rem;
-  text-align: center;
-}
+  .sectionTitle {
+    font-size: 24px;
+    font-weight: 500;
+  }
 
-.shortStatsTitle {
-  padding-bottom: 20px;
-  font-weight: 500;
-  font-size: 2.4rem;
-  text-align: center;
-}
+  .wordsStatsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // padding: 1rem;
+    gap: 1rem;
 
-.wordsStats {
-  padding: 20px 25px;
-  display: flex;
-  gap: 20px;
-  background: #ffe079;
-  border-radius: 8px;
-}
+    .shortStatsTitle {
+      font-size: 19px;
+      border-bottom: solid rgb(0, 218, 116);
+    }
 
-.gamesStats {
-  display: flex;
-  gap: 40px;
-}
+    .wordsStats {
+      display: flex;
+      flex-direction: column;
+      align-items: left;
+      padding: 1rem;
+      border: solid 2px;
+      border-radius: 10px;
+    }
+  }
 
-.gamesStatsItem {
-  padding: 20px 25px;
-  background: #d9ff86;
-  border-radius: 8px;
-}
+  .gamesStatsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 
-.gameTitle {
-  padding-bottom: 15px;
-  font-weight: 500;
-  font-size: 2rem;
-  text-align: center;
+    .shortStatsTitle {
+      font-size: 19px;
+      border-bottom: solid rgb(0, 218, 116);
+    }
+
+    .gamesStats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+
+      .gamesStatsItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: solid 2px;
+        border-radius: 10px;
+        padding: 1rem;
+
+        .gameTitle {
+          border-bottom: 2px solid $primary-font-color;
+          width: 100%;
+          text-align: center;
+          padding-bottom: 0.6rem;
+        }
+      }
+    }
+  }
 }
 
 .longStatsSection {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-}
+  align-items: center;
+  gap: 2rem;
 
-.chartTitle {
-  padding-bottom: 20px;
-  font-weight: 500;
-  font-size: 2.4rem;
-  text-align: center;
+  .sectionTitle {
+    font-size: 24px;
+    font-weight: 500;
+    flex-wrap: wrap;
+  }
+
+  .chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .chartTitle {
+      font-size: 18px;
+      border-bottom: solid rgb(0, 156, 218);
+    }
+  }
 }

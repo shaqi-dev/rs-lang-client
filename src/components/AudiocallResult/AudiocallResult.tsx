@@ -14,9 +14,10 @@ import { ReactComponent as DefaultAudioButton } from '../../assets/svg/default-a
 
 interface AudiocallResultProps {
   correctWordsCount: number;
+  tryAgain: () => void;
 }
 
-const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
+const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount, tryAgain }) => {
   const dispatch = useAppDispatch();
   const wrongAnswers = useAppSelector(selectWrongAnswers);
   const correctAnswers = useAppSelector(selectCorrectAnswers);
@@ -26,8 +27,8 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
   const correctAnswersPers = (correctAnswers.length / pieChartDivider) * 100;
   const pieChartStyle = {
     '--percentage': correctAnswersPers,
-    '--border-thickness': '10px',
-    '--main-color': 'lawngreen',
+    '--border-thickness': '24px',
+    '--main-color': 'rgb(90, 220, 0)',
   } as React.CSSProperties;
 
   const playAudio = (audioLink: string): void => {
@@ -55,7 +56,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
           className={s.resultsNav_button}
           onClick={(): void => handleSetResultPage(AudiocallResultPage.WORDS)}
         >
-          Words
+          Слова
         </button>
       </div>
       <div className={s.resultsBody}>
@@ -66,7 +67,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
           </div>
         ) : (
           <div className={s.audiocallResultWords}>
-            <p className={s.correctWrongText}>{`Correct answers (${correctAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Верные ответы (${correctAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
               {correctAnswers.map((answer: Word) => {
                 return (
@@ -82,7 +83,7 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
                 );
               })}
             </ul>
-            <p className={s.correctWrongText}>{`Wrong answers (${wrongAnswers.length}):`}</p>
+            <p className={s.correctWrongText}>{`Неверные ответы (${wrongAnswers.length}):`}</p>
             <ul className={s.audiocallResultWords_list}>
               {wrongAnswers.map((answer) => {
                 return (
@@ -101,6 +102,9 @@ const AudiocallResult: FC<AudiocallResultProps> = ({ correctWordsCount }) => {
           </div>
         )}
       </div>
+      <button type="button" onClick={tryAgain} className={s.tryAgainButton}>
+        Играть снова
+      </button>
     </div>
   );
 };

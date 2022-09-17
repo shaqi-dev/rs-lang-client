@@ -76,79 +76,81 @@ const Textbook: FC = () => {
   };
 
   return (
-    <ContentWrapper className={s.wrapper}>
-      <section className={s.viewSection}>
-        <Button
-          type="button"
-          buttonStyle="link"
-          inactive={view === 'user'}
-          className={s.viewSection_button}
-          onClick={handleClickTextbook}
-        >
-          Учебник
-        </Button>
-        {userId && (
+    <ContentWrapper>
+      <section className={s.wrapper}>
+        <section className={s.viewSection}>
           <Button
             type="button"
             buttonStyle="link"
-            inactive={view === 'main'}
+            inactive={view === 'user'}
             className={s.viewSection_button}
-            onClick={handleClickVocabulary}
+            onClick={handleClickTextbook}
           >
-            Сложные слова
+            Учебник
           </Button>
-        )}
-      </section>
-      <section className={s.groupsSection}>
-        <p className={s.sectionTitle}>Уровень сложности</p>
-        <WordsGroupList onClickItem={handleClickWordsGroupItem} />
-      </section>
-      <section className={s.wordsSection}>
-        <p className={s.sectionTitle}>Слова</p>
-        {!wordsResponse?.words && <p>Loading...</p>}
-        <div className={s.wordsBody}>
-          <WordList wordsResponse={wordsResponse} activeWord={word} />
-          {word && <WordCard word={word} view={view} userId={userId} />}
-        </div>
-        <Paginate
-          pageCount={maxPages}
-          forcePage={page}
-          onPageChage={handleChangePage}
-          learned={wordsResponse.isLearned}
-        />
-      </section>
-      <section className={s.gamesSection}>
-        <p className={s.sectionTitle}>Игры</p>
-        <div className={s.gamesBody}>
-          <Button
-            type="button"
-            buttonStyle="primary"
-            onClick={(): void =>
-              navigate('../rs-lang-client/games/sprint', {
-                state: {
-                  fromTextbook: true,
-                },
-              })
-            }
-            disabled={wordsResponse.isLearned}
-          >
-            Спринт
-          </Button>
-          <Button
-            type="button"
-            buttonStyle="primary"
-            onClick={(): void =>
-              navigate('../rs-lang-client/games/audiocall', {
-                state: {
-                  fromTextbook: true,
-                },
-              })
-            }
-            disabled={wordsResponse.isLearned}
-          >
-            Аудиовызов
-          </Button>
-        </div>
+          {userId && (
+            <Button
+              type="button"
+              buttonStyle="link"
+              inactive={view === 'main'}
+              className={s.viewSection_button}
+              onClick={handleClickVocabulary}
+            >
+              Сложные слова
+            </Button>
+          )}
+        </section>
+        <section className={s.groupsSection}>
+          <p className={s.sectionTitle}>Уровень сложности:</p>
+          <WordsGroupList onClickItem={handleClickWordsGroupItem} />
+        </section>
+        <section className={s.wordsSection}>
+          <p className={s.sectionTitle}>Слова</p>
+          {!wordsResponse?.words && <p>Loading...</p>}
+          <div className={s.wordsBody}>
+            <WordList wordsResponse={wordsResponse} activeWord={word} />
+            {word && <WordCard word={word} view={view} userId={userId} />}
+          </div>
+          <Paginate
+            pageCount={maxPages}
+            forcePage={page}
+            onPageChage={handleChangePage}
+            learned={wordsResponse.isLearned}
+          />
+        </section>
+        <section className={s.gamesSection}>
+          <p className={s.sectionTitle}>Игры</p>
+          <div className={s.gamesBody}>
+            <Button
+              type="button"
+              buttonStyle="primary"
+              onClick={(): void =>
+                navigate('../rs-lang-client/games/sprint', {
+                  state: {
+                    fromTextbook: true,
+                  },
+                })
+              }
+              disabled={wordsResponse.isLearned}
+            >
+              Спринт
+            </Button>
+            <Button
+              type="button"
+              buttonStyle="primary"
+              onClick={(): void =>
+                navigate('../rs-lang-client/games/audiocall', {
+                  state: {
+                    fromTextbook: true,
+                  },
+                })
+              }
+              disabled={wordsResponse.isLearned}
+            >
+              Аудиовызов
+            </Button>
+          </div>
+        </section>
       </section>
     </ContentWrapper>
   );

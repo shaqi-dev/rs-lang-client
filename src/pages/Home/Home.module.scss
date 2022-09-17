@@ -1,8 +1,10 @@
+@use '../../styles/variables' as *;
+
 .wrapper {
   display: flex;
   flex-direction: column;
   row-gap: 6rem;
-
+  color: $primary-font-color;
   section {
     width: 100%;
   }
@@ -12,21 +14,21 @@
     flex-direction: column;
     justify-content: center;
     height: 40vw;
-    min-height: 500px;
+    min-height: 400px;
     background: url('../../assets/svg/bird.svg') no-repeat right ;
     background-size: contain;
 
     &_name {
       font-weight: 700;
       font-size: 44px;
-      color: #164E63;
+      color: $description-font-color;
       margin-bottom: 2rem;
     }
 
     &_descr {
       font-weight: 500;
       font-size: 22px;
-      color: #164E63;
+      color: $description-font-color;
       line-height: 3rem;
     }
   }
@@ -40,16 +42,17 @@
     &_textbook {
       display: flex;
       column-gap: 2rem;
+      flex-wrap: wrap;
 
       .textbookImage {
         background: url('../../assets/img/textbook.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
         padding: 2rem;
         border: solid 4px rgb(30, 41, 59);
+        transition: transform .2s;
 
         .textbookText {
           color: rgb(221, 214, 18);
@@ -60,11 +63,11 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/textbook.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
           cursor: pointer;
+          transform: scale(1.1);
         }
       }
     }
@@ -73,16 +76,17 @@
       display: flex;
       column-gap: 2rem;
       justify-content: right;
+      flex-wrap: wrap;
 
       .sprintImage {
         background: url('../../assets/img/sprint.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
         padding: 2rem;
         border: solid 4px rgb(30, 41, 59);
+        transition: transform .2s;
 
         .sprintText {
           color: rgb(221, 214, 18);
@@ -93,11 +97,11 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/sprint.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
           cursor: pointer;
+          transform: scale(1.1);
         }
       }
     }
@@ -105,16 +109,17 @@
     &_audiocall {
       display: flex;
       column-gap: 2rem;
+      flex-wrap: wrap;
 
       .audiocallImage {
         background: url('../../assets/img/audiocall.jpg') no-repeat center;
         background-size: contain;
-        width: 20px;
         height: 200px;
         width: 280px;
         border-radius: 10px;
         padding: 2rem;
         border: solid 4px rgb(30, 41, 59);
+        transition: transform .2s;
 
         .audiocallText {
           color: rgb(221, 214, 18);
@@ -125,11 +130,11 @@
         &:hover {
           background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../../assets/img/audiocall.jpg') no-repeat center;
           background-size: contain;
-          width: 20px;
           height: 200px;
           width: 280px;
           border-radius: 10px;
           cursor: pointer;
+          transform: scale(1.1);
         }
       }
     }
@@ -158,7 +163,9 @@
     .teamMembers {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       column-gap: 6rem;
+      row-gap: 6rem;
 
       .member {
         display: flex;
@@ -209,6 +216,26 @@
         .participation {
           text-align: center;
         }
+      }
+    }
+  }
+
+  .scope, .team {
+    h2 {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .wrapper {
+    .scope {
+      &_sprint {
+        flex-direction: column-reverse;
+      }
+
+      .explanation {
+        max-width: 90%;
       }
     }
   }

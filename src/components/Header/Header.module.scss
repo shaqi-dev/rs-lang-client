@@ -1,13 +1,26 @@
-body {
-  padding: 20px 48px;
-}
-
 .header {
   height: 48px;
   display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  // max-width: 1186px;
   padding: 0px 40px;
+  margin-top: 2rem;
+}
+
+.burgerIcon {
+  cursor: pointer;
+  width: 40px;
+  padding: 0.4rem;
+
+  &:hover {
+    background-color: rgb(202, 221, 214);
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 560px) {
+  .header {
+    padding: 0px 20px;
+  }
 }

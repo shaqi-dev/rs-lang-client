@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
-import Button from '../Button';
 import useAudio from '../../hooks/useAudio';
 import { useAppDispatch } from '../../hooks/redux';
 import { setWord } from '../../store/textbook/textbookSlice';
@@ -156,19 +155,21 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
         </div>
         {userId && (
           <div className={s.userActions}>
-            <Button
+            <button
               type="button"
               onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveHardWord}
+              className={s.addToHard}
             >
               {isMainView && (isHardWord ? 'Удалить из сложных' : 'Добавить в сложные')}
               {isUserView && 'Удалить из сложных'}
-            </Button>
-            <Button
+            </button>
+            <button
               type="button"
               onClick={!isLearnedWord ? handleAddLearnedWord : handleRemoveLearnedWord}
+              className={s.addToKnown}
             >
               {isLearnedWord ? 'Удалить из изученных' : 'Добавить в изученные'}
-            </Button>
+            </button>
           </div>
         )}
         <div className={s.textBlock}>
