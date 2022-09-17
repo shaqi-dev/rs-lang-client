@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { BarChart, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Area } from 'recharts';
 import { timeFormatter } from '../../shared/timeFormatter';
 import { ChartDataItem } from '../../interfaces/ChartDataItem';
@@ -9,11 +9,31 @@ interface ChartProps {
 }
 
 const Chart: FC<ChartProps> = ({ type, chartData }) => {
+  const [chartWidth, setChartWidth] = useState(600);
+  const [chartHeight, setChartHeight] = useState(400);
+
+  useEffect(() => {
+    if (window.innerWidth <= 650) {
+      setChartWidth(300);
+      setChartHeight(200);
+    }
+  }, []);
+
   if (!chartData.length) return <p>Not enough chart data</p>;
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 650) {
+      setChartWidth(300);
+      setChartHeight(200);
+    } else {
+      setChartWidth(600);
+      setChartHeight(400);
+    }
+  });
 
   if (type === 'bar')
     return (
-      <BarChart width={600} height={400} data={chartData}>
+      <BarChart width={chartWidth} height={chartHeight} data={chartData}>
         <defs>
           <linearGradient id="colorSprint" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
@@ -34,7 +54,7 @@ const Chart: FC<ChartProps> = ({ type, chartData }) => {
     );
 
   return (
-    <AreaChart width={600} height={400} data={chartData}>
+    <AreaChart width={chartWidth} height={chartHeight} data={chartData}>
       <defs>
         <linearGradient id="colorSprint" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />

@@ -22,11 +22,11 @@ const Header: FC = () => {
       <Offcanvas show={show} onHide={handleClose} responsive="lg" right="true">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
-            <Logo />
+            <Logo closeNav={handleClose} />
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <NavBar userId={userId} />
+          <NavBar userId={userId} closeNav={handleClose} />
         </Offcanvas.Body>
       </Offcanvas>
     </header>
