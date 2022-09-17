@@ -68,6 +68,7 @@
 			justify-content: center;
 			align-items: center;
 			column-gap: 2rem;
+			flex-wrap: wrap;
 
 			.wordLeft {
 				display: flex;
@@ -81,15 +82,20 @@
 				width: 200px;
 			}
 
+			.equalSign {
+				font-size: 24px;
+			}
+
 			p {
 				padding: 10px 40px;
 				font-weight: 600;
 				font-size: 18px;
 				background-color: rgb(30, 41, 59);
-				width: 200px;
+				width: 100%;
 				text-align: center;
 				color: white;
 				border-radius: 10px;
+				margin: 0;
 			}
 		}
 	}
@@ -104,6 +110,9 @@
 			background-color: transparent;
 			color: rgb(30, 41, 59);
 			font-weight: 800;
+			height: 46px;
+			width: 100px;
+			border-radius: 10px;
 		}
 			
 		&_true {
@@ -118,51 +127,27 @@
 			}
 		}
 	}
-
-    // .wordContainer {
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     margin: 25px 0 20px;
-    // }
-    
-    // .content {
-    //     display: flex;
-    //     justify-content: space-evenly;
-    
-    //     &_timer {
-    //         font-size: 24px;
-    //         font-weight: bold;
-    //         padding: 20px;
-    //         text-align: center;
-    //     }
-    
-    //     &_counter {
-    //         margin-left: 50px;
-    //         font-size: 18px;
-    //         padding: 20px;
-    //         text-align: center;
-    //     }
-    // }
-    
-    // .falseButton, .trueButton {
-    //     margin: 0 30px;
-    //     width: 150px;
-    // }
-    
-    // .button {
-    //     &_true, &_false {
-    //         width: 125px;
-    //         height: 45px;
-    //         margin: 0 10px;
-    //     }
-    
-    //     &_true {
-    //         background-color: rgba(58, 156, 44, 0.69);
-    //     }
-    
-    //     &_false {
-    //         background-color: rgba(156, 58, 44, 0.69);
-    //     }
-    // }
 }
+
+@media (max-width: 642px) {
+	.gameContentContainer {
+		.timerAndCount {
+			.wordContainer {
+				flex-direction: column;
+			}
+		}
+	}
+}
+
+@media (max-width: 560px) {
+  .gameContentContainer {
+		padding: 4rem 2rem;
+    .timerAndCount {
+			.content {
+				column-gap: 0;
+				justify-content: space-between;
+			}
+		}
+  }
+}
+
