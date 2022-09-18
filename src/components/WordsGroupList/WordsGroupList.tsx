@@ -17,7 +17,11 @@ const WordsGroupList: FC<WordsGroupListProps> = ({ onClickItem }) => {
     <ul className={s.root}>
       {wordsGroupNames.map((name) => (
         <li className={s.listItem} key={name}>
-          <WordsGroupItem active={activeGroupName === name} onClick={(): void => onClickItem(name)}>
+          <WordsGroupItem
+            className={name}
+            active={activeGroupName === name}
+            onClick={(): void => onClickItem(name)}
+          >
             {name}
           </WordsGroupItem>
         </li>

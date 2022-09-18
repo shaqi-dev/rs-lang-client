@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import Button from '../Button';
 import s from './SprintGame.module.scss';
 import { ReactComponent as ClockIcon } from '../../assets/svg/clock-icon.svg';
 
@@ -56,28 +55,28 @@ const SprintGameContent: FC<SprintGameProps> = ({
             <div className={s.wordLeft}>
               <p>{word || 'Слова закончились!'}</p>
             </div>
-            {word && <span>=</span>}
+            {word && <span className={s.equalSign}>=</span>}
             <div className={s.wordRight}>{word && <p>{translate || 'Перевод'}</p>}</div>
           </div>
         </section>
         {word && (
           <section className={s.buttonContainer}>
-            <Button
+            <button
               className={s.buttonContainer_true}
               // disabled={disabledBtn}
               type="button"
               onClick={(): void => checkWord(true)}
             >
               Верно
-            </Button>
-            <Button
+            </button>
+            <button
               className={s.buttonContainer_false}
               // disabled={disabledBtn}
               type="button"
               onClick={(): void => checkWord(false)}
             >
               Неверно
-            </Button>
+            </button>
           </section>
         )}
       </div>

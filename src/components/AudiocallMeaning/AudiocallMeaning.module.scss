@@ -3,9 +3,13 @@
   flex-direction: column;
   row-gap: 2rem;
   justify-content: center;
+  align-items: center;
+  width: 64vw;
 
   &_picture {
     border-radius: 8px;
+    width: 100%;
+    max-width: 380px;
   }
 
   &_wordAndAudio {

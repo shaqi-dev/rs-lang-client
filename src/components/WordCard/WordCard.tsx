@@ -211,23 +211,21 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
         </div>
         {userId && (
           <div className={s.userActions}>
-            <Button
+            <button
               type="button"
               onClick={isMainView && !isHardWord ? handleAddHardWord : handleRemoveHardWord}
-              buttonStyle="secondary"
-              className={s.actionButton}
+              className={s.addToHard}
             >
               {isMainView && (isHardWord ? 'Удалить из сложных' : 'Добавить в сложные')}
               {isUserView && 'Удалить из сложных'}
-            </Button>
-            <Button
+            </button>
+            <button
               type="button"
               onClick={!isLearnedWord ? handleAddLearnedWord : handleRemoveLearnedWord}
-              buttonStyle="secondary"
-              className={s.actionButton}
+              className={s.addToKnown}
             >
               {isLearnedWord ? 'Удалить из изученных' : 'Добавить в изученные'}
-            </Button>
+            </button>
           </div>
         )}
         <div className={s.textBlock}>

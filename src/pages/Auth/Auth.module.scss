@@ -1,13 +1,30 @@
+@use '../../styles/variables' as *;
+
 .wrapper {
-  gap: 10px;
-}
+  gap: 2.6rem;
+  border: solid 2px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  color: $primary-font-color;
 
-.title {
-  padding: 20px 0;
-  font-size: 3.2rem;
-  font-weight: bold;
-}
+  .title {
+    // padding-top: 1.6rem;
+    font-size: 3.2rem;
+    font-weight: bold;
+  }
+  
+  .switch {
+    width: 200px;
+    color: #007965;
+    border-color: #007965;
+    font-size: 17px;
 
-.switch {
-  width: 200px;
+    &:hover {
+      background-color: #FFCC29;
+      color: #007965;
+    }
+  }
 }

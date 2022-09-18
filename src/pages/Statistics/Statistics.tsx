@@ -94,7 +94,7 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
     <ContentWrapper className={s.wrapper}>
       <section className={s.shortStatsSection}>
         <p className={s.sectionTitle}>Статистика за сегодня</p>
-        <div>
+        <div className={s.wordsStatsSection}>
           <p className={s.shortStatsTitle}>Статистика по словам</p>
           <div className={s.wordsStats}>
             <p>Новые слова: {newWordsTotal}</p>
@@ -102,31 +102,35 @@ const Statistics: FC<StatisticsProps> = ({ userId }) => {
             <p>Процент правильных ответов: {winPercentTotal()}%</p>
           </div>
         </div>
-        <div>
+        <div className={s.gamesStatsSection}>
           <p className={s.shortStatsTitle}>Статистика по мини-играм</p>
           <div className={s.gamesStats}>
             <div className={s.gamesStatsItem}>
               <p className={s.gameTitle}>Спринт</p>
-              <p>Новые слова: {newWordsSrint}</p>
-              <p>Процент правильных ответов: {getGameWinrate(sprintToday)}%</p>
-              <p>Самая длинная серия побед: {winStreakSprint}</p>
+              <div className={s.gamesStatsItemInfo}>
+                <p>Новые слова: {newWordsSrint}</p>
+                <p>Процент правильных ответов: {getGameWinrate(sprintToday)}%</p>
+                <p>Самая длинная серия побед: {winStreakSprint}</p>
+              </div>
             </div>
             <div className={s.gamesStatsItem}>
               <p className={s.gameTitle}>Аудиовызов</p>
-              <p>Новые слова: {newWordsAudiocall}</p>
-              <p>Процент правильных ответов: {getGameWinrate(audiocallToday)}%</p>
-              <p>Самая длинная серия побед: {winStreakAudiocall}</p>
+              <div className={s.gamesStatsItemInfo}>
+                <p>Новые слова: {newWordsAudiocall}</p>
+                <p>Процент правильных ответов: {getGameWinrate(audiocallToday)}%</p>
+                <p>Самая длинная серия побед: {winStreakAudiocall}</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
       <section className={s.longStatsSection}>
         <p className={s.sectionTitle}>Статистика за всё время</p>
-        <div>
+        <div className={s.chart}>
           <p className={s.chartTitle}>Новые слова по дням</p>
           <Chart type="bar" chartData={newWordsChartData()} />
         </div>
-        <div>
+        <div className={s.chart}>
           <p className={s.chartTitle}>Изученные слова за все время</p>
           <Chart type="area" chartData={learnedWordsChartData()} />
         </div>
