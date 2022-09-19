@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
-import useAudio from '../../hooks/useAudio';
+import Button from '../Button';
 import { useAppDispatch } from '../../hooks/redux';
 import { setWord } from '../../store/textbook/textbookSlice';
 import {
@@ -42,8 +42,6 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
   const audiocall = ('userWord' in word && word.userWord?.optional?.games?.audiocall) || undefined;
   const sprint = ('userWord' in word && word.userWord?.optional?.games?.sprint) || undefined;
 
-  const [play] = useAudio(word);
-
   const [createUserWord] = useCreateUserWordMutation();
   const [updateUserWord] = useUpdateUserWordMutation();
   const [getUserWordById] = useLazyGetUserWordByIdQuery();
@@ -54,6 +52,57 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
   const isLearnedWord = ('userWord' in word && word.userWord?.optional?.learned) || false;
   const isMainView = view === TextbookView.MAIN;
   const isUserView = view === TextbookView.USER;
+
+  const player = useRef<{
+    audio: HTMLAudioElement | null;
+    audioExample: HTMLAudioElement | null;
+    audioMeaning: HTMLAudioElement | null;
+    play: (() => void) | null;
+    stop: (() => void) | null;
+  }>({ audio: null, audioExample: null, audioMeaning: null, play: null, stop: null });
+
+  useEffect(() => {
+    const { current } = player;
+
+    current.stop = (): void => {
+      if (current.audio && current.audioMeaning && current.audioExample) {
+        current.audio.pause();
+        current.audioMeaning.pause();
+        current.audioExample.pause();
+        current.audio.currentTime = 0;
+        current.audioMeaning.currentTime = 0;
+        current.audioExample.currentTime = 0;
+      }
+    };
+
+    current.play = (): void => {
+      if (current.audio && current.audioMeaning && current.audioExample) {
+        if (current.stop) current.stop();
+        current.audio.play();
+      }
+    };
+
+    const initPlayer = (): void => {
+      const {
+        audio: audioSrc,
+        audioExample: audioExampleSrc,
+        audioMeaning: audioMeaningSrc,
+      } = word;
+      current.audio = new Audio(`${API_BASE}/${audioSrc}`);
+      current.audioExample = new Audio(`${API_BASE}/${audioExampleSrc}`);
+      current.audioMeaning = new Audio(`${API_BASE}/${audioMeaningSrc}`);
+
+      current.audio.addEventListener('ended', () =>
+        (current.audioMeaning as HTMLAudioElement).play(),
+      );
+      current.audioMeaning.addEventListener('ended', () =>
+        (current.audioExample as HTMLAudioElement).play(),
+      );
+    };
+
+    current.stop();
+    initPlayer();
+  }, [word]);
 
   const updateCurrentWord = async ({ wordId }: { wordId: string }): Promise<void> => {
     if (userId && isMainView) {
@@ -150,7 +199,14 @@ const WordCard: FC<WordCardProps> = ({ word, view, userId }) => {
         <div className={s.word}>
           <span className={s.word_original}>{wordOriginal} </span>
           <span className={s.word_transcription}>{transcription}</span>
-          <PlayIcon className={s.word_playButton} onClick={play} />
+          <PlayIcon
+            className={s.word_playButton}
+            onClick={(): void => {
+              if (player.current.play) {
+                player.current.play();
+              }
+            }}
+          />
           <p className={s.word_translate}>{wordTranslate}</p>
         </div>
         {userId && (
