@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/rs-lang-client/static/css/main.31d45e24.css",
-    "main.js": "/rs-lang-client/static/js/main.2facfe1e.js",
+    "main.css": "/rs-lang-client/static/css/main.f65735a2.css",
+    "main.js": "/rs-lang-client/static/js/main.a6094cac.js",
     "static/media/textbook.jpg": "/rs-lang-client/static/media/textbook.34bd58fb10f8ed8b1d63.jpg",
     "static/media/sprint.jpg": "/rs-lang-client/static/media/sprint.c1fb73615b4ad15a11d7.jpg",
     "static/media/audiocall.jpg": "/rs-lang-client/static/media/audiocall.8c521c235d4bd711343c.jpg",
@@ -14,11 +14,12 @@
     "index.html": "/rs-lang-client/index.html",
     "static/media/default-audio-button.svg": "/rs-lang-client/static/media/default-audio-button.23d8a6493cb18802e0bf2681fada069c.svg",
     "static/media/play-sound-icon.svg": "/rs-lang-client/static/media/play-sound-icon.258714d4946e480150bc0fa8f3383cae.svg",
-    "main.31d45e24.css.map": "/rs-lang-client/static/css/main.31d45e24.css.map",
-    "main.2facfe1e.js.map": "/rs-lang-client/static/js/main.2facfe1e.js.map"
+    "static/media/burger-icon.svg": "/rs-lang-client/static/media/burger-icon.c039c20595bce19a6afa1976611590e9.svg",
+    "main.f65735a2.css.map": "/rs-lang-client/static/css/main.f65735a2.css.map",
+    "main.a6094cac.js.map": "/rs-lang-client/static/js/main.a6094cac.js.map"
   },
   "entrypoints": [
-    "static/css/main.31d45e24.css",
-    "static/js/main.2facfe1e.js"
+    "static/css/main.f65735a2.css",
+    "static/js/main.a6094cac.js"
   ]
 }
