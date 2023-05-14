@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 import { API_BASE } from '../../services/endpoints';
 import { ReactComponent as PlayIcon } from '../../assets/svg/play-sound-icon.svg';
-import Button from '../Button';
 import { useAppDispatch } from '../../hooks/redux';
 import { setWord } from '../../store/textbook/textbookSlice';
 import {

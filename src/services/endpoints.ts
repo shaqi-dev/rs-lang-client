@@ -1,4 +1,4 @@
-export const API_BASE = 'https://rslang-team-17-shaqi-dev.herokuapp.com';
+export const API_BASE = 'https://rs-lang-server.onrender.com';
 
 // export const API_SIGNIN = `${API_BASE}/signin`;
 
